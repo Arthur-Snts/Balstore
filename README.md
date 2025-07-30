@@ -6,7 +6,7 @@
 * Programação Orientada à Serviços
 * Projeto de Desenvolvimento de Sistemas para Internet
 
-## Colaboradores:
+## Colaboradores
 
 * Arthur Alves
 * Arthur Dantas
