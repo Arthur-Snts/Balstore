@@ -25,7 +25,7 @@ Círculos e quadriláteros
 
 ### **Tipografia:**
 
-Serifada (**Crete Round**);
+Serifada (**Literata**);
 
 Sem Serifa (**Raleway**)
 
