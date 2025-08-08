@@ -16,12 +16,12 @@ Círculos e quadriláteros
 
 ### **Cores:**
 
-- **#E66000** (Laranja)
+- **#f95228** (Laranja)
 - **#A65D29** (Marrom-claro)
 - **#493424** (Marrom-escuro)
-- **#00D2E6** (Ciano)
-- **#308891** (Turquesa)
-- **#141D1E** (Ciano-escuro)
+- **#1092d4** (Azul-Claro)
+- **#0b2549** (Azul-Escuro)
+- **#141D1E** (Cinza-escuro)
 
 ### **Tipografia:**
 
