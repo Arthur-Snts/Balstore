@@ -2,24 +2,24 @@
 
 ## **I - Qual o objetivo do projeto?**
 
-A Balstore consiste em um E-Commerce que visa estabelecer um canal de vendas e compras entre lojistas e consumidores que precisam garantir uma forma segura e prática de vender e adquirir produtos. Proporcionando conveniência e praticidade para os clientes, e alcançando um público mais amplo do que o comércio tradicional. Em que os lojistas acabam com gastos desnecessários de espaços físicos. Focando em fortes pontos de experiência de usuário e marketing digital.
+A Balstore consiste em um E-Commerce que visa estabelecer um canal de vendas e compras entre lojistas e consumidores que precisam garantir uma forma segura e prática de vender e adquirir produtos. Proporcionando confiança e praticidade para os clientes, e alcançando um público mais amplo do que o comércio tradicional. Em que os lojistas acabam com gastos desnecessários de espaços físicos. Focando em fortes pontos de experiência de usuário e marketing digital.
 
 ## **II - Qual seu público-alvo? Como o grupo caracteriza esse grupo?**
 
-O nosso público-alvo é composto por lojistas ou consumidores que queiram maior confortabilidade e variedade na hora de venda ou compra dos produtos. Podendo abranger maiores áreas de alcance do comércio. Em geral, jovens e adultos que estão habituados com o uso da internet e interessados em oferecer ou adquirir produtos de maneira rápida, simples e confiável.
+Nosso público-alvo é formado por lojistas e consumidores que buscam maior comodidade e diversidade na experiência de compra e venda de produtos, ampliando significativamente o alcance das transações comerciais. Trata-se, em geral, de jovens e adultos familiarizados com o uso da internet, interessados em oferecer ou adquirir produtos de forma ágil, prática e confiável.
 
 ## **III - Descreva os elementos que irão compor a identidade visual do seu projeto (formas, figuras, cores, tipografia, fotografia e etc).**
 
 ### **Formas:**
 
-Círculos e quadriláteros
+Formas suaves, criativas e amigáveis, como círculos, figuras arredondadas e quadriláteros
 
 ### **Cores:**
 
 - **#FFDD00** (Amarelo)
 - **#FFAA00** (Laranja)
 - **#AC00FF** (Roxo)
-- **#13008B** (Azul-Escuro)
+- **#0098fd** (Azul-Claro)
 - **#000000** (Preto)
 
 ### **Tipografia:**
@@ -30,22 +30,36 @@ Sem Serifa (**Raleway**)
 
 ### **Fotografias:**
 
-Imagens reais
+Imagens realistas conforme os produtos exibidos pelos lojistas.
 
 ## **IV - Justifique as escolhas do grupo descrevendo de que forma os elementos implementados irão se comunicar com o objetivo do projeto e com seu público-alvo.**
 
 ### **Formas:**
 
-Possui caráter mais seguro quando utilizado quadrilátero, transmitindo mais segurança na hora da compra.
+Transmitem uma sensação de proximidade, acolhimento e fluidez, essenciais para gerar confiança em um ambiente de compra online. Em e-commerces, essas características visuais ajudam a reduzir a percepção de rigidez ou impessoalidade, tornando a navegação mais intuitiva e agradável. Além disso, as formas arredondadas criam uma identidade moderna e acessível, reforçando valores como praticidade, inovação e atenção à experiência do usuário.
 
 ### **Cores:**
 
-Enquanto tons azulados transmitem segurança ao público, os alaranjados trazem noção de equilíbrio, já o marrom consagra a maturidade do projeto.
+- #FFDD00 (Amarelo): evoca energia, otimismo e dinamismo, estimulando a atenção do usuário e transmitindo sensação de acessibilidade e entusiasmo na experiência de compra.
+
+- #FFAA00 (Laranja): reforça a ideia de criatividade, movimento e ação, incentivando interações e engajamento com o site, além de ser uma cor que transmite calor e proximidade.
+
+- #AC00FF (Roxo): agrega um toque de inovação e sofisticação, diferenciando a identidade visual e transmitindo modernidade, atributo importante para gerar percepção de valor no ambiente digital.
+
+- #0098fd (Azul-Claro): simboliza confiança, estabilidade e segurança, essenciais para um e-commerce, já que o usuário precisa sentir que está realizando transações em um ambiente sólido e confiável.
+
+- #000000 (Preto): traz neutralidade, elegância e contraste, funcionando como base para destacar as demais cores e reforçar a legibilidade dos elementos visuais.
 
 ### **Tipografia:**
 
-As sem serifas são simples e elegantes, enquanto as serifadas refinadas e clássicas.
+- Literata (Serifada): uma fonte que transmite tradição, autoridade e credibilidade. As serifas facilitam a leitura em blocos de texto longos e dão um tom editorial e refinado, ideal para reforçar mensagens institucionais ou conteúdos que exigem maior formalidade.
+
+- Raleway (Sem Serifa): uma fonte limpa, moderna e minimalista. A ausência de serifas proporciona uma leitura rápida e direta, tornando-a perfeita para títulos, botões e elementos de navegação, onde a clareza e a agilidade são essenciais na experiência do usuário em um e-commerce.
 
 ### **Fotografia:**
 
-As fotografias reais são para trazer maior realidade ao visualizar um produto, tornando mais realistas as compras.
+A utilização de fotografias realistas reforça a credibilidade da marca ao apresentar produtos e experiências de maneira autêntica, transmitindo ao usuário uma percepção tangível de qualidade. Esse recurso visual reduz incertezas, gera identificação e fortalece a sensação de segurança durante o processo de compra, elementos essenciais para a construção de confiança em um ambiente digital.
+
+## **V - Quais os valores devem ser passados pelo seu sistemas? Sofisticação? Praticidade? Eficiência? etc. Os valores definidos se comunicam com os aspectos visuais definidos na identidade visual?**
+
+Buscamos transmitir valores de criatividade, inovação, confiança e otimismo. Tais princípios são comunicados de forma harmônica por meio de nossos elementos visuais, cuidadosamente definidos em cores e formas. Paralelamente, desejamos que nosso software proporcione experiências de uso pautadas pela segurança, otimização e praticidade — atributos refletidos em nossa identidade visual, seja na tipografia limpa e funcional, seja na seleção criteriosa de cores primárias que adotamos.
