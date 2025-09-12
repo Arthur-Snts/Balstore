@@ -38,9 +38,17 @@ def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
     cliente_existente = session.exec(
         select(Cliente).where(Cliente.email == cliente_cadastra.email)
     ).first()
+    
 
     if cliente_existente:
         raise HTTPException(400, "Email já cadastrado")
+    
+    cliente_existente = session.exec(
+        select(Cliente).where(Cliente.cpf == cliente_cadastra.cpf)
+    ).first()
+
+    if cliente_existente:
+        raise HTTPException(400, "CPF já cadastrado")
 
     session.add(cliente_cadastra)
     session.commit()
@@ -52,6 +60,7 @@ def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
 # DELETE
 @app.delete("/clientes")
 def deleta_cliente(cliente_id: int, session: SessionDep):
+
     cliente = session.get(Cliente, cliente_id)
 
     if not cliente:
@@ -114,6 +123,13 @@ def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
 
     if loja_existente:
         raise HTTPException(400, "Email já cadastrado")
+    
+    loja_existente = session.exec(
+        select(Loja).where(Loja.cnpj == loja_cadastra.cnpj)
+    ).first()
+
+    if loja_existente:
+        raise HTTPException(400, "CNPJ já cadastrado")
 
     session.add(loja_cadastra)
     session.commit()
@@ -147,6 +163,7 @@ def atualiza_loja(dados_novos: Loja, session: SessionDep):
     # Atualiza apenas os campos enviados
     loja.email = dados_novos.email
     loja.senha = dados_novos.senha
+    loja.descricao = dados_novos.descricao
     # se tiver outros atributos, atualize aqui...
 
     session.add(loja)
@@ -182,7 +199,7 @@ def exibe_produtos(loja_email: str, loja_senha: str, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 @app.get("/lojas/{produto_id}")
-def exibe_produtos(loja_email: str, loja_senha: str, session: SessionDep):
+def exibe_produto(loja_email: str, loja_senha: str, session: SessionDep, produto_id:int):
     # Busca a loja pelo email
     loja = session.exec(
         select(Loja).where(Loja.email == loja_email)
@@ -195,11 +212,11 @@ def exibe_produtos(loja_email: str, loja_senha: str, session: SessionDep):
         raise HTTPException(401, "Senha incorreta")
 
     # Consulta os produtos dessa loja
-    produtos = session.exec(
-        select(Produto).where(Produto.loja_id == loja.id)
-    ).all()
+    produto = session.exec(
+        select(Produto).where(Produto.loja_id == loja.id and Produto.id == produto_id)
+    ).first()
 
-    return {"loja": loja.email, "produtos": produtos}
+    return {"loja": loja.id, "produto": produto}
 
 # ------------------------------------------------------------------------------
 # CADASTRO
@@ -207,23 +224,23 @@ def exibe_produtos(loja_email: str, loja_senha: str, session: SessionDep):
 def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
     # Verifica duplicidade
     produto_existente = session.exec(
-        select(Produto).where(Produto.email == produto_cadastra.email)
+        select(Produto).where(Produto.nome == produto_cadastra.nome and Produto.loja_id == produto_cadastra.loja_id)
     ).first()
 
     if produto_existente:
-        raise HTTPException(400, "Email já cadastrado")
+        raise HTTPException(400, "Nome já cadastrado nessa loja")
 
     session.add(produto_cadastra)
     session.commit()
     session.refresh(produto_cadastra)
 
-    return {"mensagem": "Usuário cadastrado com sucesso", "loja": produto_cadastra}
+    return {"mensagem": "Produto cadastrado com sucesso", "loja": produto_cadastra.loja_id}
 
 # ------------------------------------------------------------------------------
 # DELETE
 @app.delete("/lojas/{produto_id}")
 def deleta_produto(produto_id: int, session: SessionDep):
-    produto = session.get(produto, produto_id)
+    produto = session.get(Produto, produto_id)
 
     if not produto:
         raise HTTPException(404, "Produto não encontrado")
@@ -243,8 +260,10 @@ def atualiza_produto(dados_novos: Produto, session: SessionDep):
         raise HTTPException(404, "Produto não encontrado")
 
     # Atualiza apenas os campos enviados
-    produto.email = dados_novos.email
-    produto.senha = dados_novos.senha
+    produto.nome = dados_novos.nome
+    produto.categoria_id = dados_novos.categoria_id
+    produto.estoque = dados_novos.estoque
+
     # se tiver outros atributos, atualize aqui...
 
     session.add(produto)
@@ -252,3 +271,4 @@ def atualiza_produto(dados_novos: Produto, session: SessionDep):
     session.refresh(produto)
 
     return {"mensagem": "Produto editado com sucesso", "produto": produto}
+
