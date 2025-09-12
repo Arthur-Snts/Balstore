@@ -34,6 +34,7 @@ class Amigo(SQLModel, table=True):
     id:int = Field(primary_key=True)
     amigo_de: int = Field(index=False)
     amigo: int = Field(index=False)
+    solicitação: str = Field(index=False)
 
 class Loja(SQLModel, table=True):
     id:int = Field(primary_key=True)
