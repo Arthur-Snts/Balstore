@@ -25,7 +25,7 @@ Formas suaves, criativas e amigáveis, como círculos, figuras arredondadas e qu
 
 ### **Tipografia:**
 
-Serifada (**Literata**);
+Serifada (**Bombarda**);
 
 Sem Serifa (**Raleway**)
 
