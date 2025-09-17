@@ -21,7 +21,6 @@ Formas suaves, criativas e amigáveis, como círculos, figuras arredondadas e qu
 - **#FFFFFF** (Branco)
 - **#0C5E94** (Azul) 
 - **#07304b** (Azul-Escuro)
-- **#000000** (Preto)
 
 ### **Tipografia:**
 
@@ -51,7 +50,6 @@ Transmitem uma sensação de proximidade, acolhimento e fluidez, essenciais para
 
 - #0C5E94 (Azul Médio): simboliza dinamismo, foco e segurança, com uma presença marcante sem ser excessiva. Ideal para elementos de destaque ou chamadas de ação (CTAs), pois equilibra proximidade e autoridade.
 
-- #000000 (Preto): traz neutralidade, elegância e contraste, funcionando como base para destacar as demais cores e reforçar a legibilidade dos elementos visuais.
 
 ### **Tipografia:**
 
