@@ -18,8 +18,9 @@ Formas suaves, criativas e amigáveis, como círculos, figuras arredondadas e qu
 
 - **#FFDD00** (Amarelo)
 - **#FFAA00** (Laranja)
-- **#AC00FF** (Roxo)
-- **#0098fd** (Azul-Claro)
+- **#FFFFFF** (Branco)
+- **#0C5E94** (Azul) 
+- **#07304b** (Azul-Escuro)
 - **#000000** (Preto)
 
 ### **Tipografia:**
