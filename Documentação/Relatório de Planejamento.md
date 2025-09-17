@@ -25,7 +25,7 @@ Formas suaves, criativas e amigáveis, como círculos, figuras arredondadas e qu
 
 ### **Tipografia:**
 
-Serifada (**Bombarda**);
+Serifada (**Literata**);
 
 Sem Serifa (**Raleway**)
 
@@ -45,9 +45,11 @@ Transmitem uma sensação de proximidade, acolhimento e fluidez, essenciais para
 
 - #FFAA00 (Laranja): reforça a ideia de criatividade, movimento e ação, incentivando interações e engajamento com o site, além de ser uma cor que transmite calor e proximidade.
 
-- #AC00FF (Roxo): agrega um toque de inovação e sofisticação, diferenciando a identidade visual e transmitindo modernidade, atributo importante para gerar percepção de valor no ambiente digital.
+- #FFFFFF (Branco): transmite pureza, simplicidade e clareza, criando espaços de respiro na interface e garantindo equilíbrio visual. Funciona como fundo neutro que destaca as demais cores, além de reforçar a sensação de transparência e objetividade no ambiente digital.
 
-- #0098fd (Azul-Claro): simboliza confiança, estabilidade e segurança, essenciais para um e-commerce, já que o usuário precisa sentir que está realizando transações em um ambiente sólido e confiável.
+- #07304B (Azul-Petróleo Escuro): evoca seriedade, profundidade e profissionalismo, transmitindo confiança e sobriedade. Essa tonalidade pode ser usada para dar solidez à identidade visual, equilibrando cores mais vibrantes e reforçando a credibilidade do site.
+
+- #0C5E94 (Azul Médio): simboliza dinamismo, foco e segurança, com uma presença marcante sem ser excessiva. Ideal para elementos de destaque ou chamadas de ação (CTAs), pois equilibra proximidade e autoridade.
 
 - #000000 (Preto): traz neutralidade, elegância e contraste, funcionando como base para destacar as demais cores e reforçar a legibilidade dos elementos visuais.
 
