@@ -16,8 +16,8 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 # ------------------------------------------------------------------------------
 # LOGIN
-@app.get("/clientes")
-def login_clientes(cli_email: str, cli_senha: str, session: SessionDep):
+@app.get("/cliente")
+def login_cliente(cli_email: str, cli_senha: str, session: SessionDep):
     cliente = session.exec(
         select(Cliente).where(Cliente.email == cli_email)
     ).first()
@@ -32,7 +32,7 @@ def login_clientes(cli_email: str, cli_senha: str, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # CADASTRO
-@app.post("/clientes")
+@app.post("/cliente")
 def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
     # Verifica duplicidade
     cliente_existente = session.exec(
@@ -58,7 +58,7 @@ def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # DELETE
-@app.delete("/clientes")
+@app.delete("/cliente")
 def deleta_cliente(cliente_id: int, session: SessionDep):
 
     cliente = session.get(Cliente, cliente_id)
@@ -73,7 +73,7 @@ def deleta_cliente(cliente_id: int, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # UPDATE
-@app.put("/clientes")
+@app.put("/cliente")
 def atualiza_cliente(dados_novos: Cliente, session: SessionDep):
     cliente = session.get(Cliente, dados_novos.id)
 
@@ -98,8 +98,8 @@ def atualiza_cliente(dados_novos: Cliente, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # LOGIN
-@app.get("/lojas")
-def login_lojas(loja_email: str, loja_senha: str, session: SessionDep):
+@app.get("/loja")
+def login_loja(loja_email: str, loja_senha: str, session: SessionDep):
     loja = session.exec(
         select(loja).where(loja.email == loja_email)
     ).first()
@@ -114,7 +114,7 @@ def login_lojas(loja_email: str, loja_senha: str, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # CADASTRO
-@app.post("/lojas")
+@app.post("/loja")
 def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
     # Verifica duplicidade
     loja_existente = session.exec(
@@ -139,7 +139,7 @@ def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # DELETE
-@app.delete("/lojas")
+@app.delete("/loja")
 def deleta_loja(loja_id: int, session: SessionDep):
     loja = session.get(loja, loja_id)
 
@@ -153,7 +153,7 @@ def deleta_loja(loja_id: int, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # UPDATE
-@app.put("/lojas")
+@app.put("/loja")
 def atualiza_loja(dados_novos: Loja, session: SessionDep):
     loja = session.get(loja, dados_novos.id)
 
@@ -177,7 +177,7 @@ def atualiza_loja(dados_novos: Loja, session: SessionDep):
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 # ------------------------------------------------------------------------------
-@app.get("/lojas/produtos")
+@app.get("/loja/produtos")
 def exibe_produtos(loja_email: str, loja_senha: str, session: SessionDep):
     # Busca a loja pelo email
     loja = session.exec(
@@ -198,7 +198,7 @@ def exibe_produtos(loja_email: str, loja_senha: str, session: SessionDep):
     return {"loja": loja.email, "produtos": produtos}
 
 # ------------------------------------------------------------------------------
-@app.get("/lojas/{produto_id}")
+@app.get("/loja/{produto_id}")
 def exibe_produto(loja_email: str, loja_senha: str, session: SessionDep, produto_id:int):
     # Busca a loja pelo email
     loja = session.exec(
@@ -220,7 +220,7 @@ def exibe_produto(loja_email: str, loja_senha: str, session: SessionDep, produto
 
 # ------------------------------------------------------------------------------
 # CADASTRO
-@app.post("/lojas/produtos")
+@app.post("/loja/produtos")
 def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
     # Verifica duplicidade
     produto_existente = session.exec(
@@ -238,7 +238,7 @@ def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # DELETE
-@app.delete("/lojas/{produto_id}")
+@app.delete("/loja/{produto_id}")
 def deleta_produto(produto_id: int, session: SessionDep):
     produto = session.get(Produto, produto_id)
 
@@ -252,9 +252,9 @@ def deleta_produto(produto_id: int, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # UPDATE
-@app.put("/lojas/{produto_id}")
-def atualiza_produto(dados_novos: Produto, session: SessionDep):
-    produto = session.get(produto, dados_novos.id)
+@app.put("/loja/{produto_id}")
+def atualiza_produto(dados_novos: Produto, session: SessionDep, produto_id:int):
+    produto = session.get(Produto, produto_id)
 
     if not produto:
         raise HTTPException(404, "Produto não encontrado")
@@ -271,4 +271,9 @@ def atualiza_produto(dados_novos: Produto, session: SessionDep):
     session.refresh(produto)
 
     return {"mensagem": "Produto editado com sucesso", "produto": produto}
+
+# ------------------------------------------------------------------------------
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                        #Carrinho
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
