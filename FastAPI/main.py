@@ -35,7 +35,6 @@ def login_cliente(cli_email: str, cli_senha: str, session: SessionDep):
 # CADASTRO
 @app.post("/cliente")
 def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
-    # Verifica duplicidade
     cliente_existente = session.exec(
         select(Cliente).where(Cliente.email == cliente_cadastra.email)
     ).first()
@@ -83,11 +82,10 @@ def atualiza_cliente(dados_novos: Cliente, session: SessionDep):
     if not cliente:
         raise HTTPException(404, "Perfil não encontrado")
 
-    # Atualiza apenas os campos enviados
     cliente.nome = dados_novos.nome
     cliente.email = dados_novos.email
     cliente.senha = dados_novos.senha
-    # se tiver outros atributos, atualize aqui...
+
 
     session.add(cliente)
     session.commit()
@@ -120,7 +118,7 @@ def login_loja(loja_email: str, loja_senha: str, session: SessionDep):
 # CADASTRO
 @app.post("/loja")
 def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
-    # Verifica duplicidade
+
     loja_existente = session.exec(
         select(Loja).where(Loja.email == loja_cadastra.email)
     ).first()
@@ -135,7 +133,7 @@ def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
     if loja_existente:
         raise HTTPException(400, "CNPJ já cadastrado")
 
-    
+    loja_cadastra.senha = generate_password_hash(loja_cadastra.senha)
 
     session.add(loja_cadastra)
     session.commit()
@@ -166,11 +164,10 @@ def atualiza_loja(dados_novos: Loja, session: SessionDep):
     if not loja:
         raise HTTPException(404, "Perfil não encontrada")
 
-    # Atualiza apenas os campos enviados
     loja.email = dados_novos.email
     loja.senha = dados_novos.senha
     loja.descricao = dados_novos.descricao
-    # se tiver outros atributos, atualize aqui...
+
 
     session.add(loja)
     session.commit()
@@ -184,53 +181,32 @@ def atualiza_loja(dados_novos: Loja, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 @app.get("/loja/produtos")
-def exibe_produtos(loja_email: str, loja_senha: str, session: SessionDep):
-    # Busca a loja pelo email
-    loja = session.exec(
-        select(Loja).where(Loja.email == loja_email)
-    ).first()
+def exibe_produtos(loja_id:int, session: SessionDep):
 
-    if not loja:
-        raise HTTPException(404, "Email inexistente")
-
-    if loja.senha != loja_senha:
-        raise HTTPException(401, "Senha incorreta")
-
-    # Consulta os produtos dessa loja
     produtos = session.exec(
-        select(Produto).where(Produto.loja_id == loja.id)
+        select(Produto).where(Produto.loja_id == loja_id)
     ).all()
 
-    return {"loja": loja.email, "produtos": produtos}
+    return produtos
 
 # ------------------------------------------------------------------------------
 @app.get("/loja/{produto_id}")
-def exibe_produto(loja_email: str, loja_senha: str, session: SessionDep, produto_id:int):
-    # Busca a loja pelo email
-    loja = session.exec(
-        select(Loja).where(Loja.email == loja_email)
-    ).first()
+def exibe_produto(loja_id:int, session: SessionDep, produto_id:int):
+    
 
-    if not loja:
-        raise HTTPException(404, "Email inexistente")
-
-    if loja.senha != loja_senha:
-        raise HTTPException(401, "Senha incorreta")
-
-    # Consulta os produtos dessa loja
+    
     produto = session.exec(
-        select(Produto).where(Produto.loja_id == loja.id and Produto.id == produto_id)
+        select(Produto).where(Produto.loja_id == loja_id, Produto.id == produto_id)
     ).first()
 
-    return {"loja": loja.id, "produto": produto}
+    return produto
 
 # ------------------------------------------------------------------------------
 # CADASTRO
 @app.post("/loja/produtos")
 def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
-    # Verifica duplicidade
     produto_existente = session.exec(
-        select(Produto).where(Produto.nome == produto_cadastra.nome and Produto.loja_id == produto_cadastra.loja_id)
+        select(Produto).where(Produto.nome == produto_cadastra.nome, Produto.loja_id == produto_cadastra.loja_id)
     ).first()
 
     if produto_existente:
@@ -240,7 +216,7 @@ def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
     session.commit()
     session.refresh(produto_cadastra)
 
-    return {"mensagem": "Produto cadastrado com sucesso", "loja": produto_cadastra.loja_id}
+    return {"mensagem": "Produto cadastrado com sucesso", "Produto": produto_cadastra}
 
 # ------------------------------------------------------------------------------
 # DELETE
@@ -265,12 +241,12 @@ def atualiza_produto(dados_novos: Produto, session: SessionDep, produto_id:int):
     if not produto:
         raise HTTPException(404, "Produto não encontrado")
 
-    # Atualiza apenas os campos enviados
+
     produto.nome = dados_novos.nome
     produto.categoria_id = dados_novos.categoria_id
     produto.estoque = dados_novos.estoque
 
-    # se tiver outros atributos, atualize aqui...
+
 
     session.add(produto)
     session.commit()
@@ -282,16 +258,141 @@ def atualiza_produto(dados_novos: Produto, session: SessionDep, produto_id:int):
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                         #Carrinho
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+# ------------------------------------------------------------------------------
+# GET
 @app.get("/carrinho/{cliente_id}")
 def pega_carrinho(cliente_id:int, session: SessionDep):
+
     carrinho = session.exec(
         select(Carrinho).where(Carrinho.cliente_id == cliente_id)
     ).all()
 
     if not carrinho:
-        raise HTTPException(400, "Cliente sem Carrinho")
+        raise HTTPException(400, "Carrinho do Cliente vazio")
     
     carrinho_total = session.exec(
         select(Carrinho, Produto).where(Carrinho.cliente_id == cliente_id, Produto.id == Carrinho.produto_id)
     )
+
+    return carrinho_total
+# ------------------------------------------------------------------------------
+# POST
+@app.post("/carrinho")
+def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep):
+
+    carrinho_existente = session.exec(
+        select(Carrinho).where(Carrinho.produto_id == carrinho_cadastra.produto_id, Carrinho.cliente_id == carrinho_cadastra.cliente_id)
+    ).first()
+
+    if carrinho_existente:
+        raise HTTPException(400, "Produto já está em seu carrinho")
+
+    session.add(carrinho_cadastra)
+    session.commit()
+    session.refresh(carrinho_cadastra)
+
+    return {"mensagem": "Produto colocado no carrinho com sucesso", "Produto Colocado": carrinho_cadastra}
+
+# ------------------------------------------------------------------------------
+# DELETE
+@app.delete("/carrinho/{cliente_id}")
+def deleta_carrinho(produto_id: int, session: SessionDep, cliente_id:int):
+    carrinho_deletado = session.exec(
+        select(Carrinho).where(Carrinho.produto_id == produto_id, Carrinho.cliente_id == cliente_id)
+    )
+
+    if not carrinho_deletado:
+        raise HTTPException(404, "Produto não encontrado no carrinho desse Cliente")
+
+    session.delete(carrinho_deletado)
+    session.commit()
+
+    return {"mensagem": "Produto deletado com sucesso desse carrinho"}
+
+# ------------------------------------------------------------------------------
+# PUT
+@app.put("/carrinho/{cliente_id}")
+def atualiza_carrinho(produto_id: int, session: SessionDep, cliente_id:int, quantidade_nova: int):
+
+    carrinho_atualizar = session.exec(
+        select(Carrinho).where(Carrinho.produto_id == produto_id, Carrinho.cliente_id == cliente_id)
+    )
+
+    if not carrinho_atualizar:
+        raise HTTPException(404, "Produto não encontrado no carrinho desse Cliente")
+    
+    carrinho_atualizar.qnt_produto = quantidade_nova
+
+    session.add(carrinho_atualizar)
+    session.commit()
+    session.refresh(carrinho_atualizar)
+
+    return {"mensagem": "Carrinho editado com sucesso", "Quantidade Nova": quantidade_nova}
+
+# ------------------------------------------------------------------------------
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                        #Carrinho
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# ------------------------------------------------------------------------------
+# GET
+@app.get("/amigo/{cliente_id}")
+def pega_amigos(cliente_id:int, session: SessionDep):
+
+    amigos = session.exec(
+        select(Amigo).where(Amigo.amigo_de == cliente_id)
+    ).all()
+
+    if not amigos:
+        raise HTTPException(400, "Cliente sem amigos")
+    
+    lista = []
+
+    for amigo in amigos:
+        lista.append(amigo.amigo)
+
+    return lista
+# ------------------------------------------------------------------------------
+# POST
+@app.post("/amigo")
+def adiciona_amigo(amigo:Amigo, session:SessionDep):
+
+    amizade_existente = session.exec(
+        select(Amigo).where(Amigo.amigo_de == amigo.amigo_de, Amigo.amigo == amigo.amigo)
+    ).first()
+
+    if amizade_existente:
+        raise HTTPException(400, "Amizade já existe com esses usuários")
+
+    amizade_inversa = Amigo(id=amigo.id+1, amigo=amigo.amigo_de, amigo_de=amigo.amigo)
+
+    session.add(amigo)
+    session.commit()
+    session.refresh(amigo)
+
+    session.add(amizade_inversa)
+    session.commit()
+    session.refresh(amizade_inversa)
+
+    return {"mensagem": "Amizade cadastrada com sucesso", "Nova Amizade": amigo}
+
+# ------------------------------------------------------------------------------
+# DELETE
+@app.delete("/amigo/{cliente_id}")
+def desfaz_amizade(session: SessionDep, cliente_id:int, amigo_exclui:int):
+    amigo_deletado = session.exec(
+        select(Amigo).where(Amigo.amigo == produto_id, Carrinho.cliente_id == cliente_id)
+    )
+
+    if not carrinho_deletado:
+        raise HTTPException(404, "Produto não encontrado no carrinho desse Cliente")
+
+    session.delete(carrinho_deletado)
+    session.commit()
+
+    return {"mensagem": "Produto deletado com sucesso desse carrinho"}
+
+# ------------------------------------------------------------------------------
+# PUT
+
+
+
