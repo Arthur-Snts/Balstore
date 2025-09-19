@@ -3,6 +3,7 @@ from config import app, engine
 from sqlmodel import SQLModel, Session, select
 from fastapi import HTTPException, Depends
 from typing import Annotated
+from werkzeug.security import generate_password_hash, check_password_hash
 
 def get_session():
     with Session(engine) as session:
@@ -25,7 +26,7 @@ def login_cliente(cli_email: str, cli_senha: str, session: SessionDep):
     if not cliente:
         raise HTTPException(404, "Email inexistente")
 
-    if cliente.senha != cli_senha:
+    if check_password_hash(cli_senha,cliente.senha):
         raise HTTPException(401, "Senha incorreta")
 
     return cliente
@@ -49,6 +50,8 @@ def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
 
     if cliente_existente:
         raise HTTPException(400, "CPF já cadastrado")
+
+    cliente_cadastra.senha = generate_password_hash(cliente_cadastra.senha)
 
     session.add(cliente_cadastra)
     session.commit()
@@ -81,6 +84,7 @@ def atualiza_cliente(dados_novos: Cliente, session: SessionDep):
         raise HTTPException(404, "Perfil não encontrado")
 
     # Atualiza apenas os campos enviados
+    cliente.nome = dados_novos.nome
     cliente.email = dados_novos.email
     cliente.senha = dados_novos.senha
     # se tiver outros atributos, atualize aqui...
@@ -101,13 +105,13 @@ def atualiza_cliente(dados_novos: Cliente, session: SessionDep):
 @app.get("/loja")
 def login_loja(loja_email: str, loja_senha: str, session: SessionDep):
     loja = session.exec(
-        select(loja).where(loja.email == loja_email)
+        select(Loja).where(Loja.email == loja_email)
     ).first()
 
     if not loja:
         raise HTTPException(404, "Email inexistente")
 
-    if loja.senha != loja_senha:
+    if check_password_hash(loja.senha, loja_senha):
         raise HTTPException(401, "Senha incorreta")
 
     return loja
@@ -130,6 +134,8 @@ def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
 
     if loja_existente:
         raise HTTPException(400, "CNPJ já cadastrado")
+
+    
 
     session.add(loja_cadastra)
     session.commit()
@@ -277,3 +283,15 @@ def atualiza_produto(dados_novos: Produto, session: SessionDep, produto_id:int):
                                                         #Carrinho
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+@app.get("/carrinho/{cliente_id}")
+def pega_carrinho(cliente_id:int, session: SessionDep):
+    carrinho = session.exec(
+        select(Carrinho).where(Carrinho.cliente_id == cliente_id)
+    ).all()
+
+    if not carrinho:
+        raise HTTPException(400, "Cliente sem Carrinho")
+    
+    carrinho_total = session.exec(
+        select(Carrinho, Produto).where(Carrinho.cliente_id == cliente_id, Produto.id == Carrinho.produto_id)
+    )
