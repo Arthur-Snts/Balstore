@@ -180,7 +180,7 @@ def atualiza_loja(dados_novos: Loja, session: SessionDep):
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 # ------------------------------------------------------------------------------
-@app.get("/loja/produtos")
+@app.get("/produto/{loja_id}")
 def exibe_produtos(loja_id:int, session: SessionDep):
 
     produtos = session.exec(
@@ -190,20 +190,20 @@ def exibe_produtos(loja_id:int, session: SessionDep):
     return produtos
 
 # ------------------------------------------------------------------------------
-@app.get("/loja/{produto_id}")
-def exibe_produto(loja_id:int, session: SessionDep, produto_id:int):
+@app.get("/produto/{loja_id}/{produto_nome}")
+def exibe_produto(loja_id:int, session: SessionDep, produto_nome:str):
     
 
     
     produto = session.exec(
-        select(Produto).where(Produto.loja_id == loja_id, Produto.id == produto_id)
+        select(Produto).where(Produto.loja_id == loja_id, Produto.nome == produto_nome)
     ).first()
 
     return produto
 
 # ------------------------------------------------------------------------------
 # CADASTRO
-@app.post("/loja/produtos")
+@app.post("/produto")
 def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
     produto_existente = session.exec(
         select(Produto).where(Produto.nome == produto_cadastra.nome, Produto.loja_id == produto_cadastra.loja_id)
@@ -220,9 +220,11 @@ def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # DELETE
-@app.delete("/loja/{produto_id}")
-def deleta_produto(produto_id: int, session: SessionDep):
-    produto = session.get(Produto, produto_id)
+@app.delete("/produto/{loja_id}")
+def deleta_produto(produto_nome: str, loja_id:int, session: SessionDep):
+    produto = session.exec(
+        select(Produto).where(Produto.nome == produto_nome, Produto.loja_id == loja_id)
+    ).first()
 
     if not produto:
         raise HTTPException(404, "Produto não encontrado")
@@ -234,7 +236,7 @@ def deleta_produto(produto_id: int, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # UPDATE
-@app.put("/loja/{produto_id}")
+@app.put("/produto/{loja_id}")
 def atualiza_produto(dados_novos: Produto, session: SessionDep, produto_id:int):
     produto = session.get(Produto, produto_id)
 
@@ -339,7 +341,7 @@ def atualiza_carrinho(produto_id: int, session: SessionDep, cliente_id:int, quan
 def pega_amigos(cliente_id:int, session: SessionDep):
 
     amigos = session.exec(
-        select(Amigo).where(Amigo.amigo_de == cliente_id)
+        select(Amigo, Cliente).where(Amigo.amigo_de == cliente_id, Cliente.id == Amigo.amigo)
     ).all()
 
     if not amigos:
@@ -353,17 +355,17 @@ def pega_amigos(cliente_id:int, session: SessionDep):
     return lista
 # ------------------------------------------------------------------------------
 # POST
-@app.post("/amigo")
-def adiciona_amigo(amigo:Amigo, session:SessionDep):
+@app.post("/amigo/{cliente_id}")
+def adiciona_amigo(amigo:Amigo, session:SessionDep, cliente_id:int):
 
     amizade_existente = session.exec(
-        select(Amigo).where(Amigo.amigo_de == amigo.amigo_de, Amigo.amigo == amigo.amigo)
+        select(Amigo).where(Amigo.amigo_de == cliente_id, Amigo.amigo == amigo.amigo)
     ).first()
 
     if amizade_existente:
         raise HTTPException(400, "Amizade já existe com esses usuários")
 
-    amizade_inversa = Amigo(id=amigo.id+1, amigo=amigo.amigo_de, amigo_de=amigo.amigo)
+    amizade_inversa = Amigo(id=amigo.id+1, amigo=cliente_id, amigo_de=amigo.amigo)
 
     session.add(amigo)
     session.commit()
@@ -380,16 +382,16 @@ def adiciona_amigo(amigo:Amigo, session:SessionDep):
 @app.delete("/amigo/{cliente_id}")
 def desfaz_amizade(session: SessionDep, cliente_id:int, amigo_exclui:int):
     amigo_deletado = session.exec(
-        select(Amigo).where(Amigo.amigo == produto_id, Carrinho.cliente_id == cliente_id)
+        select(Amigo).where(Amigo.amigo == amigo_exclui, Amigo.amigo_de == cliente_id)
     )
 
-    if not carrinho_deletado:
-        raise HTTPException(404, "Produto não encontrado no carrinho desse Cliente")
+    if not amigo_deletado:
+        raise HTTPException(404, "Amigo não encontrado nas amizades desse Cliente")
 
-    session.delete(carrinho_deletado)
+    session.delete(amigo_deletado)
     session.commit()
 
-    return {"mensagem": "Produto deletado com sucesso desse carrinho"}
+    return {"mensagem": "Amigo deletado com sucesso desse Cliente"}
 
 # ------------------------------------------------------------------------------
 # PUT
