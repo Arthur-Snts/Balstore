@@ -3,6 +3,7 @@ from config import app, engine
 from sqlmodel import SQLModel, Session, select
 from fastapi import HTTPException, Depends
 from typing import Annotated
+from sqlalchemy import LargeBinary
 from werkzeug.security import generate_password_hash, check_password_hash
 
 def get_session():
@@ -18,23 +19,43 @@ SessionDep = Annotated[Session, Depends(get_session)]
 # ------------------------------------------------------------------------------
 # LOGIN
 @app.get("/cliente")
-def login_cliente(cli_email: str, cli_senha: str, session: SessionDep):
-    cliente = session.exec(
-        select(Cliente).where(Cliente.email == cli_email)
-    ).first()
+def busca_cliente(cli_email: str = None, cli_senha: str = None, session: SessionDep = Depends(get_session), cli_nome:str=None, cli_cpf:str=None):
 
-    if not cliente:
-        raise HTTPException(404, "Email inexistente")
+    if cli_email and cli_senha:
 
-    if check_password_hash(cli_senha,cliente.senha):
-        raise HTTPException(401, "Senha incorreta")
+        cliente = session.exec(
+            select(Cliente).where(Cliente.email == cli_email)
+        ).first()
+
+        if not cliente:
+            raise HTTPException(404, "Email inexistente")
+
+        if not check_password_hash(cli_senha,cliente.senha):
+            raise HTTPException(401, "Senha incorreta")
+    
+    if cli_email:
+        cliente = session.exec(
+            select(Cliente).where(Cliente.email == cli_email)
+        ).first()
+
+    if cli_nome:
+        cliente = session.exec(
+            select(Cliente).where(Cliente.nome.contains(cli_nome))
+        ).all()
+
+    if cli_cpf:
+        cliente = session.exec(
+            select(Cliente).where(Cliente.cpf == cli_cpf)
+        ).first()
+
 
     return cliente
 
 # ------------------------------------------------------------------------------
 # CADASTRO
 @app.post("/cliente")
-def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
+def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep = Depends(get_session)):
+
     cliente_existente = session.exec(
         select(Cliente).where(Cliente.email == cliente_cadastra.email)
     ).first()
@@ -61,9 +82,24 @@ def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
 # ------------------------------------------------------------------------------
 # DELETE
 @app.delete("/cliente")
-def deleta_cliente(cliente_id: int, session: SessionDep):
-
-    cliente = session.get(Cliente, cliente_id)
+def deleta_cliente(cli_id: int = None, session: SessionDep = Depends(get_session), cli_nome:str = None, cli_cpf:str = None, cli_email:str = None):
+    
+    if cli_id:
+        cliente = session.get(Cliente, cli_id)
+    if cli_cpf:
+        cliente = session.exec(
+            select(Cliente).where(Cliente.cpf == cli_cpf)
+        ).first()
+    if cli_email:
+        cliente = session.exec(
+            select(Cliente).where(Cliente.email == cli_email)
+        ).first()
+    if cli_nome:
+        cliente = session.exec(
+            select(Cliente).where(Cliente.nome.contains(cli_nome))
+        ).all()
+        if len(cliente)>1:
+            raise HTTPException(404, "Mais de um Cliente com esse Nome, Verifique por outra Informação")
 
     if not cliente:
         raise HTTPException(404, "Perfil não encontrado")
@@ -75,17 +111,17 @@ def deleta_cliente(cliente_id: int, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # UPDATE
-@app.put("/cliente")
-def atualiza_cliente(dados_novos: Cliente, session: SessionDep):
-    cliente = session.get(Cliente, dados_novos.id)
+@app.put("/cliente/{cli_id}")
+def atualiza_cliente(cli_id:int,cli_nome:str=None, cli_email:str=None, cli_senha:str=None, session: SessionDep = Depends(get_session)):
 
+    cliente = session.get(Cliente, cli_id)
+    
     if not cliente:
-        raise HTTPException(404, "Perfil não encontrado")
+        raise HTTPException(404, "Perfil não encontrado pelo ID, Verifique a informação.")
 
-    cliente.nome = dados_novos.nome
-    cliente.email = dados_novos.email
-    cliente.senha = dados_novos.senha
-
+    cliente.nome = cli_nome
+    cliente.email = cli_email
+    cliente.senha = generate_password_hash(cli_senha)
 
     session.add(cliente)
     session.commit()
@@ -101,23 +137,37 @@ def atualiza_cliente(dados_novos: Cliente, session: SessionDep):
 # ------------------------------------------------------------------------------
 # LOGIN
 @app.get("/loja")
-def login_loja(loja_email: str, loja_senha: str, session: SessionDep):
-    loja = session.exec(
-        select(Loja).where(Loja.email == loja_email)
-    ).first()
+def busca_loja(loj_email: str = None, loj_senha: str=None, session: SessionDep= Depends(get_session), loj_nome:str=None, loj_cnpj:str = None, loj_id:id = None):
 
-    if not loja:
-        raise HTTPException(404, "Email inexistente")
+    if loj_email and loj_senha:
+        loja = session.exec(
+            select(Loja).where(Loja.email == loj_email)
+        ).first()
 
-    if check_password_hash(loja.senha, loja_senha):
-        raise HTTPException(401, "Senha incorreta")
+        if not loja:
+            raise HTTPException(404, "Email inexistente")
+
+        if check_password_hash(loja.senha, loj_senha):
+            raise HTTPException(401, "Senha incorreta")
+    if loj_nome:
+        loja = session.exec(
+            select(Loja).where(Loja.nome.contains(loj_nome))
+        ).all()
+    if loj_cnpj:
+        loja = session.exec(
+            select(Loja).where(Loja.cnpj == loj_cnpj)
+        ).first()
+    if loj_id:
+        loja = session.exec(
+            select(Loja).where(Loja.id == loj_id)
+        ).first()
 
     return loja
 
 # ------------------------------------------------------------------------------
 # CADASTRO
 @app.post("/loja")
-def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
+def cadastra_loja(loja_cadastra: Loja, session: SessionDep = Depends(get_session)):
 
     loja_existente = session.exec(
         select(Loja).where(Loja.email == loja_cadastra.email)
@@ -144,30 +194,46 @@ def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
 # ------------------------------------------------------------------------------
 # DELETE
 @app.delete("/loja")
-def deleta_loja(loja_id: int, session: SessionDep):
-    loja = session.get(loja, loja_id)
+def deleta_loja(loj_id: int = None, session: SessionDep = Depends(get_session), loj_nome:str = None, loj_cnpj:str = None, loj_email:str = None):
+    
+    if loj_id:
+        loja = session.get(Loja, loj_id)
+    if loj_cnpj:
+        loja = session.exec(
+            select(Loja).where(Loja.cnpj == loj_cnpj)
+        ).first()
+    if loj_email:
+        loja = session.exec(
+            select(Loja).where(Loja.email == loj_email)
+        ).first()
+    if loj_nome:
+        loja = session.exec(
+            select(Loja).where(Loja.nome.contains(loj_nome))
+        ).all()
+        if len(loja)>1:
+            raise HTTPException(404, "Mais de uma Loja com esse Nome, Verifique por outra Informação")
 
     if not loja:
-        raise HTTPException(404, "Perfil não encontrado")
+        raise HTTPException(404, "Loja não encontrada")
 
     session.delete(loja)
     session.commit()
 
-    return {"mensagem": "Perfil deletado com sucesso"}
+    return {"mensagem": "Loja deletada com sucesso"}
 
 # ------------------------------------------------------------------------------
 # UPDATE
-@app.put("/loja")
-def atualiza_loja(dados_novos: Loja, session: SessionDep):
-    loja = session.get(loja, dados_novos.id)
+@app.put("/loja/{loj_id}")
+def atualiza_loja(loj_id:int,loj_nome:str=None, loj_email:str=None, loj_senha:str=None, session: SessionDep = Depends(get_session)):
 
+    loja = session.get(loja, loj_id)
+    
     if not loja:
-        raise HTTPException(404, "Perfil não encontrada")
+        raise HTTPException(404, "Loja não encontrada pelo ID, Verifique a informação.")
 
-    loja.email = dados_novos.email
-    loja.senha = dados_novos.senha
-    loja.descricao = dados_novos.descricao
-
+    loja.nome = loj_nome
+    loja.email = loj_email
+    loja.senha = generate_password_hash(loj_senha)
 
     session.add(loja)
     session.commit()
@@ -180,31 +246,36 @@ def atualiza_loja(dados_novos: Loja, session: SessionDep):
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 # ------------------------------------------------------------------------------
-@app.get("/produto/{loja_id}")
-def exibe_produtos(loja_id:int, session: SessionDep):
+@app.get("/produto")
+def busca_produto(loj_id:int=None, pro_id:int=None, pro_nome:str=None, pro_categoria:str=None, session: SessionDep = Depends(get_session)):
 
-    produtos = session.exec(
-        select(Produto).where(Produto.loja_id == loja_id)
-    ).all()
+    produtos = session.exec(select(Produto)).all()
+
+    if loj_id:
+        produtos = session.exec(
+            select(Produto).where(Produto.loja_id == loj_id)
+        ).all()
+    if pro_id:
+        produtos = session.exec(
+            select(Produto).where(Produto.id == pro_id)
+        ).all()
+    if pro_nome:
+        produtos = session.exec(
+            select(Produto).where(Produto.nome.contains(pro_nome))
+        ).all()
+    if pro_categoria:
+        produtos = session.exec(
+            select(Produto, Categoria).where(Produto.categoria_id == Categoria.id, Categoria.nome == pro_categoria)
+        ).all()
+
 
     return produtos
 
 # ------------------------------------------------------------------------------
-@app.get("/produto/{loja_id}/{produto_nome}")
-def exibe_produto(loja_id:int, session: SessionDep, produto_nome:str):
-    
-
-    
-    produto = session.exec(
-        select(Produto).where(Produto.loja_id == loja_id, Produto.nome == produto_nome)
-    ).first()
-
-    return produto
-
-# ------------------------------------------------------------------------------
 # CADASTRO
 @app.post("/produto")
-def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
+def cadastra_produto(produto_cadastra: Produto, session: SessionDep= Depends(get_session)):
+
     produto_existente = session.exec(
         select(Produto).where(Produto.nome == produto_cadastra.nome, Produto.loja_id == produto_cadastra.loja_id)
     ).first()
@@ -221,13 +292,21 @@ def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
 # ------------------------------------------------------------------------------
 # DELETE
 @app.delete("/produto/{loja_id}")
-def deleta_produto(produto_nome: str, loja_id:int, session: SessionDep):
-    produto = session.exec(
-        select(Produto).where(Produto.nome == produto_nome, Produto.loja_id == loja_id)
-    ).first()
+def deleta_produto(loja_id:int,pro_id:int=None, pro_nome: str=None, session: SessionDep= Depends(get_session)):
+    if pro_nome:
+        produto = session.exec(
+            select(Produto).where(Produto.nome == pro_nome, Produto.loja_id == loja_id)
+        ).first()
 
-    if not produto:
-        raise HTTPException(404, "Produto não encontrado")
+        if not produto:
+            raise HTTPException(404, "Produto não encontrado")
+    if pro_id:
+        produto = session.exec(
+            select(Produto).where(Produto.id == pro_id, Produto.loja_id == loja_id)
+        ).first()
+
+        if not produto:
+            raise HTTPException(404, "Produto não encontrado")
 
     session.delete(produto)
     session.commit()
@@ -236,19 +315,27 @@ def deleta_produto(produto_nome: str, loja_id:int, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # UPDATE
-@app.put("/produto/{loja_id}")
-def atualiza_produto(dados_novos: Produto, session: SessionDep, produto_id:int):
-    produto = session.get(Produto, produto_id)
+@app.put("/produto/{pro_id}")
+def atualiza_produto(pro_id:int,pro_nome:str=None, pro_categoria:str=None, pro_estoque:int=None, pro_imagem:LargeBinary =None, session: SessionDep = Depends(get_session)):
+
+
+    produto = session.get(Produto, pro_id)
 
     if not produto:
         raise HTTPException(404, "Produto não encontrado")
+    
 
-
-    produto.nome = dados_novos.nome
-    produto.categoria_id = dados_novos.categoria_id
-    produto.estoque = dados_novos.estoque
-
-
+    if pro_nome:
+        produto.nome = pro_nome
+    if pro_categoria:
+        categoria = session.exec(
+                select(Categoria).where(Categoria.nome == pro_categoria)
+            ).first()
+        produto.categoria_id = categoria.id
+    if pro_estoque:
+        produto.estoque = pro_estoque
+    if pro_imagem:
+        produto.imagem = pro_imagem
 
     session.add(produto)
     session.commit()
@@ -263,7 +350,7 @@ def atualiza_produto(dados_novos: Produto, session: SessionDep, produto_id:int):
 # ------------------------------------------------------------------------------
 # GET
 @app.get("/carrinho/{cliente_id}")
-def pega_carrinho(cliente_id:int, session: SessionDep):
+def pega_carrinho(cliente_id:int, session: SessionDep = Depends(get_session)):
 
     carrinho = session.exec(
         select(Carrinho).where(Carrinho.cliente_id == cliente_id)
@@ -280,7 +367,7 @@ def pega_carrinho(cliente_id:int, session: SessionDep):
 # ------------------------------------------------------------------------------
 # POST
 @app.post("/carrinho")
-def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep):
+def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep = Depends(get_session)):
 
     carrinho_existente = session.exec(
         select(Carrinho).where(Carrinho.produto_id == carrinho_cadastra.produto_id, Carrinho.cliente_id == carrinho_cadastra.cliente_id)
@@ -298,7 +385,7 @@ def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep):
 # ------------------------------------------------------------------------------
 # DELETE
 @app.delete("/carrinho/{cliente_id}")
-def deleta_carrinho(produto_id: int, session: SessionDep, cliente_id:int):
+def deleta_carrinho(produto_id: int, session: SessionDep = Depends(get_session), cliente_id:int):
     carrinho_deletado = session.exec(
         select(Carrinho).where(Carrinho.produto_id == produto_id, Carrinho.cliente_id == cliente_id)
     )
@@ -314,7 +401,7 @@ def deleta_carrinho(produto_id: int, session: SessionDep, cliente_id:int):
 # ------------------------------------------------------------------------------
 # PUT
 @app.put("/carrinho/{cliente_id}")
-def atualiza_carrinho(produto_id: int, session: SessionDep, cliente_id:int, quantidade_nova: int):
+def atualiza_carrinho(produto_id: int, session: SessionDep = Depends(get_session), cliente_id:int, quantidade_nova: int):
 
     carrinho_atualizar = session.exec(
         select(Carrinho).where(Carrinho.produto_id == produto_id, Carrinho.cliente_id == cliente_id)
@@ -333,12 +420,12 @@ def atualiza_carrinho(produto_id: int, session: SessionDep, cliente_id:int, quan
 
 # ------------------------------------------------------------------------------
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                        #Carrinho
+                                                        #Amigo
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # ------------------------------------------------------------------------------
 # GET
 @app.get("/amigo/{cliente_id}")
-def pega_amigos(cliente_id:int, session: SessionDep):
+def pega_amigos(cliente_id:int, session: SessionDep = Depends(get_session)):
 
     amigos = session.exec(
         select(Amigo, Cliente).where(Amigo.amigo_de == cliente_id, Cliente.id == Amigo.amigo)
@@ -356,7 +443,7 @@ def pega_amigos(cliente_id:int, session: SessionDep):
 # ------------------------------------------------------------------------------
 # POST
 @app.post("/amigo/{cliente_id}")
-def adiciona_amigo(amigo:Amigo, session:SessionDep, cliente_id:int):
+def adiciona_amigo(amigo:Amigo, session:SessionDep = Depends(get_session), cliente_id:int):
 
     amizade_existente = session.exec(
         select(Amigo).where(Amigo.amigo_de == cliente_id, Amigo.amigo == amigo.amigo)
@@ -380,7 +467,7 @@ def adiciona_amigo(amigo:Amigo, session:SessionDep, cliente_id:int):
 # ------------------------------------------------------------------------------
 # DELETE
 @app.delete("/amigo/{cliente_id}")
-def desfaz_amizade(session: SessionDep, cliente_id:int, amigo_exclui:int):
+def desfaz_amizade(session: SessionDep = Depends(get_session), cliente_id:int, amigo_exclui:int):
     amigo_deletado = session.exec(
         select(Amigo).where(Amigo.amigo == amigo_exclui, Amigo.amigo_de == cliente_id)
     )
