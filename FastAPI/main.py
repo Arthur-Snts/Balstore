@@ -149,6 +149,10 @@ def busca_loja(loj_email: str = None, loj_senha: str=None, session: SessionDep= 
 
         if check_password_hash(loja.senha, loj_senha):
             raise HTTPException(401, "Senha incorreta")
+    if loj_email:
+        loja = session.exec(
+            select(Loja).where(Loja.email == loj_email)
+        ).first()   
     if loj_nome:
         loja = session.exec(
             select(Loja).where(Loja.nome.contains(loj_nome))
@@ -316,7 +320,7 @@ def deleta_produto(loja_id:int,pro_id:int=None, pro_nome: str=None, session: Ses
 # ------------------------------------------------------------------------------
 # UPDATE
 @app.put("/produto/{pro_id}")
-def atualiza_produto(pro_id:int,pro_nome:str=None, pro_categoria:str=None, pro_estoque:int=None, pro_imagem:LargeBinary =None, session: SessionDep = Depends(get_session)):
+def atualiza_produto(pro_id:int,pro_preco:float=None,pro_nome:str=None, pro_categoria:str=None, pro_estoque:int=None, pro_imagem:LargeBinary =None, session: SessionDep = Depends(get_session)):
 
 
     produto = session.get(Produto, pro_id)
@@ -336,6 +340,8 @@ def atualiza_produto(pro_id:int,pro_nome:str=None, pro_categoria:str=None, pro_e
         produto.estoque = pro_estoque
     if pro_imagem:
         produto.imagem = pro_imagem
+    if pro_preco:
+        produto.preco = pro_preco
 
     session.add(produto)
     session.commit()
@@ -349,20 +355,35 @@ def atualiza_produto(pro_id:int,pro_nome:str=None, pro_categoria:str=None, pro_e
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # ------------------------------------------------------------------------------
 # GET
-@app.get("/carrinho/{cliente_id}")
-def pega_carrinho(cliente_id:int, session: SessionDep = Depends(get_session)):
+@app.get("/carrinho")
+def pega_carrinho(cli_id:int = None, cli_email:str = None, session: SessionDep = Depends(get_session)):
 
-    carrinho = session.exec(
-        select(Carrinho).where(Carrinho.cliente_id == cliente_id)
-    ).all()
+    if cli_id:
+        carrinho = session.exec(
+            select(Carrinho).where(Carrinho.cliente_id == cli_id)
+        ).all()
+
+        carrinho_total = session.exec(
+            select(Carrinho, Produto).where(Carrinho.cliente_id == cli_id, Produto.id == Carrinho.produto_id)
+        )
+
+    if cli_email:
+        cliente = session.exec(
+            select(Cliente).where(Cliente.email == cli_email)
+        ).first()
+
+        carrinho = session.exec(
+            select(Carrinho).where(Carrinho.cliente_id == cliente.id)
+        ).all()
+
+        carrinho_total = session.exec(
+            select(Carrinho, Produto).where(Carrinho.cliente_id == cliente.id, Produto.id == Carrinho.produto_id)
+        )
+
 
     if not carrinho:
         raise HTTPException(400, "Carrinho do Cliente vazio")
     
-    carrinho_total = session.exec(
-        select(Carrinho, Produto).where(Carrinho.cliente_id == cliente_id, Produto.id == Carrinho.produto_id)
-    )
-
     return carrinho_total
 # ------------------------------------------------------------------------------
 # POST
@@ -384,11 +405,23 @@ def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep = Depends(get
 
 # ------------------------------------------------------------------------------
 # DELETE
-@app.delete("/carrinho/{cliente_id}")
-def deleta_carrinho(produto_id: int, session: SessionDep = Depends(get_session), cliente_id:int):
-    carrinho_deletado = session.exec(
-        select(Carrinho).where(Carrinho.produto_id == produto_id, Carrinho.cliente_id == cliente_id)
-    )
+@app.delete("/carrinho")
+def deleta_carrinho(pro_id: int= None, session: SessionDep = Depends(get_session), cli_id:int = None, cli_email:str = None, pro_nome:str = None, pro_loja:str = None):
+    if pro_id and cli_id:
+        carrinho_deletado = session.exec(
+            select(Carrinho).where(Carrinho.produto_id == pro_id, Carrinho.cliente_id == cli_id)
+        ).first()
+    if cli_email and pro_nome and pro_loja:
+        cliente = session.exec(
+            select(Cliente).where(Cliente.email == cli_email)
+        ).first()
+        produto = session.exec(
+            select(Produto, Loja).where(Produto.nome == pro_nome, Produto.loja_id == Loja.id, Loja.nome == pro_loja)
+        ).first()
+        carrinho_deletado = session.exec(
+            select(Carrinho).where(Carrinho.produto_id == produto.id, Carrinho.cliente_id == cliente.id)
+        ).first()
+
 
     if not carrinho_deletado:
         raise HTTPException(404, "Produto não encontrado no carrinho desse Cliente")
@@ -400,23 +433,35 @@ def deleta_carrinho(produto_id: int, session: SessionDep = Depends(get_session),
 
 # ------------------------------------------------------------------------------
 # PUT
-@app.put("/carrinho/{cliente_id}")
-def atualiza_carrinho(produto_id: int, session: SessionDep = Depends(get_session), cliente_id:int, quantidade_nova: int):
+@app.put("/carrinho")
+def atualiza_carrinho( qnt_nova: int, pro_id: int = None, session: SessionDep = Depends(get_session), cli_id:int = None, cli_email:str = None, pro_nome:str = None, pro_loja:str = None):
 
-    carrinho_atualizar = session.exec(
-        select(Carrinho).where(Carrinho.produto_id == produto_id, Carrinho.cliente_id == cliente_id)
-    )
+    if pro_id and cli_id:
+        carrinho_atualizar = session.exec(
+            select(Carrinho).where(Carrinho.produto_id == pro_id, Carrinho.cliente_id == cli_id)
+        ).first()
+    if cli_email and pro_nome and pro_loja:
+        cliente = session.exec(
+            select(Cliente).where(Cliente.email == cli_email)
+        ).first()
+        produto = session.exec(
+            select(Produto, Loja).where(Produto.nome == pro_nome, Produto.loja_id == Loja.id, Loja.nome == pro_loja)
+        ).first()
+        carrinho_atualizar = session.exec(
+            select(Carrinho).where(Carrinho.produto_id == produto.id, Carrinho.cliente_id == cliente.id)
+        ).first()
+
 
     if not carrinho_atualizar:
         raise HTTPException(404, "Produto não encontrado no carrinho desse Cliente")
-    
-    carrinho_atualizar.qnt_produto = quantidade_nova
+
+    carrinho_atualizar.qnt_produto = qnt_nova
 
     session.add(carrinho_atualizar)
     session.commit()
     session.refresh(carrinho_atualizar)
 
-    return {"mensagem": "Carrinho editado com sucesso", "Quantidade Nova": quantidade_nova}
+    return {"mensagem": "Carrinho editado com sucesso", "Quantidade Nova": qnt_nova}
 
 # ------------------------------------------------------------------------------
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
