@@ -1,4 +1,4 @@
-from models import Categoria, Produto, Favorito, Cliente, Carrinho, Amigo, Loja, Comentario
+from models import Categoria, Produto, Favorito, Cliente, Carrinho, Amigo, Loja, Comentario, Endereco
 from config import app, engine
 from sqlmodel import SQLModel, Session, select
 from fastapi import HTTPException, Depends
@@ -54,7 +54,7 @@ def busca_cliente(cli_email: str = None, cli_senha: str = None, session: Session
 # ------------------------------------------------------------------------------
 # CADASTRO
 @app.post("/cliente")
-def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep = Depends(get_session)):
+def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
 
     cliente_existente = session.exec(
         select(Cliente).where(Cliente.email == cliente_cadastra.email)
@@ -82,24 +82,9 @@ def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep = Depends(ge
 # ------------------------------------------------------------------------------
 # DELETE
 @app.delete("/cliente")
-def deleta_cliente(cli_id: int = None, session: SessionDep = Depends(get_session), cli_nome:str = None, cli_cpf:str = None, cli_email:str = None):
+def deleta_cliente(cli_id: int, session: SessionDep):
     
-    if cli_id:
-        cliente = session.get(Cliente, cli_id)
-    if cli_cpf:
-        cliente = session.exec(
-            select(Cliente).where(Cliente.cpf == cli_cpf)
-        ).first()
-    if cli_email:
-        cliente = session.exec(
-            select(Cliente).where(Cliente.email == cli_email)
-        ).first()
-    if cli_nome:
-        cliente = session.exec(
-            select(Cliente).where(Cliente.nome.contains(cli_nome))
-        ).all()
-        if len(cliente)>1:
-            raise HTTPException(404, "Mais de um Cliente com esse Nome, Verifique por outra Informação")
+    cliente = session.get(Cliente, cli_id)
 
     if not cliente:
         raise HTTPException(404, "Perfil não encontrado")
@@ -197,25 +182,10 @@ def cadastra_loja(loja_cadastra: Loja, session: SessionDep = Depends(get_session
 
 # ------------------------------------------------------------------------------
 # DELETE
-@app.delete("/loja")
-def deleta_loja(loj_id: int = None, session: SessionDep = Depends(get_session), loj_nome:str = None, loj_cnpj:str = None, loj_email:str = None):
+@app.delete("/loja/{loj_id}")
+def deleta_loja(loj_id: int, session: SessionDep):
     
-    if loj_id:
-        loja = session.get(Loja, loj_id)
-    if loj_cnpj:
-        loja = session.exec(
-            select(Loja).where(Loja.cnpj == loj_cnpj)
-        ).first()
-    if loj_email:
-        loja = session.exec(
-            select(Loja).where(Loja.email == loj_email)
-        ).first()
-    if loj_nome:
-        loja = session.exec(
-            select(Loja).where(Loja.nome.contains(loj_nome))
-        ).all()
-        if len(loja)>1:
-            raise HTTPException(404, "Mais de uma Loja com esse Nome, Verifique por outra Informação")
+    loja = session.get(Loja, loj_id)
 
     if not loja:
         raise HTTPException(404, "Loja não encontrada")
@@ -278,7 +248,7 @@ def busca_produto(loj_id:int=None, pro_id:int=None, pro_nome:str=None, pro_categ
 # ------------------------------------------------------------------------------
 # CADASTRO
 @app.post("/produto")
-def cadastra_produto(produto_cadastra: Produto, session: SessionDep= Depends(get_session)):
+def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
 
     produto_existente = session.exec(
         select(Produto).where(Produto.nome == produto_cadastra.nome, Produto.loja_id == produto_cadastra.loja_id)
@@ -295,22 +265,15 @@ def cadastra_produto(produto_cadastra: Produto, session: SessionDep= Depends(get
 
 # ------------------------------------------------------------------------------
 # DELETE
-@app.delete("/produto/{loja_id}")
-def deleta_produto(loja_id:int,pro_id:int=None, pro_nome: str=None, session: SessionDep= Depends(get_session)):
-    if pro_nome:
-        produto = session.exec(
-            select(Produto).where(Produto.nome == pro_nome, Produto.loja_id == loja_id)
-        ).first()
+@app.delete("/produto/{pro_id}")
+def deleta_produto(pro_id:int, session: SessionDep):
+  
+    produto = session.exec(
+        select(Produto).where(Produto.id == pro_id)
+    ).first()
 
-        if not produto:
-            raise HTTPException(404, "Produto não encontrado")
-    if pro_id:
-        produto = session.exec(
-            select(Produto).where(Produto.id == pro_id, Produto.loja_id == loja_id)
-        ).first()
-
-        if not produto:
-            raise HTTPException(404, "Produto não encontrado")
+    if not produto:
+        raise HTTPException(404, "Produto não encontrado")
 
     session.delete(produto)
     session.commit()
@@ -355,31 +318,16 @@ def atualiza_produto(pro_id:int,pro_preco:float=None,pro_nome:str=None, pro_cate
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # ------------------------------------------------------------------------------
 # GET
-@app.get("/carrinho")
-def pega_carrinho(cli_id:int = None, cli_email:str = None, session: SessionDep = Depends(get_session)):
+@app.get("/carrinho/{cli_id}")
+def pega_carrinho(cli_id:int, session: SessionDep = Depends(get_session)):
 
-    if cli_id:
-        carrinho = session.exec(
-            select(Carrinho).where(Carrinho.cliente_id == cli_id)
-        ).all()
+    carrinho = session.exec(
+        select(Carrinho).where(Carrinho.cliente_id == cli_id)
+    ).all()
 
-        carrinho_total = session.exec(
-            select(Carrinho, Produto).where(Carrinho.cliente_id == cli_id, Produto.id == Carrinho.produto_id)
-        )
-
-    if cli_email:
-        cliente = session.exec(
-            select(Cliente).where(Cliente.email == cli_email)
-        ).first()
-
-        carrinho = session.exec(
-            select(Carrinho).where(Carrinho.cliente_id == cliente.id)
-        ).all()
-
-        carrinho_total = session.exec(
-            select(Carrinho, Produto).where(Carrinho.cliente_id == cliente.id, Produto.id == Carrinho.produto_id)
-        )
-
+    carrinho_total = session.exec(
+        select(Carrinho, Produto).where(Carrinho.cliente_id == cli_id, Produto.id == Carrinho.produto_id)
+    ).all()
 
     if not carrinho:
         raise HTTPException(400, "Carrinho do Cliente vazio")
@@ -388,7 +336,7 @@ def pega_carrinho(cli_id:int = None, cli_email:str = None, session: SessionDep =
 # ------------------------------------------------------------------------------
 # POST
 @app.post("/carrinho")
-def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep = Depends(get_session)):
+def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep):
 
     carrinho_existente = session.exec(
         select(Carrinho).where(Carrinho.produto_id == carrinho_cadastra.produto_id, Carrinho.cliente_id == carrinho_cadastra.cliente_id)
@@ -406,22 +354,11 @@ def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep = Depends(get
 # ------------------------------------------------------------------------------
 # DELETE
 @app.delete("/carrinho")
-def deleta_carrinho(pro_id: int= None, session: SessionDep = Depends(get_session), cli_id:int = None, cli_email:str = None, pro_nome:str = None, pro_loja:str = None):
-    if pro_id and cli_id:
-        carrinho_deletado = session.exec(
-            select(Carrinho).where(Carrinho.produto_id == pro_id, Carrinho.cliente_id == cli_id)
-        ).first()
-    if cli_email and pro_nome and pro_loja:
-        cliente = session.exec(
-            select(Cliente).where(Cliente.email == cli_email)
-        ).first()
-        produto = session.exec(
-            select(Produto, Loja).where(Produto.nome == pro_nome, Produto.loja_id == Loja.id, Loja.nome == pro_loja)
-        ).first()
-        carrinho_deletado = session.exec(
-            select(Carrinho).where(Carrinho.produto_id == produto.id, Carrinho.cliente_id == cliente.id)
-        ).first()
+def deleta_carrinho(pro_id: int, session: SessionDep, cli_id:int):
 
+    carrinho_deletado = session.exec(
+        select(Carrinho).where(Carrinho.produto_id == pro_id, Carrinho.cliente_id == cli_id)
+    ).first()
 
     if not carrinho_deletado:
         raise HTTPException(404, "Produto não encontrado no carrinho desse Cliente")
@@ -433,24 +370,13 @@ def deleta_carrinho(pro_id: int= None, session: SessionDep = Depends(get_session
 
 # ------------------------------------------------------------------------------
 # PUT
-@app.put("/carrinho")
-def atualiza_carrinho( qnt_nova: int, pro_id: int = None, session: SessionDep = Depends(get_session), cli_id:int = None, cli_email:str = None, pro_nome:str = None, pro_loja:str = None):
+@app.put("/carrinho/{cli_id}")
+def atualiza_carrinho(qnt_nova: int, pro_id: int, session: SessionDep, cli_id:int):
 
-    if pro_id and cli_id:
-        carrinho_atualizar = session.exec(
-            select(Carrinho).where(Carrinho.produto_id == pro_id, Carrinho.cliente_id == cli_id)
-        ).first()
-    if cli_email and pro_nome and pro_loja:
-        cliente = session.exec(
-            select(Cliente).where(Cliente.email == cli_email)
-        ).first()
-        produto = session.exec(
-            select(Produto, Loja).where(Produto.nome == pro_nome, Produto.loja_id == Loja.id, Loja.nome == pro_loja)
-        ).first()
-        carrinho_atualizar = session.exec(
-            select(Carrinho).where(Carrinho.produto_id == produto.id, Carrinho.cliente_id == cliente.id)
-        ).first()
 
+    carrinho_atualizar = session.exec(
+        select(Carrinho).where(Carrinho.produto_id == pro_id, Carrinho.cliente_id == cli_id)
+    ).first()
 
     if not carrinho_atualizar:
         raise HTTPException(404, "Produto não encontrado no carrinho desse Cliente")
@@ -469,11 +395,13 @@ def atualiza_carrinho( qnt_nova: int, pro_id: int = None, session: SessionDep = 
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # ------------------------------------------------------------------------------
 # GET
-@app.get("/amigo/{cliente_id}")
-def pega_amigos(cliente_id:int, session: SessionDep = Depends(get_session)):
+@app.get("/amigo/{cli_id}")
+def pega_amigos(cli_id:int, session: SessionDep):
 
+
+   
     amigos = session.exec(
-        select(Amigo, Cliente).where(Amigo.amigo_de == cliente_id, Cliente.id == Amigo.amigo)
+        select(Amigo, Cliente).where(Amigo.amigo_de == cli_id, Cliente.id == Amigo.amigo)
     ).all()
 
     if not amigos:
@@ -487,17 +415,17 @@ def pega_amigos(cliente_id:int, session: SessionDep = Depends(get_session)):
     return lista
 # ------------------------------------------------------------------------------
 # POST
-@app.post("/amigo/{cliente_id}")
-def adiciona_amigo(amigo:Amigo, session:SessionDep = Depends(get_session), cliente_id:int):
+@app.post("/amigo/{cli_id}")
+def adiciona_amigo(amigo:Amigo, session:SessionDep, cli_id:int):
 
     amizade_existente = session.exec(
-        select(Amigo).where(Amigo.amigo_de == cliente_id, Amigo.amigo == amigo.amigo)
+        select(Amigo).where(Amigo.amigo_de == cli_id, Amigo.amigo == amigo.amigo)
     ).first()
 
     if amizade_existente:
         raise HTTPException(400, "Amizade já existe com esses usuários")
 
-    amizade_inversa = Amigo(id=amigo.id+1, amigo=cliente_id, amigo_de=amigo.amigo)
+    amizade_inversa = Amigo(id=amigo.id+1, amigo=cli_id, amigo_de=amigo.amigo)
 
     session.add(amigo)
     session.commit()
@@ -511,11 +439,11 @@ def adiciona_amigo(amigo:Amigo, session:SessionDep = Depends(get_session), clien
 
 # ------------------------------------------------------------------------------
 # DELETE
-@app.delete("/amigo/{cliente_id}")
-def desfaz_amizade(session: SessionDep = Depends(get_session), cliente_id:int, amigo_exclui:int):
+@app.delete("/amigo/{cli_id}")
+def desfaz_amizade(session: SessionDep, cli_id:int, amigo_exclui:int):
     amigo_deletado = session.exec(
-        select(Amigo).where(Amigo.amigo == amigo_exclui, Amigo.amigo_de == cliente_id)
-    )
+        select(Amigo).where(Amigo.amigo == amigo_exclui, Amigo.amigo_de == cli_id)
+    ).first()
 
     if not amigo_deletado:
         raise HTTPException(404, "Amigo não encontrado nas amizades desse Cliente")
@@ -527,6 +455,122 @@ def desfaz_amizade(session: SessionDep = Depends(get_session), cliente_id:int, a
 
 # ------------------------------------------------------------------------------
 # PUT
+@app.put("/amigo/{cli_id}")
+def atualiza_amizade(session: SessionDep, cli_id:int, status_novo:str, amigo_id:int):
+    amigo_atualizar = session.exec(
+        select(Amigo).where(Amigo.amigo == amigo_id, Amigo.amigo_de == cli_id)
+    ).first()
 
+    if not amigo_atualizar:
+        raise HTTPException(404, "Amigo não encontrado nas amizades desse Cliente")
+    
+    amigo_atualizar.solicitacao = status_novo
 
+    session.add(amigo_atualizar)
+    session.commit()
+    session.refresh(amigo_atualizar)
 
+    return {"mensagem": "Amigo atualizado com sucesso desse Cliente"}
+
+# ------------------------------------------------------------------------------
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                        #Endereço
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# ------------------------------------------------------------------------------
+# GET
+@app.get("/endereco")
+def pega_enderecos(session: SessionDep, cli_id:int = None,loj_id:int = None):
+
+    if loj_id:
+        enderecos = session.exec(
+            select(Endereco).where(Endereco.loj_id == loj_id)
+        ).first()
+
+        if not enderecos:
+            raise HTTPException(400, "Loja sem Endereço")
+
+    if cli_id:
+        enderecos = session.exec(
+            select(Endereco).where(Endereco.cli_id == cli_id)
+        ).all()
+
+        if not enderecos:
+            raise HTTPException(400, "Cliente sem Enderecos")
+
+    return enderecos
+
+# ------------------------------------------------------------------------------
+# POST
+
+@app.post("/endereco")
+def cadastra_enderecos(session: SessionDep, endereco:Endereco):
+
+    if endereco.cli_id:
+        endereco_existente = session.exec(
+            select(Endereco).where(Endereco.cli_id == endereco.cli_id, Endereco.rua == endereco.rua, Endereco.numero == endereco.numero)
+        ).first()
+
+        if endereco_existente:
+            raise HTTPException(400, "Endereços já cadastrado nesse Cliente")
+    if endereco.loj_id:
+        endereco_existente = session.exec(
+            select(Endereco).where(Endereco.loj_id == endereco.loj_id, Endereco.rua == endereco.rua, Endereco.numero == endereco.numero)
+        ).first()
+
+        if endereco_existente:
+            raise HTTPException(400, "Endereços já cadastrado nessa Loja")
+
+    session.add(endereco)
+    session.commit()
+    session.refresh(endereco)
+
+    return {"mensagem": "Endereço cadastrado com Sucesso", "Endereco": endereco}
+
+# ------------------------------------------------------------------------------
+# PUT
+@app.put("/endereco")
+def atualiza_endereco(session: SessionDep,end_id:int, rua: str =None, numero: str = None, bairro: str = None, cidade: str = None, estado:str = None, CEP:str = None):
+    
+    endereco_atualizar = session.exec(
+        select(Endereco).where(Endereco.id == end_id)
+    ).first()
+
+    if not endereco_atualizar:
+        raise HTTPException(404, "Endereço não encontrado")
+    
+    if rua:
+        endereco_atualizar.rua = rua
+    if numero:
+        endereco_atualizar.numero = numero 
+    if bairro:
+        endereco_atualizar.bairro = bairro 
+    if cidade:
+        endereco_atualizar.cidade = cidade 
+    if estado:
+        endereco_atualizar.estado = estado 
+    if CEP:
+        endereco_atualizar.CEP = CEP 
+
+    session.add(endereco_atualizar)
+    session.commit()
+    session.refresh(endereco_atualizar)
+
+    return {"mensagem": "Endereço atualizado com sucesso!"}
+
+# ------------------------------------------------------------------------------
+# DELETE
+
+@app.delete("/endereco")
+def deleta_enderecos(session: SessionDep,end_id:int):
+
+    endereco_deletado = session.exec(
+        select(Endereco).where(Endereco.id == end_id)
+    ).first()
+
+    if not endereco_deletado:
+        raise HTTPException(404, "Endereço não encontrado!")
+
+    session.delete(endereco_deletado)
+    session.commit()
+
+    return {"mensagem": "Endereço deletado com sucesso!"}

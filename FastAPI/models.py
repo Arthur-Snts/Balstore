@@ -39,9 +39,6 @@ class Produto(SQLModel, table=True):
     carrinhos: list["Carrinho"] = Relationship(back_populates="produto")
 
 
-
-
-
 class Cliente(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nome: str = Field(index=False)
@@ -52,6 +49,18 @@ class Cliente(SQLModel, table=True):
     favoritos: list["Favorito"] = Relationship(back_populates="cliente")
     carrinhos: list["Carrinho"] = Relationship(back_populates="cliente")
     comentarios: list["Comentario"] = Relationship(back_populates="cliente")
+    enderecos: list["Endereco"] = Relationship(back_populates="cliente")
+
+class Endereco (SQLModel, table=True):
+    id:Optional[int] = Field(default=None, primary_key=True)
+    rua: str = Field(index=False)
+    numero: str = Field(index=False)
+    bairro: str = Field(index=False)
+    cidade: str = Field(index=False)
+    estado: str = Field(index=False)
+    CEP: str = Field(index=False)
+    cli_id: Optional[int] = Field(foreign_key="cliente.id")
+    loj_id: Optional[int] = Field(foreign_key="loja.id")
 
 
 class Favorito(SQLModel, table=True):
