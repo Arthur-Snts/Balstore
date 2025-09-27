@@ -18,7 +18,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 # ------------------------------------------------------------------------------
 # LOGIN
 @app.get("/cliente")
-def busca_cliente(session: SessionDep, cli_email: str = None, cli_senha: str = None, cli_nome:str=None, cli_cpf:str=None):
+def busca_ou_login_cliente(session: SessionDep, cli_email: str = None, cli_senha: str = None, cli_nome:str=None, cli_cpf:str=None):
 
     cliente = None
     if cli_email and cli_senha:
@@ -83,7 +83,7 @@ def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # DELETE
-@app.delete("/cliente")
+@app.delete("/cliente/{cli_id}")
 def deleta_cliente(cli_id: int, session: SessionDep):
     
     cliente = session.get(Cliente, cli_id)
@@ -124,7 +124,7 @@ def atualiza_cliente(session: SessionDep,cli_id:int,cli_nome:str=None, cli_email
 # ------------------------------------------------------------------------------
 # LOGIN
 @app.get("/loja")
-def busca_loja(session: SessionDep,loj_email: str = None, loj_senha: str=None, loj_nome:str=None, loj_cnpj:str = None, loj_id:int = None):
+def busca_ou_login_loja(session: SessionDep,loj_email: str = None, loj_senha: str=None, loj_nome:str=None, loj_cnpj:str = None, loj_id:int = None):
 
     if loj_email and loj_senha:
         loja = session.exec(
@@ -355,11 +355,11 @@ def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep):
 
 # ------------------------------------------------------------------------------
 # DELETE
-@app.delete("/carrinho")
-def deleta_carrinho(pro_id: int, session: SessionDep, cli_id:int):
+@app.delete("/carrinho/{car_id}")
+def deleta_carrinho(car_id: int, session: SessionDep):
 
     carrinho_deletado = session.exec(
-        select(Carrinho).where(Carrinho.produto_id == pro_id, Carrinho.cliente_id == cli_id)
+        select(Carrinho).where(Carrinho.id == car_id)
     ).first()
 
     if not carrinho_deletado:
@@ -372,12 +372,12 @@ def deleta_carrinho(pro_id: int, session: SessionDep, cli_id:int):
 
 # ------------------------------------------------------------------------------
 # PUT
-@app.put("/carrinho/{cli_id}")
-def atualiza_carrinho(qnt_nova: int, pro_id: int, session: SessionDep, cli_id:int):
+@app.put("/carrinho/{car_id}")
+def atualiza_carrinho(qnt_nova: int, session: SessionDep, car_id:int):
 
 
     carrinho_atualizar = session.exec(
-        select(Carrinho).where(Carrinho.produto_id == pro_id, Carrinho.cliente_id == cli_id)
+        select(Carrinho).where(Carrinho.id == car_id)
     ).first()
 
     if not carrinho_atualizar:
