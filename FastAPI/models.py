@@ -1,6 +1,6 @@
 from typing import Optional
 from sqlmodel import SQLModel, Field, Relationship
-from sqlalchemy import LargeBinary, Column, String
+from sqlalchemy import Column, String
 
 
 class Categoria(SQLModel, table=True):
@@ -24,7 +24,7 @@ class Produto(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nome: str = Field(index=False)
     estoque: int = Field(default=0, index=False)
-    imagem: bytes = Field(sa_column=Column(LargeBinary), index=False)
+    imagem: bytes = Field(index=False)
     preco:float = Field(index=False)
 
     categoria_id: int = Field(foreign_key="categoria.id")
@@ -91,7 +91,7 @@ class Amigo(SQLModel, table=True):
 
 class Comentario(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    conteudo: Optional[str] = Field(sa_column=Column(String(500)), index=False)
+    conteudo: Optional[str] = Field(sa_column=Column(String(500)))
     avaliacao: int = Field(index=False)
 
     cliente_id: int = Field(foreign_key="cliente.id")

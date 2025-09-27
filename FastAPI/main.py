@@ -1,9 +1,8 @@
 from models import Categoria, Produto, Favorito, Cliente, Carrinho, Amigo, Loja, Comentario, Endereco
 from config import app, engine
-from sqlmodel import SQLModel, Session, select
+from sqlmodel import Session, select
 from fastapi import HTTPException, Depends
 from typing import Annotated
-from sqlalchemy import LargeBinary
 from werkzeug.security import generate_password_hash, check_password_hash
 
 def get_session():
@@ -19,8 +18,9 @@ SessionDep = Annotated[Session, Depends(get_session)]
 # ------------------------------------------------------------------------------
 # LOGIN
 @app.get("/cliente")
-def busca_cliente(cli_email: str = None, cli_senha: str = None, session: SessionDep = Depends(get_session), cli_nome:str=None, cli_cpf:str=None):
+def busca_cliente(session: SessionDep, cli_email: str = None, cli_senha: str = None, cli_nome:str=None, cli_cpf:str=None):
 
+    cliente = None
     if cli_email and cli_senha:
 
         cliente = session.exec(
@@ -48,6 +48,8 @@ def busca_cliente(cli_email: str = None, cli_senha: str = None, session: Session
             select(Cliente).where(Cliente.cpf == cli_cpf)
         ).first()
 
+    if not cliente:
+        raise HTTPException(400, "Nenhum Parâmetro Passado")
 
     return cliente
 
@@ -97,7 +99,7 @@ def deleta_cliente(cli_id: int, session: SessionDep):
 # ------------------------------------------------------------------------------
 # UPDATE
 @app.put("/cliente/{cli_id}")
-def atualiza_cliente(cli_id:int,cli_nome:str=None, cli_email:str=None, cli_senha:str=None, session: SessionDep = Depends(get_session)):
+def atualiza_cliente(session: SessionDep,cli_id:int,cli_nome:str=None, cli_email:str=None, cli_senha:str=None):
 
     cliente = session.get(Cliente, cli_id)
     
@@ -122,7 +124,7 @@ def atualiza_cliente(cli_id:int,cli_nome:str=None, cli_email:str=None, cli_senha
 # ------------------------------------------------------------------------------
 # LOGIN
 @app.get("/loja")
-def busca_loja(loj_email: str = None, loj_senha: str=None, session: SessionDep= Depends(get_session), loj_nome:str=None, loj_cnpj:str = None, loj_id:id = None):
+def busca_loja(session: SessionDep,loj_email: str = None, loj_senha: str=None, loj_nome:str=None, loj_cnpj:str = None, loj_id:int = None):
 
     if loj_email and loj_senha:
         loja = session.exec(
@@ -156,7 +158,7 @@ def busca_loja(loj_email: str = None, loj_senha: str=None, session: SessionDep= 
 # ------------------------------------------------------------------------------
 # CADASTRO
 @app.post("/loja")
-def cadastra_loja(loja_cadastra: Loja, session: SessionDep = Depends(get_session)):
+def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
 
     loja_existente = session.exec(
         select(Loja).where(Loja.email == loja_cadastra.email)
@@ -198,7 +200,7 @@ def deleta_loja(loj_id: int, session: SessionDep):
 # ------------------------------------------------------------------------------
 # UPDATE
 @app.put("/loja/{loj_id}")
-def atualiza_loja(loj_id:int,loj_nome:str=None, loj_email:str=None, loj_senha:str=None, session: SessionDep = Depends(get_session)):
+def atualiza_loja(session: SessionDep,loj_id:int,loj_nome:str=None, loj_email:str=None, loj_senha:str=None):
 
     loja = session.get(loja, loj_id)
     
@@ -221,7 +223,7 @@ def atualiza_loja(loj_id:int,loj_nome:str=None, loj_email:str=None, loj_senha:st
 
 # ------------------------------------------------------------------------------
 @app.get("/produto")
-def busca_produto(loj_id:int=None, pro_id:int=None, pro_nome:str=None, pro_categoria:str=None, session: SessionDep = Depends(get_session)):
+def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome:str=None, pro_categoria:str=None):
 
     produtos = session.exec(select(Produto)).all()
 
@@ -283,7 +285,7 @@ def deleta_produto(pro_id:int, session: SessionDep):
 # ------------------------------------------------------------------------------
 # UPDATE
 @app.put("/produto/{pro_id}")
-def atualiza_produto(pro_id:int,pro_preco:float=None,pro_nome:str=None, pro_categoria:str=None, pro_estoque:int=None, pro_imagem:LargeBinary =None, session: SessionDep = Depends(get_session)):
+def atualiza_produto(session: SessionDep,pro_id:int,pro_preco:float=None,pro_nome:str=None, pro_categoria:str=None, pro_estoque:int=None, pro_imagem:bytes =None):
 
 
     produto = session.get(Produto, pro_id)
@@ -319,7 +321,7 @@ def atualiza_produto(pro_id:int,pro_preco:float=None,pro_nome:str=None, pro_cate
 # ------------------------------------------------------------------------------
 # GET
 @app.get("/carrinho/{cli_id}")
-def pega_carrinho(cli_id:int, session: SessionDep = Depends(get_session)):
+def pega_carrinho(cli_id:int, session: SessionDep):
 
     carrinho = session.exec(
         select(Carrinho).where(Carrinho.cliente_id == cli_id)
@@ -528,7 +530,7 @@ def cadastra_enderecos(session: SessionDep, endereco:Endereco):
 
 # ------------------------------------------------------------------------------
 # PUT
-@app.put("/endereco")
+@app.put("/endereco/{end_id}")
 def atualiza_endereco(session: SessionDep,end_id:int, rua: str =None, numero: str = None, bairro: str = None, cidade: str = None, estado:str = None, CEP:str = None):
     
     endereco_atualizar = session.exec(
@@ -560,7 +562,7 @@ def atualiza_endereco(session: SessionDep,end_id:int, rua: str =None, numero: st
 # ------------------------------------------------------------------------------
 # DELETE
 
-@app.delete("/endereco")
+@app.delete("/endereco/{end_id}")
 def deleta_enderecos(session: SessionDep,end_id:int):
 
     endereco_deletado = session.exec(
@@ -574,3 +576,143 @@ def deleta_enderecos(session: SessionDep,end_id:int):
     session.commit()
 
     return {"mensagem": "Endereço deletado com sucesso!"}
+
+# ------------------------------------------------------------------------------
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                        #Favoritos
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# ------------------------------------------------------------------------------
+# GET
+@app.get("/favorito/{cli_id}")
+def pega_favoritos(session: SessionDep, cli_id:int):
+
+    cliente = session.exec(
+        select(Cliente).where(Cliente.id == cli_id)
+    ).first()
+
+    if not cliente:
+        raise HTTPException(400, "Cliente não encontrado")
+
+    return cliente.favoritos
+
+# ------------------------------------------------------------------------------
+# POST
+
+@app.post("/favorito/{cli_id}")
+def cadastra_favoritos(session: SessionDep, cli_id:int, favorito_cadastro:Favorito):
+
+    favorito_existente = session.exec(
+        select(Favorito).where(Favorito.cliente_id == cli_id, Favorito.produto_id == favorito_cadastro.produto_id)
+    ).first()
+
+    if favorito_existente:
+        raise HTTPException(400, "Produto já favoritado por esse Cliente")
+
+    session.add(favorito_cadastro)
+    session.commit()
+    session.refresh(favorito_cadastro)
+
+    return {"mensagem": "Produto adicionado aos favoritos", "Favorito": favorito_cadastro}
+
+# ------------------------------------------------------------------------------
+# DELETE
+
+@app.delete("/favorito/{fav_id}")
+def deleta_favoritos(session: SessionDep,fav_id:int):
+
+    favorito_deletado = session.exec(
+        select(Favorito).where(Favorito.id == fav_id)
+    ).first()
+
+    if not favorito_deletado:
+        raise HTTPException(404, "Favorito não encontrado!")
+
+    session.delete(favorito_deletado)
+    session.commit()
+
+    return {"mensagem": "Favorito deletado com sucesso!"}
+
+
+# ------------------------------------------------------------------------------
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                        #Comentários
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# ------------------------------------------------------------------------------
+# GET
+@app.get("/comentario/{pro_id}")
+def pega_comentarios(session: SessionDep, pro_id:int, cli_id:int = None):
+
+    comentarios = session.exec(
+        select(Comentario).where(Comentario.produto_id == pro_id)
+    ).all()
+
+    if not comentarios:
+        raise HTTPException(400, "Produto sem Comentários")
+    
+    if cli_id:
+        comentarios = session.exec(
+            select(Comentario).where(Comentario.produto_id == pro_id, Comentario.cliente_id == cli_id)
+        ).first()
+
+    return comentarios
+
+# ------------------------------------------------------------------------------
+# POST
+
+@app.post("/comentario/{pro_id}")
+def cadastra_comentarios(session: SessionDep, pro_id:int, comentario_cadastro:Comentario, cli_id:int):
+
+    comentario_existente = session.exec(
+        select(Comentario).where(Comentario.produto_id == pro_id, Comentario.cliente_id == cli_id)
+    ).first()
+
+    if comentario_existente:
+        raise HTTPException(400, "Produto já comentado por esse Cliente")
+
+    session.add(comentario_cadastro)
+    session.commit()
+    session.refresh(comentario_cadastro)
+
+    return {"mensagem": "Comentário adicionado ao Produto", "comentario": comentario_cadastro}
+
+# ------------------------------------------------------------------------------
+# DELETE
+
+@app.delete("/comentario/{com_id}")
+def deleta_comentarios(session: SessionDep,com_id:int):
+
+    comentario_deletado = session.exec(
+        select(Comentario).where(Comentario.id == com_id)
+    ).first()
+
+    if not comentario_deletado:
+        raise HTTPException(404, "Comentario não encontrado!")
+
+    session.delete(comentario_deletado)
+    session.commit()
+
+    return {"mensagem": "Comentario deletado com sucesso!"}
+
+# ------------------------------------------------------------------------------
+# DELETE
+
+@app.put("/comentario/{com_id}")
+def atualiza_comentario(session: SessionDep,com_id:int, conteudo: str =None, avaliacao: int = None):
+    
+    comentario_atualizar = session.exec(
+        select(Comentario).where(Comentario.id == com_id)
+    ).first()
+
+    if not comentario_atualizar:
+        raise HTTPException(404, "Comentario não encontrado")
+    
+    if conteudo:
+        comentario_atualizar.conteudo = conteudo
+    if avaliacao:
+        comentario_atualizar.avaliacao = avaliacao 
+
+    session.add(comentario_atualizar)
+    session.commit()
+    session.refresh(comentario_atualizar)
+
+    return {"mensagem": "Comentario atualizado com sucesso!"}
