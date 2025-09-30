@@ -59,6 +59,7 @@ class Endereco (SQLModel, table=True):
     cidade: str = Field(index=False)
     estado: str = Field(index=False)
     CEP: str = Field(index=False)
+    cliente: "Cliente" = Relationship(back_populates="enderecos")
     cli_id: Optional[int] = Field(foreign_key="cliente.id")
     loj_id: Optional[int] = Field(foreign_key="loja.id")
 

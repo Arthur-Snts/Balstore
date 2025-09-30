@@ -77,7 +77,6 @@ def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
 
     session.add(cliente_cadastra)
     session.commit()
-    session.refresh(cliente_cadastra)
 
     return {"mensagem": "Perfil cadastrado com sucesso", "cliente": cliente_cadastra}
 
@@ -106,9 +105,12 @@ def atualiza_cliente(session: SessionDep,cli_id:int,cli_nome:str=None, cli_email
     if not cliente:
         raise HTTPException(404, "Perfil não encontrado pelo ID, Verifique a informação.")
 
-    cliente.nome = cli_nome
-    cliente.email = cli_email
-    cliente.senha = generate_password_hash(cli_senha)
+    if cli_nome:
+        cliente.nome = cli_nome
+    if cli_email:
+        cliente.email = cli_email
+    if cli_senha:
+        cliente.senha = generate_password_hash(cli_senha)
 
     session.add(cliente)
     session.commit()
@@ -207,9 +209,12 @@ def atualiza_loja(session: SessionDep,loj_id:int,loj_nome:str=None, loj_email:st
     if not loja:
         raise HTTPException(404, "Loja não encontrada pelo ID, Verifique a informação.")
 
-    loja.nome = loj_nome
-    loja.email = loj_email
-    loja.senha = generate_password_hash(loj_senha)
+    if loj_nome:
+        loja.nome = loj_nome
+    if loj_email:
+        loja.email = loj_email
+    if loj_senha:
+        loja.senha = generate_password_hash(loj_senha)
 
     session.add(loja)
     session.commit()
@@ -481,15 +486,7 @@ def atualiza_amizade(session: SessionDep, cli_id:int, status_novo:str, amigo_id:
 # ------------------------------------------------------------------------------
 # GET
 @app.get("/endereco")
-def pega_enderecos(session: SessionDep, cli_id:int = None,loj_id:int = None):
-
-    if loj_id:
-        enderecos = session.exec(
-            select(Endereco).where(Endereco.loj_id == loj_id)
-        ).first()
-
-        if not enderecos:
-            raise HTTPException(400, "Loja sem Endereço")
+def pega_enderecos(session: SessionDep, cli_id:int):
 
     if cli_id:
         enderecos = session.exec(
@@ -694,7 +691,7 @@ def deleta_comentarios(session: SessionDep,com_id:int):
     return {"mensagem": "Comentario deletado com sucesso!"}
 
 # ------------------------------------------------------------------------------
-# DELETE
+# PUT
 
 @app.put("/comentario/{com_id}")
 def atualiza_comentario(session: SessionDep,com_id:int, conteudo: str =None, avaliacao: int = None):
@@ -716,3 +713,4 @@ def atualiza_comentario(session: SessionDep,com_id:int, conteudo: str =None, ava
     session.refresh(comentario_atualizar)
 
     return {"mensagem": "Comentario atualizado com sucesso!"}
+
