@@ -13,7 +13,7 @@
 - get(“/produto”): Retorna de diferentes modos, os produtos, baseado no tanto de parâmetro passados  
 - post(“/produto”): Cadastra um Produto  
 - put(“/produto/{pro_id}”): Atualiza dados de um Produto  
-- delete(“/loja/{pro_id}”): Deleta um Produto
+- delete(“/produto/{pro_id}”): Deleta um Produto
 
 - get(“/carrinho/{cli_id}”): Retorna os Produtos no Carrinho de um Cliente  
 - delete(“/carrinho/{car_id}”): Deleta um Produto do Carrinho   
