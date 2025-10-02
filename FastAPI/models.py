@@ -26,6 +26,7 @@ class Produto(SQLModel, table=True):
     estoque: int = Field(default=0, index=False)
     imagem: bytes = Field(index=False)
     preco:float = Field(index=False)
+    promocao:int = Field(index=False)
 
     categoria_id: int = Field(foreign_key="categoria.id")
     categoria: "Categoria" = Relationship(back_populates="produtos")

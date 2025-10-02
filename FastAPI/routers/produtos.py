@@ -82,7 +82,7 @@ def deleta_produto(pro_id:int, session: SessionDep):
 # ------------------------------------------------------------------------------
 # UPDATE
 @router.put("/{pro_id}")
-def atualiza_produto(session: SessionDep,pro_id:int,pro_preco:float=None,pro_nome:str=None, pro_categoria:str=None, pro_estoque:int=None, pro_imagem:bytes =None):
+def atualiza_produto(session: SessionDep,pro_id:int,pro_preco:float=None,pro_nome:str=None, pro_categoria:str=None, pro_estoque:int=None, pro_imagem:bytes =None, pro_promocao:int = None):
 
 
     produto = session.get(Produto, pro_id)
@@ -104,6 +104,8 @@ def atualiza_produto(session: SessionDep,pro_id:int,pro_preco:float=None,pro_nom
         produto.imagem = pro_imagem
     if pro_preco:
         produto.preco = pro_preco
+    if pro_promocao:
+        produto.promocao = pro_promocao
 
     session.add(produto)
     session.commit()
