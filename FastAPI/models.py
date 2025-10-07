@@ -51,6 +51,7 @@ class Cliente(SQLModel, table=True):
     carrinhos: list["Carrinho"] = Relationship(back_populates="cliente")
     comentarios: list["Comentario"] = Relationship(back_populates="cliente")
     enderecos: list["Endereco"] = Relationship(back_populates="cliente")
+    presentes: list["Carrinho"] = Relationship(back_populates="cliente_presenteado")
 
 class Endereco (SQLModel, table=True):
     id:Optional[int] = Field(default=None, primary_key=True)
@@ -79,6 +80,9 @@ class Carrinho(SQLModel, table=True):
     cliente_id: int = Field(foreign_key="cliente.id")
     produto_id: int = Field(foreign_key="produto.id")
     qnt_produto: int = Field(default=1, index=False)
+    presente_para: Optional[int] = Field(default=None)
+
+    cliente_presenteado: "Cliente" = Relationship(back_populates="presentes")
 
     cliente: "Cliente" = Relationship(back_populates="carrinhos")
     produto: "Produto" = Relationship(back_populates="carrinhos")

@@ -20,7 +20,7 @@ router = APIRouter(prefix="/favoritos", tags=["favoritos"])
 # ------------------------------------------------------------------------------
 # GET
 @router.get("/{cli_id}")
-def pega_favoritos(session: SessionDep, cli_id:int):
+def pega_favoritos(session: SessionDep, cli_id:int, fav_id:int = None):
 
     cliente = session.exec(
         select(Cliente).where(Cliente.id == cli_id)
@@ -28,6 +28,10 @@ def pega_favoritos(session: SessionDep, cli_id:int):
 
     if not cliente:
         raise HTTPException(400, "Cliente não encontrado")
+    
+    if fav_id:
+        favorito = session.exec(select(Favorito).where(Favorito.id == fav_id))
+        return favorito
 
     return cliente.favoritos
 
