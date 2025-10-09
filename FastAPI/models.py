@@ -1,6 +1,7 @@
 from typing import Optional
 from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import Column, String
+from datetime import datetime
 
 
 class Categoria(SQLModel, table=True):
@@ -18,6 +19,7 @@ class Loja(SQLModel, table=True):
     descricao: Optional[str] = Field(default=None, index=False)
 
     produtos: list["Produto"] = Relationship(back_populates="loja")
+    notificacoes: list["Notificacao" = Relationship(back_populates="loja")]
 
 
 class Produto(SQLModel, table=True):
@@ -34,10 +36,14 @@ class Produto(SQLModel, table=True):
     loja_id: int = Field(foreign_key="loja.id")
     loja: "Loja" = Relationship(back_populates="produtos")
 
+    com_id: Optional[int] = Field(foreign_key="compra.id")
+    compra: "Compra" = Relationship(back_populates="produtos")
     
     comentarios: list["Comentario"] = Relationship(back_populates="produto")
     favoritos: list["Favorito"] = Relationship(back_populates="produto")
     carrinhos: list["Carrinho"] = Relationship(back_populates="produto")
+    notificacoes: list["Notificação"] = Relationship(back_populates="produto")
+    
 
 
 class Cliente(SQLModel, table=True):
@@ -52,6 +58,8 @@ class Cliente(SQLModel, table=True):
     comentarios: list["Comentario"] = Relationship(back_populates="cliente")
     enderecos: list["Endereco"] = Relationship(back_populates="cliente")
     presentes: list["Carrinho"] = Relationship(back_populates="cliente_presenteado")
+    compras: list["Compra"] = Relationship(back_populates="cliente")
+    notificacoes: list["Notificação"] = Relationship(back_populates="cliente")
 
 class Endereco (SQLModel, table=True):
     id:Optional[int] = Field(default=None, primary_key=True)
@@ -64,6 +72,8 @@ class Endereco (SQLModel, table=True):
     cliente: "Cliente" = Relationship(back_populates="enderecos")
     cli_id: Optional[int] = Field(foreign_key="cliente.id")
     loj_id: Optional[int] = Field(foreign_key="loja.id")
+
+    notificacoes: list["Notificação"] = Relationship(back_populates="cliente")
 
 
 class Favorito(SQLModel, table=True):
@@ -107,15 +117,27 @@ class Comentario(SQLModel, table=True):
     produto: "Produto" = Relationship(back_populates="comentarios")
 
 
+class Compra(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    valor:float = Field(index=False)
+    cliente_id: int = Field(foreign_key="cliente.id")
+    data: datetime = Field(default=datetime.utcnow,index=False)
+    situacao: str = Field(default="pendente", index=False)
+    cod_rastreio: Optional[int] = Field(index=False)
+
+    cliente: "Cliente" = Relationship(back_populates="compras")
+    produtos: "Produto" = Relationship(back_populates="compra")
 
 
+class Notificacao(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    end_id: Optional[int] = Field(foreign_key="endereco.id")
+    loj_id: int = Field(foreign_key="loja.id")
+    conteudo: Optional[str] = Field(sa_column=Column(String(500)))
+    cliente_id: int = Field(foreign_key="cliente.id")
+    produto_id: int = Field(foreign_key="produto.id")
 
-
-    
-
-
-
-
-
-
-
+    cliente: "Cliente" = Relationship(back_populates="notificacoes")
+    produto: "Produto" = Relationship(back_populates="notificacoes")
+    endereco: "Endereceo" = Relationship(back_populates="notificacoes")
+    loja: "Loja" = Relationship(back_populates="notificacoes")
