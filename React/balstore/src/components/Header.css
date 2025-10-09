@@ -1,0 +1,40 @@
+:root {
+    --amarelo: #f6d600;
+    --branco: #ffffff;
+    --azul-principal: #0c5e94;
+    --azul-escuro: #07304b;
+    --preto: #000000;
+    --cinza-input: #dbdfe4;
+    --cinza-texto: #737373;
+    --vermelho: #ff5757;
+}
+
+.header {
+    background-color: var(--azul-principal);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    box-sizing: border-box;
+  }
+
+.BAL-icon {
+  height: 50px;
+  width: auto;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--branco);
+    font-size: 18px;
+    font-weight: normal;
+    margin-right: 10px;
+}
+.nav-link:hover{
+    color: var(--amarelo);
+    font-size: 20px;
+    transition: 0.5s;
+}
+.active {
+    color: var(--amarelo);
+}
