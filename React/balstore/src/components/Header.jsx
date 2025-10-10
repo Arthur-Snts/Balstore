@@ -1,5 +1,8 @@
 import React from 'react';
-import './Header.css'
+import './Header.css';
+import Bal_Logo from '../assets/BALstore.png';
+import Carrinho from '../assets/carrinho-logo-balstore.png'
+
 
 export default function Header({status}) {
     return (
@@ -16,16 +19,20 @@ export default function Header({status}) {
 function GuestHeader() {
     return (
         <div className='container'>
-            <img src="" alt="BALSTORE_icon"  className='BAL-icon'/>
-            <input type="search" className='search-bar'/>
+            <img src={Bal_Logo} alt="BALSTORE_icon"  className='BAL-icon'/>
+            <div className='search'>
+                <i className="fa fa-search"></i>
+                <input type="search" className='search-bar' placeholder='Pesquisar...'/>
+            </div>
+            
             <nav>
                 <ul className='nav-list'>
-                    <li><a href="" className='nav-link active'>Sign up</a></li>
+                    <li><a href="" className='nav-link'>Sign up</a></li>
                     <li><a href="" className='nav-link'>Sign in</a></li>
                     <li><a href="" className='nav-link'>Sobre nós</a></li>
                 </ul>
             </nav>
-            <img src="" alt="BALSTORE_carrinho" className='BAL-carrinho'/>
+            <img src={Carrinho} alt="BALSTORE_carrinho" className='BAL-carrinho'/>
         </div>
     )
 };
@@ -33,16 +40,16 @@ function GuestHeader() {
 function CustomerHeader() {
     return (
         <div className='container'>
-        <img src="" alt="BALSTORE_icon" className='BAL-icon'/>
-        <input type="search" />
+        <img src={Bal_Logo} alt="BALSTORE_icon" className='BAL-icon'/>
+        <input type="search" className='search-bar' placeholder='Pesquisar...'/>
         <nav>
-            <ul>
+            <ul className='nav-list'>
                 <li><a href="" className='nav-link'>Perfil</a></li>
                 <li><a href="" className='nav-link'>Minha loja</a></li>
                 <li><a href="" className='nav-link'>Sobre nós</a></li>
             </ul>
         </nav>
-        <img src="" alt="BALSTORE_carrinho" className='BAL-carrinho'/>
+        <img src={Carrinho} alt="BALSTORE_carrinho" className='BAL-carrinho'/>
         </div>
     )
 };
@@ -50,9 +57,9 @@ function CustomerHeader() {
 function SellerHeader() {
     return (
         <div className='container'>
-        <img src="" alt="BALSTORE_icon" className='BAL-icon'/>
+        <img src={Bal_Logo} alt="BALSTORE_icon" className='BAL-icon'/>
         <nav>
-            <ul>
+            <ul className='nav-list'>
                 <li><a href="" className='nav-link'>Meus produtos</a></li>
                 <li><a href="" className='nav-link'>Pedidos</a></li>
                 <li><a href="" className='nav-link'>Configurações</a></li>
@@ -60,7 +67,7 @@ function SellerHeader() {
                 <li><a href="" className='nav-link'>Logout</a></li>
             </ul>
         </nav>
-        <img src="" alt="BALSTORE_carrinho" className='BAL-carrinho'/>
+        <img src={Carrinho} alt="BALSTORE_carrinho" className='BAL-carrinho'/>
         </div>
     )
 }
