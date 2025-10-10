@@ -126,7 +126,7 @@ class Compra(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     valor:float = Field(index=False)
     cliente_id: int = Field(foreign_key="cliente.id")
-    data: datetime = Field(default=datetime.utcnow,index=False)
+    data: datetime = Field(default_factory=datetime.utcnow,index=False)
     situacao: str = Field(default="Aguardando Pagamento", index=False)
     cod_rastreio: Optional[str] = Field(index=False)
 
