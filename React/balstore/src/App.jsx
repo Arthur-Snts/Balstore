@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Home from './components/Home';
 import About from './components/About';
 import Header from './components/Header'
+import CarouselBALSTORE from './components/carrossel';
 import Navigation from './components/Navigation'; // Seu componente de navegação
 
 function App() {
@@ -29,6 +30,8 @@ function App() {
         <button onClick={() => setUserStatus("guest")}>Deslogar</button>
         <button onClick={() => setUserStatus("customer")}>Logar como Usuário</button>
         <button onClick={() => setUserStatus("seller")}>Logar como Lojista</button>
+
+        <CarouselBALSTORE/>
       </main>
     </div>
   );
