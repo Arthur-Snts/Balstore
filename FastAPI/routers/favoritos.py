@@ -30,7 +30,7 @@ def pega_favoritos(session: SessionDep, cli_id:int, fav_id:int = None):
         raise HTTPException(400, "Cliente não encontrado")
     
     if fav_id:
-        favorito = session.exec(select(Favorito).where(Favorito.id == fav_id))
+        favorito = session.exec(select(Favorito).where(Favorito.id == fav_id)).first()
         return favorito
 
     return cliente.favoritos
