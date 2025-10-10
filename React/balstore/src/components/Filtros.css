@@ -1,0 +1,143 @@
+/* FiltrosDeProduto.css */
+
+/*
+  Ajustes básicos para simular o ambiente
+  Fontes como 'Segoe UI', 'Roboto', ou 'Arial' são geralmente usadas
+  para um visual limpo como o da imagem.
+*/
+.filtros-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 300px; /* Largura ajustável conforme sua necessidade */
+  padding: 20px;
+  background-color: #ffffff; /* Fundo branco, se necessário */
+  border: 1px solid #e0e0e0; /* Opcional: para delimitar o componente */
+}
+
+/* --- Cabeçalho de Filtros --- */
+
+.filtros-cabecalho {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.icone-filtro {
+  /* O ícone na imagem é um filtro, usei '☰' como placeholder */
+  /* No código real, você usaria uma biblioteca de ícones (ex: Font Awesome, Lucide) */
+  font-size: 20px;
+  margin-right: 10px;
+  color: #333;
+}
+
+.titulo-filtros {
+  font-size: 18px;
+  font-weight: 600; /* Um pouco mais encorpado */
+  color: #333;
+  margin: 0;
+  letter-spacing: 1.5px; /* Para dar a sensação de texto capitalizado e espaçado */
+}
+
+/* --- Seções (Categoria, Preço) --- */
+
+.subtitulo-filtro {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* --- Lista de Categorias --- */
+
+.lista-categorias {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-categoria {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Espaço entre os itens da lista */
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+}
+
+.checkbox-categoria input[type="checkbox"] {
+  /* Estilização do checkbox para se assemelhar ao padrão */
+  margin-right: 10px;
+  /* Personalização para navegadores WebKit (Chrome, Safari) */
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #aaa;
+  border-radius: 2px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+
+/* Estado de marcado (opcional) */
+.checkbox-categoria input[type="checkbox"]:checked {
+  background-color: #007bff; /* Cor azul de exemplo ao marcar */
+  border-color: #007bff;
+}
+/* Adicionar o 'check' visualmente, se desejar, mas vou manter simples */
+
+/* --- Separador Horizontal --- */
+
+.separador {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 30px 0; /* Espaço para simular o da imagem */
+}
+
+/* --- Filtro por Preço --- */
+
+.filtro-preco {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.input-preco {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 45%; /* Metade da largura total para os dois campos */
+  text-align: center;
+}
+
+.input-preco::placeholder {
+  color: #aaa;
+}
+
+.separador-preco {
+  /* O traço '—' entre os campos min/max */
+  display: block;
+  width: 10%;
+  text-align: center;
+  height: 1px;
+  background-color: #888;
+  margin: 0 5px;
+}
+
+/* --- Botão --- */
+
+.botao-confirmar {
+  width: 100%;
+  padding: 10px;
+  background-color: #1e6091; /* Azul escuro similar ao da imagem */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.botao-confirmar:hover {
+  background-color: #164f78;
+}
