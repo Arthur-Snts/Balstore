@@ -33,7 +33,10 @@ def busca_ou_login_loja(session: SessionDep,loj_email: str = None, loj_senha: st
             raise HTTPException(404, "Email inexistente")
 
         if check_password_hash(loja.senha, loj_senha):
-            raise HTTPException(401, "Senha incorreta")
+            return {"mensagem": "Login Realizado com Sucesso"}
+        else:
+            raise HTTPException(401, "Senha Incorreta")
+
     if loj_email:
         loja = session.exec(
             select(Loja).where(Loja.email == loj_email)
@@ -72,7 +75,7 @@ def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
     if loja_existente:
         raise HTTPException(400, "CNPJ já cadastrado")
 
-    loja_cadastra.senha = generate_password_hash(loja_cadastra.senha)
+    loja_cadastra.senha = generate_password_hash(loja_cadastra.senha, method="pbkdf2:sha256")
 
     session.add(loja_cadastra)
     session.commit()
@@ -100,7 +103,7 @@ def deleta_loja(loj_id: int, session: SessionDep):
 @router.put("/{loj_id}")
 def atualiza_loja(session: SessionDep,loj_id:int,loj_nome:str=None, loj_email:str=None, loj_senha:str=None):
 
-    loja = session.get(loja, loj_id)
+    loja = session.get(Loja, loj_id)
     
     if not loja:
         raise HTTPException(404, "Loja não encontrada pelo ID, Verifique a informação.")
@@ -110,7 +113,7 @@ def atualiza_loja(session: SessionDep,loj_id:int,loj_nome:str=None, loj_email:st
     if loj_email:
         loja.email = loj_email
     if loj_senha:
-        loja.senha = generate_password_hash(loj_senha)
+        loja.senha = generate_password_hash(loj_senha, method="pbkdf2:sha256")
 
     session.add(loja)
     session.commit()

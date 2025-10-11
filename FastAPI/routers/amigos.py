@@ -71,6 +71,7 @@ def adiciona_amigo(amigo:Amigo, session:SessionDep, cli_id:int):
 
 @router.delete("/{cli_id}")
 def desfaz_amizade(session: SessionDep, cli_id:int, amigo_exclui:int):
+
     amigo_deletado = session.exec(
         select(Amigo).where(Amigo.amigo == amigo_exclui, Amigo.amigo_de == cli_id)
     ).first()
@@ -79,6 +80,13 @@ def desfaz_amizade(session: SessionDep, cli_id:int, amigo_exclui:int):
         raise HTTPException(404, "Amigo não encontrado nas amizades desse Cliente")
 
     session.delete(amigo_deletado)
+    session.commit()
+
+    amigo_inverso_deletado = session.exec(
+        select(Amigo).where(Amigo.amigo == cli_id, Amigo.amigo_de == amigo_exclui)
+    ).first()
+
+    session.delete(amigo_inverso_deletado)
     session.commit()
 
     return {"mensagem": "Amigo deletado com sucesso desse Cliente"}

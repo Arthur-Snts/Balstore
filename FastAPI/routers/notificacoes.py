@@ -59,5 +59,35 @@ def cadastra_notificacao(session: SessionDep, notificacao_cadastra:Notificacao):
 # ------------------------------------------------------------------------------
 # PUT
 
+@router.put("/{not_id}")
+def atualiza_notificacao(session: SessionDep, status_novo: str, not_id: int):
+
+    notificacao_existente = session.exec(
+        select(Notificacao).where(Notificacao.id == not_id)
+    ).first()
+
+    if not notificacao_existente:
+        raise HTTPException(400, "Notificação não encontrada")
+    
+    notificacao_existente.status == status_novo
+
+    session.add(notificacao_existente)
+    session.commit()
+    session.refresh(notificacao_existente)
+
+    return {"mensagem": "Notificacao atualizada com sucesso", "Notificacao": notificacao_existente}
+
 # ------------------------------------------------------------------------------
 # DELETE
+
+@router.delete("/{not_id}")
+def deleta_notificacao(session:SessionDep, not_id:int):
+
+    notificacao = session.exec(
+        select(Notificacao).where(Notificacao.id == not_id)
+    ).first()
+
+    session.delete(notificacao)
+    session.commit()
+
+    return {"mensagem" : "Notificação deletada com sucesso"}

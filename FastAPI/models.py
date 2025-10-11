@@ -14,6 +14,7 @@ class Categoria(SQLModel, table=True):
 class Loja(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nome: str = Field(index=False)
+    email:str = Field(index=False)
     cnpj: str = Field(index=False, unique=True)
     senha: str = Field(index=False)  
     descricao: Optional[str] = Field(default=None, index=False)
@@ -71,7 +72,7 @@ class Endereco (SQLModel, table=True):
     cli_id: Optional[int] = Field(foreign_key="cliente.id")
     loj_id: Optional[int] = Field(foreign_key="loja.id")
 
-    notificacoes: list["Notificacao"] = Relationship(back_populates="cliente")
+    notificacoes: list["Notificacao"] = Relationship(back_populates="endereco")
 
 
 class Favorito(SQLModel, table=True):
@@ -139,8 +140,10 @@ class Notificacao(SQLModel, table=True):
     end_id: Optional[int] = Field(foreign_key="endereco.id")
     loj_id: int = Field(foreign_key="loja.id")
     conteudo: Optional[str] = Field(sa_column=Column(String(500)))
+    status: str = Field(index=False)
     cliente_id: int = Field(foreign_key="cliente.id")
     produto_id: int = Field(foreign_key="produto.id")
+    
 
     cliente: "Cliente" = Relationship(back_populates="notificacoes")
     produto: "Produto" = Relationship(back_populates="notificacoes")

@@ -47,7 +47,7 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
 # ------------------------------------------------------------------------------
 # CADASTRO
 @router.post("/")
-def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
+def cadastra_produto(produto_cadastra: Produto, session: SessionDep, imagem:bytes):
 
     produto_existente = session.exec(
         select(Produto).where(Produto.nome == produto_cadastra.nome, Produto.loja_id == produto_cadastra.loja_id)
@@ -55,6 +55,8 @@ def cadastra_produto(produto_cadastra: Produto, session: SessionDep):
 
     if produto_existente:
         raise HTTPException(400, "Nome já cadastrado nessa loja")
+    
+    produto_cadastra.imagem = imagem
 
     session.add(produto_cadastra)
     session.commit()

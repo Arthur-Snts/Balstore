@@ -10,23 +10,29 @@ app.include_router(router)
 
 from routers.amigos import router as amigos
 from routers.carrinhos import router as carrinhos
+from routers.categorias import router as categorias
 from routers.clientes import router as clientes
 from routers.comentarios import router as comentarios
+from routers.compras import router as compras
 from routers.enderecos import router as enderecos
 from routers.favoritos import router as favoritos
 from routers.lojas import router as lojas
+from routers.notificacoes import router as notificacoes
 from routers.produtos import router as produtos
-from routers.compras import router as compras
+
+
 
 
 app.include_router(amigos)
 app.include_router(carrinhos)
+app.include_router(categorias)
 app.include_router(clientes)
 app.include_router(comentarios)
 app.include_router(compras)
 app.include_router(enderecos)
 app.include_router(favoritos)
 app.include_router(lojas)
+app.include_router(notificacoes)
 app.include_router(produtos)
 
 

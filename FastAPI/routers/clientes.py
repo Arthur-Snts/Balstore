@@ -32,23 +32,31 @@ def busca_ou_login_cliente(session: SessionDep, cli_email: str = None, cli_senha
         if not cliente:
             raise HTTPException(404, "Email inexistente")
 
-        if not check_password_hash(cli_senha,cliente.senha):
-            raise HTTPException(401, "Senha incorreta")
+        if check_password_hash(cliente.senha, cli_senha):
+            return {"mensagem": "Login Realizado com Sucesso"}
+        else:
+            raise HTTPException(401, "Senha Incorreta")
     
     if cli_email:
         cliente = session.exec(
             select(Cliente).where(Cliente.email == cli_email)
         ).first()
+        if not cliente:
+            raise HTTPException(404, "Email inexistente")
 
     if cli_nome:
         cliente = session.exec(
             select(Cliente).where(Cliente.nome.contains(cli_nome))
         ).all()
+        if not cliente:
+            raise HTTPException(404, "Nenhum usuário que contenha esse trecho no nome")
 
     if cli_cpf:
         cliente = session.exec(
             select(Cliente).where(Cliente.cpf == cli_cpf)
         ).first()
+        if not cliente:
+            raise HTTPException(404, "CPF não existente no banco")
 
     if not cliente:
         raise HTTPException(400, "Nenhum Parâmetro Passado")
@@ -75,10 +83,13 @@ def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
     if cliente_existente:
         raise HTTPException(400, "CPF já cadastrado")
 
-    cliente_cadastra.senha = generate_password_hash(cliente_cadastra.senha)
+    cliente_cadastra.senha = generate_password_hash(cliente_cadastra.senha,method="pbkdf2:sha256")
 
+    
     session.add(cliente_cadastra)
     session.commit()
+    session.refresh(cliente_cadastra)
+    
 
     return {"mensagem": "Perfil cadastrado com sucesso", "cliente": cliente_cadastra}
 
@@ -112,7 +123,7 @@ def atualiza_cliente(session: SessionDep,cli_id:int,cli_nome:str=None, cli_email
     if cli_email:
         cliente.email = cli_email
     if cli_senha:
-        cliente.senha = generate_password_hash(cli_senha)
+        cliente.senha = generate_password_hash(cli_senha, method="pbkdf2:sha256")
 
     session.add(cliente)
     session.commit()
