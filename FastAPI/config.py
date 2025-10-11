@@ -16,7 +16,7 @@ async def lifespan(app:FastAPI):
     get_create_db()
     yield
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan,docs_url=None)
 
 app.add_middleware(
     CORSMiddleware,
