@@ -1,7 +1,8 @@
 import React from 'react';
 import './Header.css';
-import Bal_Logo from '../assets/BALstore.png';
-import Carrinho from '../assets/carrinho-logo-balstore.png'
+import "../Cores.css"
+import Bal_Logo from '../../assets/BALstore.png';
+import Carrinho from '../../assets/carrinho-logo-balstore.png'
 
 
 export default function Header({status}) {
