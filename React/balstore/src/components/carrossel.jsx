@@ -1,83 +1,84 @@
-import React from 'react';
-import './carrossel.css';
+import React, { useState } from 'react';
+import carouselData from './carrosselData';
 
-const Carrossel = () => {
+const Carousel = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handlePrev = () => {
+    setActiveIndex((prevIndex) => 
+      prevIndex === 0 ? carouselData .length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prevIndex) => 
+      prevIndex === carouselData .length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const goToSlide = (index) => {
+    setActiveIndex(index);
+  };
+
   return (
-    <div id="carouselBALSTORE" className="carousel slide" data-bs-ride="carousel">
+    <div id="carouselExampleIndicators" className="carousel slide">
+      {/* Indicadores */}
       <div className="carousel-indicators">
-        <button 
-          type="button" 
-          data-bs-target="#carouselBALSTORE" 
-          data-bs-slide-to="0" 
-          className="active" 
-          aria-current="true" 
-          aria-label="Slide 1"
-        ></button>
-        <button 
-          type="button" 
-          data-bs-target="#carouselBALSTORE" 
-          data-bs-slide-to="1" 
-          aria-label="Slide 2"
-        ></button>
-        <button 
-          type="button" 
-          data-bs-target="#carouselBALSTORE" 
-          data-bs-slide-to="2" 
-          aria-label="Slide 3"
-        ></button>
+        {carouselData .map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to={index}
+            className={index === activeIndex ? 'active' : ''}
+            aria-current={index === activeIndex ? 'true' : undefined}
+            aria-label={`Slide ${index + 1}`}
+            onClick={() => goToSlide(index)}
+          />
+        ))}
       </div>
 
+      {/* carouselData  */}
       <div className="carousel-inner">
-        <div className="carousel-item active">
-          <img 
-            src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80" 
-            alt="Promoção de Eletrônicos" 
-            className="carousel-image"
-          />
-          <div className="carousel-caption">
-            <h2>Ofertas Especiais</h2>
-            <p>Descontos incríveis em eletrônicos!</p>
-            <a href="#" className="btn btn-custom btn-lg">Ver Ofertas</a>
+        {carouselData .map((slide, index) => (
+          <div
+            key={index}
+            className={`carousel-item ${index === activeIndex ? 'active' : ''}`}
+          >
+            <img
+               src={slide.src}
+                className="d-block w-100"
+                alt={slide.alt}
+                style={{ height: '648px',width: '1000px', objectFit: 'cover' }}
+            />
           </div>
-        </div>
-
-        <div className="carousel-item">
-          <img 
-            src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1200&q=80" 
-            alt="Moda e Estilo" 
-            className="carousel-image"
-          />
-          <div className="carousel-caption">
-            <h2>Moda e Estilo</h2>
-            <p>As melhores tendências estão aqui</p>
-            <a href="#" className="btn btn-custom btn-lg">Explorar</a>
-          </div>
-        </div>
-
-        <div className="carousel-item">
-          <img 
-            src="https://images.unsplash.com/photo-1616628188464-8c144e2e38c2?auto=format&fit=crop&w=1200&q=80" 
-            alt="Casa e Decoração" 
-            className="carousel-image"
-          />
-          <div className="carousel-caption">
-            <h2>Casa & Decoração</h2>
-            <p>Deixe seu lar mais confortável</p>
-            <a href="#" className="btn btn-custom btn-lg">Comprar Agora</a>
-          </div>
-        </div>
+        ))}
       </div>
 
-      <button className="carousel-control-prev" type="button" data-bs-target="#carouselBALSTORE" data-bs-slide="prev">
+      {/* Controles de navegação */}
+      <button
+        className="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide="prev"
+        onClick={handlePrev}
+      >
         <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span className="visually-hidden">Anterior</span>
+        <span className="visually-hidden">Previous</span>
       </button>
-      <button className="carousel-control-next" type="button" data-bs-target="#carouselBALSTORE" data-bs-slide="next">
+      
+      <button
+        className="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide="next"
+        onClick={handleNext}
+      >
         <span className="carousel-control-next-icon" aria-hidden="true"></span>
-        <span className="visually-hidden">Próximo</span>
+        <span className="visually-hidden">Next</span>
       </button>
     </div>
   );
 };
 
-export default Carrossel;
+export default Carousel;
