@@ -5,7 +5,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 100px;
+    gap: 80px;
     width: 100%;
   }
 
@@ -39,17 +39,15 @@
   }
 
 nav{
-    width: 20%;
+    flex-grow: 0.4;
 }
 
 .nav-list {
     display: flex;
-    flex-direction: row;
     list-style-type: none;
-    align-self: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
-    gap: 10px;
+    gap: 10%;
     margin-top: 15px;
 }
 
