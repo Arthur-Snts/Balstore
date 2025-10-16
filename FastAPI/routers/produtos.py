@@ -46,6 +46,7 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
 
 # ------------------------------------------------------------------------------
 # CADASTRO
+# baixar arquivo (ex degravacao) e armazenar imagem numa pasta e armazenar o nome
 @router.post("/")
 def cadastra_produto(produto_cadastra: Produto, session: SessionDep, imagem:bytes):
 
