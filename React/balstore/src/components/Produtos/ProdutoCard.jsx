@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import './ProdutoCard.css';
-import guarana from '../assets/Guarana.png';
+import guarana from '../../assets/Guarana.png';
 
 export default function ProdutoCard() {
   return (
