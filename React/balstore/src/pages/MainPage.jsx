@@ -9,6 +9,7 @@ export default function MainPage() {
     return (
         <>
             <HeaderGuest/>
+                <br />
                 <Carrossel/>
                 <CategoriaButton/>
                 <CarrosselCategoria/>
