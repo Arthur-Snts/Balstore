@@ -53,6 +53,10 @@ footer {
     text-decoration: none;
 }
 
+.githubs .footer-list {
+    align-items: center;
+}
+
 .githubs {
     display: flex;
     flex-direction: column;
