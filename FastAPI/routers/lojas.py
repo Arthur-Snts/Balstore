@@ -74,6 +74,13 @@ def cadastra_loja(loja_cadastra: Loja, session: SessionDep):
 
     if loja_existente:
         raise HTTPException(400, "CNPJ já cadastrado")
+    
+    loja_existente = session.exec(
+        select(Loja).where(Loja.nome == loja_cadastra.nome)
+    ).first()
+
+    if loja_existente:
+        raise HTTPException(400, "Nome de Loja já cadastrado")
 
     loja_cadastra.senha = generate_password_hash(loja_cadastra.senha, method="pbkdf2:sha256")
 
