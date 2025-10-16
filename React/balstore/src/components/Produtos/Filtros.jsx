@@ -1,6 +1,4 @@
 // FiltrosDeProduto.jsx
-
-import React from 'react';
 import './Filtros.css'; // Não esqueça de importar o CSS
 
 const categorias = [
