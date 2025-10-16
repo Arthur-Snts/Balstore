@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 import Header from './components/Header_and_Footer/Header'
@@ -9,7 +8,6 @@ import MainPage from './pages/MainPage'
 
 function App() {
 
-  const [userStatus, setUserStatus] = useState("guest");
 
   return (
     <div>
