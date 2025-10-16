@@ -70,3 +70,12 @@ nav{
     height: 60px;
     width: auto;
 }
+
+.user_name {
+    color: var(--branco);
+    text-align: center;
+}
+
+.user_image{
+    height: 60px;
+}

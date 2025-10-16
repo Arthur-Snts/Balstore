@@ -13,7 +13,7 @@ function App() {
       
       <Header_Guest/>
       <Header_Client/>
-      <Header_Lojist/>
+      <Header_Lojist user_name="Jagunço"/>
 
     </div>
   );

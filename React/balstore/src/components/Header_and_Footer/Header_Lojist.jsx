@@ -1,10 +1,10 @@
 import './Header.css';
-import "../Cores.css"
+import "../Cores.css";
 import Bal_Logo from '../../assets/BALstore.png';
-import Carrinho from '../../assets/carrinho-logo-balstore.png'
+import User from '../../assets/user_lojista.png';
 
 
-export default function Header_Lojist() {
+export default function Header_Lojist({user_name}) {
     return (
         <>
             <header className='header'>
@@ -18,7 +18,10 @@ export default function Header_Lojist() {
                             <li><a href="" className='nav-link'>Logout</a></li>
                         </ul>
                     </nav>
-                <img src={Carrinho} alt="BALSTORE_carrinho" className='BAL-carrinho'/>
+                <div className="perfil">
+                    <img src={User} alt="User_icon" className='user_image'/>
+                    <p className='user_name'>{user_name}</p>
+                </div>
             </header>
         </>
     )
