@@ -1,0 +1,128 @@
+/* Comentario.css */
+
+/*
+ * AJUSTE FEITO:
+ * 1. .lista-comentarios: max-width alterado para 80vw (80% da Viewport Width).
+ */
+
+/* Estilo para a lista de comentários para centralizar e agrupar */
+.lista-comentarios {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espaçamento entre os comentários */
+    padding: 20px;
+    background-color: #f4f4f4; /* Fundo leve para destacar */
+
+    /* Centralização e largura: 80% da tela */
+    max-width: 80vw; /* AGORA OCUPA 80% DA LARGURA DA VIEWPORT (TELA) */
+    margin: 0 auto; /* Centraliza o bloco na página */
+}
+
+.comentario-container {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-family: Arial, sans-serif;
+  
+  /* Garante que ocupe a largura total do .lista-comentarios (que agora é 80vw) */
+  max-width: 100%; 
+}
+
+.comentario-cabecalho {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 15px;
+}
+
+.foto-perfil {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+}
+
+.info-usuario {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nome-email {
+  margin-bottom: 5px;
+}
+
+.nome-usuario {
+  font-weight: bold;
+  color: #333;
+  margin-right: 5px;
+}
+
+.email-usuario {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.avaliacao-data {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avaliacao-estrelas-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nota-numerica {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+}
+
+
+/* --- Estilos da Avaliação de Estrelas --- */
+.avaliacao-estrelas {
+  color: gold;
+  font-size: 1.2em;
+  user-select: none;
+}
+
+.estrela {
+  display: inline-block;
+  margin: 0 1px;
+}
+
+.estrela-cheia {
+  color: gold;
+}
+
+.estrela-metade {
+  color: orange;
+}
+
+.estrela-vazia {
+  color: #ccc;
+}
+/* --- Fim dos Estilos da Avaliação de Estrelas --- */
+
+
+.data-hora {
+  font-size: 0.8em;
+  color: #999;
+}
+
+.comentario-corpo {
+  padding-top: 5px;
+  border-top: 1px dashed #eee;
+}
+
+.texto-comentario {
+  margin: 0;
+  line-height: 1.5;
+  color: #333;
+}
