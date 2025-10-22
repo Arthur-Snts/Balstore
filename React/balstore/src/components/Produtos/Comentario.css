@@ -1,35 +1,20 @@
 /* Comentario.css */
 
-/*
- * AJUSTE FEITO:
- * 1. .lista-comentarios: max-width alterado para 80vw (80% da Viewport Width).
- */
-
-/* Estilo para a lista de comentários para centralizar e agrupar */
-.lista-comentarios {
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Espaçamento entre os comentários */
-    padding: 20px;
-    background-color: #f4f4f4; /* Fundo leve para destacar */
-
-    /* Centralização e largura: 80% da tela */
-    max-width: 80vw; /* AGORA OCUPA 80% DA LARGURA DA VIEWPORT (TELA) */
-    margin: 0 auto; /* Centraliza o bloco na página */
-}
-
 .comentario-container {
+  /* Centralização e largura: 80% da tela */
+  max-width: 80vw;
+  margin: 20px auto; 
+  
+  /* Estilos visuais do comentário */
   border: 1px solid #ddd;
   padding: 15px;
   border-radius: 8px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   font-family: Arial, sans-serif;
-  
-  /* Garante que ocupe a largura total do .lista-comentarios (que agora é 80vw) */
-  max-width: 100%; 
 }
 
+/* Estilos de Cabeçalho */
 .comentario-cabecalho {
   display: flex;
   align-items: flex-start;
@@ -66,16 +51,17 @@
   color: #666;
 }
 
+/* Estilos de Avaliação (Estrelas como Barra de Progresso) */
 .avaliacao-data {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.avaliacao-estrelas-wrapper {
+.avaliacao-estrelas-barra-wrapper {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
 }
 
 .nota-numerica {
@@ -84,33 +70,24 @@
     color: #333;
 }
 
-
-/* --- Estilos da Avaliação de Estrelas --- */
-.avaliacao-estrelas {
-  color: gold;
-  font-size: 1.2em;
-  user-select: none;
+.estrelas-container-base {
+    position: relative;
+    display: inline-block;
+    font-size: 1.5em; 
+    line-height: 1;
+    white-space: nowrap;
+    color: #ccc;
 }
 
-.estrela {
-  display: inline-block;
-  margin: 0 1px;
+.estrelas-preenchidas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    color: gold; 
 }
 
-.estrela-cheia {
-  color: gold;
-}
-
-.estrela-metade {
-  color: orange;
-}
-
-.estrela-vazia {
-  color: #ccc;
-}
-/* --- Fim dos Estilos da Avaliação de Estrelas --- */
-
-
+/* Outros Estilos */
 .data-hora {
   font-size: 0.8em;
   color: #999;

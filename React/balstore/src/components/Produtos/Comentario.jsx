@@ -1,72 +1,72 @@
-import './Comentario.css';
+// Comentario.jsx
+
+import React from 'react';
+import './Comentario.css'; // O CSS permanece o mesmo do passo anterior
+
+/**
+ * Componente de Avaliação de Estrelas (com Preenchimento em Barra)
+ * @param {number} rating - O valor da avaliação (0 a 5).
+ */
+const EstrelasBarraProgressoAvaliacao = ({ rating }) => {
+  // Converte a avaliação para um número com uma casa decimal e calcula a porcentagem
+  const ratingValue = parseFloat(rating);
+  const porcentagemPreenchimento = (ratingValue / 5.0) * 100;
+
+  return (
+    <div className="avaliacao-estrelas-barra-wrapper">
+        <span className="nota-numerica">{ratingValue.toFixed(1)}</span>
+        
+        <div className="estrelas-container-base" aria-label={`Avaliação de ${ratingValue} de 5`}>
+            <div className="estrelas-vazias">
+                ★★★★★
+            </div>
+            <div 
+                className="estrelas-preenchidas" 
+                style={{ width: `${porcentagemPreenchimento}%` }}
+            >
+                ★★★★★
+            </div>
+        </div>
+    </div>
+  );
+};
 
 
 /**
- * Componente de Avaliação de Estrelas (Visual)
- * Exibe a nota numérica ANTES das estrelas.
- * @param {number} rating - O valor da avaliação (ex: 4.5).
+ * Componente Comentario
+ * Recebe todos os dados via props e exibe-os.
  */
-const EstrelasAvaliacaoVisual = ({ rating }) => {
-// Cria um array de 5 elementos para representar as 5 estrelas
-    const estrelas = [...Array(5)].map((_, index) => {
-        const valorEstrela = index + 1;
-        let classeEstrela = 'estrela-vazia';
-
-        if (valorEstrela - 0.5 <= rating) {
-        if (valorEstrela <= rating) {
-            classeEstrela = 'estrela-cheia';
-        } else {
-            classeEstrela = 'estrela-metade';
-        }
-        }
-
-        return (
-        <span key={index} className={`estrela ${classeEstrela}`}>
-            {classeEstrela === 'estrela-cheia' && '★'}
-            {classeEstrela === 'estrela-metade' && '✫'}
-            {classeEstrela === 'estrela-vazia' && '☆'}
-        </span>
-        );
-    });
-
-    return (
-        <div className="avaliacao-estrelas-wrapper">
-            <span className="nota-numerica">{rating.toFixed(1)}</span> {/* Nota Numérica */}
-            <div className="avaliacao-estrelas">{estrelas}</div>
-        </div>
-    );
-    };
-
-
-export default ComentarioVisual = ({props}) =>{
-    
+const Comentario = ({ nome, email, avaliacao, dataHora, fotoPerfilUrl, texto }) => {
+    // Definir uma URL de imagem padrão caso a prop fotoPerfilUrl não seja fornecida
+    const defaultFoto = "https://via.placeholder.com/150/808080/FFFFFF?text=USER";
 
     return (
         <div className="comentario-container">
             <div className="comentario-cabecalho">
                 <img
-                    src={props.fotoPerfilUrl}
-                    alt={`Foto de perfil de ${props.nome}`}
+                    src={fotoPerfilUrl || defaultFoto}
+                    alt={`Foto de perfil de ${nome || 'Usuário'}`}
                     className="foto-perfil"
                 />
 
                 <div className="info-usuario">
                     <div className="nome-email">
-                        <span className="nome-usuario">{props.nome}</span>
-                        <span className="email-usuario">({props.email})</span>
+                        <span className="nome-usuario">{nome || 'Usuário Anônimo'}</span>
+                        <span className="email-usuario">({email || 'email@nao-informado.com'})</span>
                     </div>
 
                     <div className="avaliacao-data">
-                        <EstrelasAvaliacaoVisual rating={props.avaliacao} />
-                        <span className="data-hora">{props.dataHora}</span>
+                        <EstrelasBarraProgressoAvaliacao rating={avaliacao || 0} />
+                        <span className="data-hora">{dataHora || 'Data não informada'}</span>
                     </div>
                 </div>
             </div>
 
             <div className="comentario-corpo">
-                <p className="texto-comentario">{props.texto}</p>
+                <p className="texto-comentario">{texto || 'Nenhum comentário fornecido.'}</p>
             </div>
         </div>
     );
 };
 
+export default Comentario;
