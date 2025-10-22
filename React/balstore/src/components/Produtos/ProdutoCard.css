@@ -1,5 +1,53 @@
-.card{
+.card {
   width: 200px;
-  margin: 60px;
-  border: solid black 10px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: solid #0c5e94 2px;
+}
+.top-card-section {
+  border: solid red 1px;
+  max-height: 50%;
+  min-height: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.produto-img {
+  border: solid purple 1px;
+  height: 100%;
+  width: 100%;
+}
+
+.mid-card-section {
+  border: solid blue 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: center;
+  max-height: 30%;
+  width: 100%
+}
+.nome-texto {
+  border: solid cyan 1px;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 15px;
+  /* font-family: ; */
+}
+.avaliacao-produto {
+  border: solid gold 1px;
+  display: flex;
+  justify-content: space-between;
+}
+.avaliacao-texto {
+  border: solid yellow 1px;
+}
+
+.bottom-card-section {
+  border: solid green 1px;
+}
+.preco {
+  border: solid magenta 1px;
 }
