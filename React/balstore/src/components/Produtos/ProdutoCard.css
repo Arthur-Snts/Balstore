@@ -7,7 +7,6 @@
   border: solid #0c5e94 2px;
 }
 .top-card-section {
-  border: solid red 1px;
   max-height: 50%;
   min-height: 25%;
   display: flex;
@@ -15,17 +14,16 @@
   align-items: center;
 }
 .produto-img {
-  border: solid purple 1px;
   height: 100%;
   width: 100%;
 }
 
 .mid-card-section {
-  border: solid blue 1px;
+  border: red solid 1px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-content: center;
+  align-items: center;
+  justify-content: center;
   max-height: 30%;
   width: 100%
 }
@@ -33,20 +31,22 @@
   border: solid cyan 1px;
   display: flex;
   flex-wrap: wrap;
-  font-size: 15px;
+  width: 100%;
+  font-size: 21px;
   /* font-family: ; */
 }
 .avaliacao-produto {
   border: solid gold 1px;
+  width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-}
-.avaliacao-texto {
-  border: solid yellow 1px;
 }
 
 .bottom-card-section {
-  border: solid green 1px;
+  border: solid lightgreen 1px;
+  font-size: 20px;
+  font-weight: bold;
 }
 .preco {
   border: solid magenta 1px;
