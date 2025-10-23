@@ -1,8 +1,11 @@
 from models import  Produto, Categoria
 from config import engine
 from sqlmodel import Session, select
-from fastapi import HTTPException, Depends, APIRouter
+from fastapi import HTTPException, Depends, APIRouter, UploadFile, File, Form
 from typing import Annotated
+from datetime import datetime
+import os
+
 
 
 def get_session():
@@ -48,22 +51,63 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
 # CADASTRO
 # baixar arquivo (ex degravacao) e armazenar imagem numa pasta e armazenar o nome
 @router.post("/")
-def cadastra_produto(produto_cadastra: Produto, session: SessionDep, imagem:bytes):
+async def cadastra_produto(
+    nome: str = Form(...),
+    preco: float = Form(...),
+    estoque: int = Form(...),
+    categoria_id: int = Form(...),
+    loja_id: int = Form(...),
+    promocao: int = Form(...),
+    imagem: UploadFile = File(...),
+    session: SessionDep = None
+):
+    try:
+        # Caminho da pasta "uploads" (criada dentro da pasta FastAPI)
+        UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "uploads")
+        os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-    produto_existente = session.exec(
-        select(Produto).where(Produto.nome == produto_cadastra.nome, Produto.loja_id == produto_cadastra.loja_id)
-    ).first()
+        # Verifica se o produto já existe na loja
+        produto_existente = session.exec(
+            select(Produto).where(Produto.nome == nome, Produto.loja_id == loja_id)
+        ).first()
 
-    if produto_existente:
-        raise HTTPException(400, "Nome já cadastrado nessa loja")
-    
-    produto_cadastra.imagem = imagem
+        if produto_existente:
+            raise HTTPException(status_code=400, detail="Nome já cadastrado nessa loja")
 
-    session.add(produto_cadastra)
-    session.commit()
-    session.refresh(produto_cadastra)
+        # Gera um nome único para a imagem
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        filename = f"{timestamp}_{imagem.filename}"
+        file_path = os.path.join(UPLOAD_DIR, filename)
 
-    return {"mensagem": "Produto cadastrado com sucesso", "Produto": produto_cadastra}
+        # Salva o arquivo fisicamente
+        with open(file_path, "wb") as buffer:
+            buffer.write(await imagem.read())
+
+        file_url = f"../../../../../FastAPI/uploads/{filename}"
+
+        # Cria o produto no banco com o nome do arquivo salvo
+        novo_produto = Produto(
+            nome=nome,
+            preco=preco,
+            estoque=estoque,
+            categoria_id=categoria_id,
+            loja_id=loja_id,
+            promocao=promocao,
+            imagem=file_url  # salva só o nome do arquivo
+        )
+        print (file_url)
+
+        session.add(novo_produto)
+        session.commit()
+        session.refresh(novo_produto)
+
+        return {
+            "mensagem": "Produto cadastrado com sucesso!",
+            "produto": novo_produto
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # ------------------------------------------------------------------------------
 # DELETE
