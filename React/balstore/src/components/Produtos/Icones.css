@@ -1,0 +1,55 @@
+.avaliacao-estrelas-barra-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 3px;
+}
+
+.nota-numerica {
+    font-size: 0.9em;
+    font-weight: 700;
+    color: #333;
+}
+
+.estrelas-container-base {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 5px;
+    font-size: 1.6em; 
+    line-height: 1;
+    white-space: nowrap;
+    color: #ccc;
+}
+
+.estrelas-preenchidas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    color: gold; 
+}
+
+.btn-favorito {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+}
+
+.coracao {
+    display: flex;
+    flex-direction: column;
+    font-size: 24px;
+    transition: transform .2s, color .2s;
+    color: #ff5b5b;
+}
+
+.coracao.vazado:hover {
+    transform: scale(1.2);
+}
+
+.coracao.preenchido {
+    color: #ff3b3b;
+    transform: scale(1.1);
+}

@@ -1,16 +1,27 @@
 import { Link } from 'react-router-dom';
 import './ProdutoCard.css';
-import guarana from '../../assets/Guarana.png';
+import { EstrelasAvaliacao, Favoritos } from './Icones'
 
-export default function ProdutoCard() {
+export default function ProdutoCard({produtos, favorito, onToggleFavorito}) {
   return (
-    <div className='card'>
-        <img src={guarana} alt="" className='ProdutoImg'/>
-        <div className='informações'>
-            <p>Guaraná Antartica</p>
-            <p>5,0 *****</p>
-            <h3>R$ 70,00</h3>
-        </div>
-    </div>
+    <>
+      <div className='card'>
+          <div className='top-card-section'>
+            <img src={produtos.imagem_path} alt={produtos.alt}  className='produto-img'/>
+          </div>
+          <div className='mid-card-section'>
+            <p className='nome-texto'>{produtos.nome_produto}</p>
+              <div className='avaliacao-produto'> 
+                <EstrelasAvaliacao rating = {produtos.avaliacao || 0} />
+              </div>
+          </div>
+          <div className='bottom-card-section'>
+            <p className='preco'>R${produtos.preco_produto}</p>
+            <Favoritos favorito={favorito} setFavorito={onToggleFavorito}/>
+          </div>
+      </div>
+    </>
   );
 }
+
+// precisa ajeitar o checkbox de favoritos e as estrelas
