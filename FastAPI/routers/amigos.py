@@ -57,17 +57,20 @@ def adiciona_amigo(amigo:Amigo, session:SessionDep):
     if amizade_existente:
         raise HTTPException(400, "Amizade já existe com esses usuários")
 
-    
+    if amigo.amigo_de == amigo.amigo:
+        raise HTTPException(400, "Tentativa de cadastrar uma amizade hemafrodita")
 
     session.add(amigo)
     session.commit()
     session.refresh(amigo)
 
-    amizade_inversa = Amigo(id=amigo.id+1, amigo=amigo.amigo_de, amigo_de=amigo.amigo)
+    amizade_inversa = Amigo(id=amigo.id+1, amigo=amigo.amigo_de, amigo_de=amigo.amigo, solicitacao=amigo.solicitacao)
 
     session.add(amizade_inversa)
     session.commit()
     session.refresh(amizade_inversa)
+
+    session.refresh(amigo)
 
     return {"mensagem": "Amizade cadastrada com sucesso", "Nova Amizade": amigo}
 
@@ -91,8 +94,10 @@ def desfaz_amizade(session: SessionDep, cli_id:int, amigo_exclui:int):
         select(Amigo).where(Amigo.amigo == cli_id, Amigo.amigo_de == amigo_exclui)
     ).first()
 
-    session.delete(amigo_inverso_deletado)
-    session.commit()
+    if amigo_inverso_deletado:
+
+        session.delete(amigo_inverso_deletado)
+        session.commit()
 
     return {"mensagem": "Amigo deletado com sucesso desse Cliente"}
 
