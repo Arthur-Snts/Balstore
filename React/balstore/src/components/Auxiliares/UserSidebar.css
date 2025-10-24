@@ -1,0 +1,53 @@
+@import url(../Cores.css);
+
+.barra-lateral-user {
+    border-right: solid 2px var(--azul-principal) ;
+    height: 90vh;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 30px;
+}
+
+.user-icon-and-text{
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+}
+.user-icon-and-text img {
+    width: 60px;
+    height: 100%;
+}
+.user-text{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--azul-escuro);
+}
+.user-name {
+    width: 100%;
+    font-size: 21px;
+    margin-bottom: 0px; 
+    font-weight: bolder;
+}
+.qtd-amigos{
+    font-size: 14px;
+    margin-bottom: 0px;
+    font-weight: bold;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid cyan;
+    width: 70%;
+}
+.side-menu-button {
+    width: 80%;
+    border: solid 1px purple
+}
+.side-menu-button a {
+    text-decoration: none;
+}

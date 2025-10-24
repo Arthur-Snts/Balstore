@@ -29,7 +29,7 @@ def pega_amigos(cli_id:int, session: SessionDep):
 
    
     amigos = session.exec(
-        select(Amigo, Cliente).where(Amigo.amigo_de == cli_id, Cliente.id == Amigo.amigo)
+        select(Amigo).where(Amigo.amigo_de == cli_id)
     ).all()
 
     if not amigos:
@@ -38,31 +38,39 @@ def pega_amigos(cli_id:int, session: SessionDep):
     lista = []
 
     for amigo in amigos:
-        lista.append(amigo.amigo)
+        pessoa = session.exec(
+            select(Cliente).where(Cliente.id == amigo.amigo)
+        ).first()
+        lista.append(pessoa)
 
     return lista
 # ------------------------------------------------------------------------------
 # POST
 
-@router.post("/{cli_id}")
-def adiciona_amigo(amigo:Amigo, session:SessionDep, cli_id:int):
+@router.post("/")
+def adiciona_amigo(amigo:Amigo, session:SessionDep):
 
     amizade_existente = session.exec(
-        select(Amigo).where(Amigo.amigo_de == cli_id, Amigo.amigo == amigo.amigo)
+        select(Amigo).where(Amigo.amigo_de == amigo.amigo_de, Amigo.amigo == amigo.amigo)
     ).first()
 
     if amizade_existente:
         raise HTTPException(400, "Amizade já existe com esses usuários")
 
-    amizade_inversa = Amigo(id=amigo.id+1, amigo=cli_id, amigo_de=amigo.amigo)
+    if amigo.amigo_de == amigo.amigo:
+        raise HTTPException(400, "Tentativa de cadastrar uma amizade hemafrodita")
 
     session.add(amigo)
     session.commit()
     session.refresh(amigo)
 
+    amizade_inversa = Amigo(id=amigo.id+1, amigo=amigo.amigo_de, amigo_de=amigo.amigo, solicitacao=amigo.solicitacao)
+
     session.add(amizade_inversa)
     session.commit()
     session.refresh(amizade_inversa)
+
+    session.refresh(amigo)
 
     return {"mensagem": "Amizade cadastrada com sucesso", "Nova Amizade": amigo}
 
@@ -86,8 +94,10 @@ def desfaz_amizade(session: SessionDep, cli_id:int, amigo_exclui:int):
         select(Amigo).where(Amigo.amigo == cli_id, Amigo.amigo_de == amigo_exclui)
     ).first()
 
-    session.delete(amigo_inverso_deletado)
-    session.commit()
+    if amigo_inverso_deletado:
+
+        session.delete(amigo_inverso_deletado)
+        session.commit()
 
     return {"mensagem": "Amigo deletado com sucesso desse Cliente"}
 

@@ -1,0 +1,50 @@
+/*
+ * O backdrop escurecido que cobre toda a tela.
+ * Ele usa 'fixed' para garantir que cubra a viewport inteira, 
+ * mesmo com a rolagem.
+ */
+.modal_backdrop {
+  position: fixed; /* Essencial para cobrir a tela inteira */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+  
+  /* * Z-index alto para garantir que fique sobre todos os outros elementos 
+   * (o valor exato pode variar dependendo dos outros elementos da sua app).
+   */
+  z-index: 9000; 
+
+  /* Flexbox para centralizar o conteúdo do modal */
+  display: flex; 
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+}
+
+/* O box do modal em si */
+.modal_content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px; /* Largura máxima, ajuste conforme necessário */
+  width: 90%;
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.2);
+  
+  /* * Adicionando 'position: relative' para que o botão de fechar 
+   * possa ser posicionado em relação ao modal.
+   */
+  position: relative; 
+}
+
+/* Botão de fechar (o 'x') */
+.modal_close_button {
+  position: absolute; /* Posiciona em relação ao 'modal-content' */
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
