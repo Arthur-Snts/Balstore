@@ -20,7 +20,7 @@ app = FastAPI(lifespan=lifespan,docs_url=None)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # ou ["*"] para liberar geral (menos seguro)
+    allow_origins=["*"],  # ou ["*"] para liberar geral (menos seguro)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
