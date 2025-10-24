@@ -4,24 +4,33 @@ import Footer from '../components/Header_and_Footer/Footer';
 import Carrossel from '../components/carrossel';
 import ProdutoCard from '../components/Produtos/ProdutoCard';
 import imagem from "../assets/Guarana.png";
+import { useState } from "react";
 
 
 export default function MainPage() {
 
-    const produto = {
+    const produtoTeste = {
         imagem_path: imagem,
         alt: "Guarana.png",
         nome_produto: "Guaraná fdp",
         avaliacao: 4.4,
         preco_produto: 70.04
     };
+
+    const [favorito, setFavorito] = useState(false);
+
+    function toggleFavorito() {
+      setFavorito(!favorito);
+    }
     return (
         <>
             <HeaderGuest/>
                 <br />
                 <Carrossel/>
-                <CategoriaButton/>
-                <ProdutoCard props={produto}/>
+                <ProdutoCard 
+                    produtos={produtoTeste}
+                    favorito={favorito}
+                    onToggleFavorito={toggleFavorito}/>
             <Footer/>
         </>
 

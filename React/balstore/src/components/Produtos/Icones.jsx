@@ -1,4 +1,4 @@
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import './Icones.css'
 
 export const EstrelasAvaliacao = ({ rating }) => {
@@ -25,13 +25,22 @@ export const EstrelasAvaliacao = ({ rating }) => {
   );
 };
 
-export function Favoritos(){
+export function Favoritos({ favorito, setFavorito}){
+  function toggleFavorito() {
+    setFavorito(!favorito);
+  }
+  
   return (
-    <>
-      <input type="checkbox" id="fav" className="hidden" />
-      <label htmlFor="fav">
-        <FaHeart className="text-red-500 hover:scale-110 transition-transform" />
-      </label>
-    </>
-  )
+    <button 
+      className="btn-favorito" 
+      onClick={toggleFavorito}
+      aria-label="Adicionar aos favoritos"
+    >
+      {favorito ? (
+        <FaHeart className="coracao preenchido" />
+      ) : (
+        <FaRegHeart className="coracao vazado" />
+      )}
+    </button>
+  );
 }
