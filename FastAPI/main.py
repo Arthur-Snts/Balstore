@@ -1,6 +1,8 @@
 from config import app
 import fastapi_swagger_dark as fsd
 import fastapi
+from fastapi import Response
+from datetime import datetime
 
 router = fastapi.APIRouter()
 
@@ -37,8 +39,36 @@ app.include_router(produtos)
 
 
 
+@app.get("/sitemap.xml", response_class=Response)
+def sitemap():
+    base_url = "https://balstore.com.br"
 
+    # pega TODAS as rotas registradas
+    all_routes = []
+    for route in app.routes:
+        if hasattr(route, "path") and route.path not in ["/openapi.json", "/docs", "/redoc", "/sitemap.xml"]:
+            # ignora arquivos estáticos
+            if not any(route.path.endswith(ext) for ext in [".css", ".js", ".ico", ".png", ".jpg", ".jpeg"]):
+                # ignora rotas dinâmicas /users/{id}
+                if "{" not in route.path:
+                    all_routes.append(route.path)
 
+    # remove duplicatas mantendo a ordem
+    unique_routes = list(dict.fromkeys(all_routes))
+
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+
+    today = datetime.utcnow().date()
+    for path in unique_routes:
+        xml += f"  <url>\n"
+        xml += f"    <loc>{base_url}{path}</loc>\n"
+        xml += f"    <lastmod>{today}</lastmod>\n"
+        xml += f"  </url>\n"
+
+    xml += "</urlset>"
+
+    return Response(content=xml, media_type="application/xml")
 
 
 
