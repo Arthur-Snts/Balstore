@@ -1,43 +1,7 @@
-// Comentario.jsx
+import './Comentario.css'
+import { EstrelasAvaliacao } from '../Auxiliares/Icones'
 
-import React from 'react';
-import './Comentario.css'; // O CSS permanece o mesmo do passo anterior
-
-/**
- * Componente de Avaliação de Estrelas (com Preenchimento em Barra)
- * @param {number} rating - O valor da avaliação (0 a 5).
- */
-const EstrelasBarraProgressoAvaliacao = ({ rating }) => {
-  // Converte a avaliação para um número com uma casa decimal e calcula a porcentagem
-  const ratingValue = parseFloat(rating);
-  const porcentagemPreenchimento = (ratingValue / 5.0) * 100;
-
-  return (
-    <div className="avaliacao-estrelas-barra-wrapper">
-        <span className="nota-numerica">{ratingValue.toFixed(1)}</span>
-        
-        <div className="estrelas-container-base" aria-label={`Avaliação de ${ratingValue} de 5`}>
-            <div className="estrelas-vazias">
-                ★★★★★
-            </div>
-            <div 
-                className="estrelas-preenchidas" 
-                style={{ width: `${porcentagemPreenchimento}%` }}
-            >
-                ★★★★★
-            </div>
-        </div>
-    </div>
-  );
-};
-
-
-/**
- * Componente Comentario
- * Recebe todos os dados via props e exibe-os.
- */
 const Comentario = ({ nome, email, avaliacao, dataHora, fotoPerfilUrl, texto }) => {
-    // Definir uma URL de imagem padrão caso a prop fotoPerfilUrl não seja fornecida
     const defaultFoto = "https://via.placeholder.com/150/808080/FFFFFF?text=USER";
 
     return (
@@ -56,7 +20,7 @@ const Comentario = ({ nome, email, avaliacao, dataHora, fotoPerfilUrl, texto }) 
                     </div>
 
                     <div className="avaliacao-data">
-                        <EstrelasBarraProgressoAvaliacao rating={avaliacao || 0} />
+                        <EstrelasAvaliacao rating = {avaliacao || 0} />
                         <span className="data-hora">{dataHora || 'Data não informada'}</span>
                     </div>
                 </div>

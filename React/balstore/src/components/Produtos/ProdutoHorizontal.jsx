@@ -4,14 +4,11 @@ import "../Cores.css"
 
 export default function ProdutoHorizontal({props, children}) {
 
-
-
-
     return(
         <>
             <div className="produto">
                 <div className="left_produto">
-                    <img src={props.img_path} className="img_produto"/>
+                    <img src={props.imagem_path} alt={props.nome} className="img_produto"/>
                 </div>
                 <div className="conteudo_produto">
                     <div className="texto">
@@ -19,8 +16,8 @@ export default function ProdutoHorizontal({props, children}) {
                         <div className="center_produto">
                             {props.nome && <p>{props.nome}</p>}
                             {props.estoque && <p className="estoque">Estoque: {props.estoque} exemplares</p>}
-                            {props.qnt && <p>Quantidades: {props.qnt}</p>}
-                            {props.cliente && <p>Cliente: {props.cliente}</p>}
+                            {props.qnt && <p style={{marginBottom:0}}>Quantidades: {props.qnt}</p>}
+                            {props.cliente && <p style={{marginBottom:"40px"}}>Cliente: {props.cliente}</p>}
                             {props.exemplares && <p>{props.exemplares}</p>}
                             {props.frete && <p>{props.frete}</p>}
                             {props.pedido_realizado && <p>Pedido Realizado em: {props.pedido_realizado}</p>}
@@ -28,9 +25,23 @@ export default function ProdutoHorizontal({props, children}) {
                         </div>
                     
                         <div className="right_produto">
-                            {props.preco_desconto && <p className="descontado">R$ {props.preco_desconto}</p>}
-                            {props.preco && <p className="preco">R$ {props.preco}</p>}
-                            {(props.desconto || props.desconto == 0) && <p className="desconto_aplicado">Desconto Aplicado: {props.desconto} %</p>}
+                            {props.preco && props.promocao > 0 && (
+                                <p className="descontado">R$ {props.preco.toFixed(2)}</p>
+                            )}
+                            {props.preco && (
+                                <p className="preco">
+                                R$ {(
+                                    props.promocao > 0
+                                    ? props.preco - (props.preco * props.promocao) / 100
+                                    : props.preco
+                                ).toFixed(2)}
+                                </p>
+                            )}
+                            {(props.promocao || props.promocao === 0) && (
+                                <p className="desconto_aplicado">
+                                Desconto Aplicado: {props.promocao} %
+                                </p>
+                            )}
                         </div>
                     </div>
                     <div className="children">

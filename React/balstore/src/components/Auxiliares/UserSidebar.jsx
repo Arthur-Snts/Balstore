@@ -1,7 +1,7 @@
 import user_icon from '../../assets/user-icon-default.png'
 import './UserSidebar.css'
 
-export default function UserSidebar ({props}) {
+export default function UserSidebar ({props, active}) {
     return (
         <>
             <aside className="barra-lateral-user">
@@ -15,11 +15,11 @@ export default function UserSidebar ({props}) {
                         
                 </div>
                 <div className="sidebar-menu">
-                    <button className="side-menu-button"><a href=" ">Minhas Compras</a></button>
-                    <button className="side-menu-button"><a href=" ">Configurações de conta</a></button>
-                    <button className="side-menu-button"><a href=" ">Lista de desejos</a></button>
-                    <button className="side-menu-button"><a href=" ">Lista de amigos</a></button>
-                    <button className="side-menu-button"><a href=" ">Sair da conta</a></button>
+                    <a className={active === "Minhas Compras" ? 'side-menu-button active-button-side': 'side-menu-button'}  href=" ">Minhas Compras</a>
+                    <a className={active === "Configurações" ? 'side-menu-button active-button-side': 'side-menu-button'} href=" ">Configurações de conta</a>
+                    <a className={active === "Lista de Desejos" ? 'side-menu-button active-button-side': 'side-menu-button'} href=" ">Lista de desejos</a>
+                    <a className={active === "Lista de Amigos" ? 'side-menu-button active-button-side': 'side-menu-button'} href=" ">Lista de amigos</a>
+                    <a className={active === "Sair da Conta" ? 'side-menu-button active-button-side': 'side-menu-button'} href=" ">Sair da conta</a>
                 </div>
             </aside>
         </>

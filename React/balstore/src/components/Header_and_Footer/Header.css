@@ -62,8 +62,8 @@ nav{
     color: var(--amarelo) !important;
     transition: 0.3s;
 }
-.active {
-    color: var(--amarelo);
+.active-nav-button {
+    color: var(--amarelo) !important;
 }
 
 .BAL-carrinho {
