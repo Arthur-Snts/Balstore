@@ -1,0 +1,86 @@
+.cadastro-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 250px;
+    height: 900px;
+}
+.foto-cadastro img{
+    width: 600px;
+    border-radius: 40px;
+}
+
+.foto-cadastro{
+  padding-left: 180px;
+  border-left: 3px solid var(--azul-principal);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 700px;
+}
+
+.formulario{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    gap: 30px;
+
+
+}
+.form h1{
+    color: var(--azul-principal);
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+
+.formulario input {
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid var(--azul-principal);
+  outline: none;
+  transition: border-color 0.3s;
+  font-size: 21px;
+}
+
+.formulario input:focus {
+  border-color: var(--azul-principal);
+}
+
+.button-entrar {
+  padding: 10px;
+  background-color: var(--azul-principal);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 30px;
+  width: 150px;
+  font-size: 21px;
+}
+
+.button-entrar:hover {
+  background-color: var(--azul-escuro);
+}
+
+
+.links-cadastro{
+    display: flex;
+    gap: 10px;
+}
+
+.link-form{
+    color: var(--azul-principal) !important;
+    text-decoration: underline !important;
+    cursor: pointer;
+    font-size: 21px;
+}
+
+.active {
+    color: var(--azul-escuro) !important;
+    text-decoration: none;
+    font-size: 21px;
+}
