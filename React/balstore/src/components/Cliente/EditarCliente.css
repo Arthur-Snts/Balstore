@@ -1,0 +1,44 @@
+.perfil-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.avatar img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+.perfil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 250px;
+}
+
+.perfil-form input {
+  padding: 10px;
+  border: 1px solid var(--cinza-texto);
+  border-bottom: 2px solid var(--azul-principal);
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.perfil-form input:focus {
+  border-color: var(--azul-principal);
+}
+
+.perfil-form button {
+  padding: 10px;
+  background-color: var(--azul-principal);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.perfil-form button:hover {
+  background-color: var(--azul-escuro);
+}

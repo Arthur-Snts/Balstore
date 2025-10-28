@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://balstore.com.br/sitemap.xml

@@ -1,16 +1,29 @@
 import { Link } from 'react-router-dom';
 import './ProdutoCard.css';
-import guarana from '../../assets/Guarana.png';
+import { EstrelasAvaliacao, Favoritos } from '../Auxiliares/Icones'
+import { useState } from 'react';
 
-export default function ProdutoCard() {
+export default function ProdutoCard({produto, favorito}) {
+
+  const [favorito_interno, onToggleFavorito] = useState(favorito)
+
   return (
-    <div className='card'>
-        <img src={guarana} alt="" className='ProdutoImg'/>
-        <div className='informações'>
-            <p>Guaraná Antartica</p>
-            <p>5,0 *****</p>
-            <h3>R$ 70,00</h3>
-        </div>
-    </div>
+    <>
+      <div className='card'>
+          <div className='top-card-section'>
+            <img src={produto.imagem_path} alt={produto.alt}  className='produto-img'/>
+          </div>
+          <div className='mid-card-section'>
+            <p className='nome-texto'>{produto.nome}</p>
+              <div className='avaliacao-produto'> 
+                <EstrelasAvaliacao rating = {produto.avaliacao || 0} />
+              </div>
+          </div>
+          <div className='bottom-card-section'>
+            <p className='preco'>R${produto.preco}</p>
+            <Favoritos favorito={favorito_interno} setFavorito={onToggleFavorito}/>
+          </div>
+      </div>
+    </>
   );
 }
