@@ -2,6 +2,7 @@ import "./Footer.css"
 import Bal_Logo from "../../assets/BALstore.png"
 import Github from "../../assets/github.png"
 import "../Cores.css"
+import { Link } from "react-router-dom"
 
 
 export default function Footer (){
@@ -18,7 +19,7 @@ export default function Footer (){
                     <div className="links">
                         <h5>Links Rápidos</h5>
                         <ul className='footer-list'>
-                            <li><a href="" className='footer-link'>Página Inicial</a></li>
+                            <li><Link to="/" className='footer-link'>Página Inicial</Link></li>
                             <li><a href="" className='footer-link'>Categorias</a></li>
                             <li><a href="" className='footer-link'>Perfil</a></li>
                             <li><a href="" className='footer-link'>Lista de Amigos</a></li>
