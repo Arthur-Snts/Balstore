@@ -1,0 +1,96 @@
+.comentario-container {
+  max-width: 80vw;
+  margin: 20px auto; 
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-family: Arial, sans-serif;
+}
+
+.comentario-cabecalho {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 15px;
+}
+
+.foto-perfil {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+}
+
+.info-usuario {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nome-email {
+  margin-bottom: 5px;
+}
+
+.nome-usuario {
+  font-weight: bold;
+  color: #333;
+  margin-right: 5px;
+}
+
+.email-usuario {
+  font-size: 0.9em;
+  color: #666;
+}
+.avaliacao-data {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avaliacao-estrelas-barra-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nota-numerica {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+}
+
+.estrelas-container-base {
+    position: relative;
+    display: inline-block;
+    font-size: 1.5em; 
+    line-height: 1;
+    white-space: nowrap;
+    color: #ccc;
+}
+
+.estrelas-preenchidas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    color: gold; 
+}
+
+.data-hora {
+  font-size: 0.8em;
+  color: #999;
+}
+
+.comentario-corpo {
+  padding-top: 5px;
+  border-top: 1px dashed #eee;
+}
+
+.texto-comentario {
+  margin: 0;
+  line-height: 1.5;
+  color: #333;
+}

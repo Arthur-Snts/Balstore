@@ -5,6 +5,7 @@
   flex-direction: column;
   justify-content: space-between;
   border: solid #0c5e94 2px;
+  
 }
 .top-card-section {
   max-height: 50%;
@@ -33,7 +34,6 @@
   text-align: center;
   width: 100%;
   font-size: 21px;
-  /* font-family: ; */
 }
 .avaliacao-produto {
   width: 100%;

@@ -38,3 +38,13 @@
 - post(“/comentario/{pro_id}”): Cadastra um Comentário em um Produto  
 - put(“/comentario/{pro_id}”): Atualiza um Comentário de um Produto  
 - delete(“/comentario”): Deleta um Comentário
+
+- get(“/compras/{cli_id}”): Retorna Compras de um Cliente 
+- post(“/compras/{cli_id}”): Cadastra uma Compra de um Cliente 
+- put(“/compras/{com_id}”): Atualiza uma Compra de um Cliente
+
+- get(“/notificacoes/{loj_id}”): Retorna Notificações de uma Loja 
+- post(“/notificacoes/{loj_id}”): Cadastra uma Notificação em uma Loja  
+- put(“/notificacoes/{not_id}”): Atualiza uma Notificação de uma Loja
+- delete(“/notificacoes/{not_id}”): Deleta uma Notificação de uma Loja
+ 
