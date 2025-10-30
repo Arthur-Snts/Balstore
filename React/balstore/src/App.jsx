@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 // O Link importa aonde for o link, aí envolve o que for "linkável, exemplo no Header.jsx e Footer.jsx"
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
+import Produto from "./pages/Produtos";
 
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
             <Route path="/" element={<MainPage />}/>
             <Route path="/Login" element={<Login />} /> 
             <Route path="/Cadastro" element={<Cadastro />}/>
+            <Route path="/Produto" element={<Produto />}/>
+
             {/*  Adcionando páginas aqui, lembrar de usar UseEffect de título em cada página, exemplo na MainPage */}
           </Routes>
         </Router>
