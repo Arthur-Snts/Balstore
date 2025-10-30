@@ -1,0 +1,53 @@
+.produto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.produto .left_produto{
+    width: 12%;
+}
+
+.produto .left_produto img {
+    width: 100%;
+}
+
+.produto .conteudo_produto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 60%;
+    margin-left: 10px;
+}
+
+.produto .conteudo_produto .texto {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+
+.produto .right_produto .descontado{
+    color: var(--cinza-texto);
+    text-decoration: line-through;
+    font-family: 'Times New Roman', Times, serif;
+    margin-bottom: 0px;
+}
+
+.produto .right_produto .preco{
+    font-weight: bolder;
+    font-size: 40px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.produto .texto .center_produto .estoque,  .produto .right_produto .desconto_aplicado{
+    color: var(--azul-principal);
+}
+
+.produto .right_produto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+

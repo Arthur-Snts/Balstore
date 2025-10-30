@@ -1,0 +1,38 @@
+.categoria-recomendada{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titulo-categoria-recomendada{
+    background-color: var(--azul-principal);
+    color: white;
+    margin-bottom: 30px;
+    padding: 15px;
+    padding-left: 40px;
+    width: 80%;
+}
+
+.titulo-categoria-recomendada p {
+    margin-bottom: 0;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.recomendados{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.produtos_todos{
+    display: flex;
+    width: 80%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--azul-principal);
+}

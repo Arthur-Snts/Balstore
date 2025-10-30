@@ -1,11 +1,6 @@
-/* Comentario.css */
-
 .comentario-container {
-  /* Centralização e largura: 80% da tela */
   max-width: 80vw;
   margin: 20px auto; 
-  
-  /* Estilos visuais do comentário */
   border: 1px solid #ddd;
   padding: 15px;
   border-radius: 8px;
@@ -14,7 +9,6 @@
   font-family: Arial, sans-serif;
 }
 
-/* Estilos de Cabeçalho */
 .comentario-cabecalho {
   display: flex;
   align-items: flex-start;
@@ -50,8 +44,6 @@
   font-size: 0.9em;
   color: #666;
 }
-
-/* Estilos de Avaliação (Estrelas como Barra de Progresso) */
 .avaliacao-data {
   display: flex;
   align-items: center;
@@ -87,7 +79,6 @@
     color: gold; 
 }
 
-/* Outros Estilos */
 .data-hora {
   font-size: 0.8em;
   color: #999;

@@ -1,5 +1,4 @@
-// FiltrosDeProduto.jsx
-import './Filtros.css'; // Não esqueça de importar o CSS
+import './Filtros.css';
 
 const categorias = [
   "Brinquedos",
@@ -21,7 +20,7 @@ function FiltrosDeProduto() {
   return (
     <div className="filtros-container">
       <div className="filtros-cabecalho">
-        <span className="icone-filtro">☰</span> {/* Ícone simplificado */}
+        <span className="icone-filtro">☰</span>
         <h2 className="titulo-filtros">FILTROS</h2>
       </div>
 
@@ -43,7 +42,7 @@ function FiltrosDeProduto() {
         <h3 className="subtitulo-filtro">Por Preço</h3>
         <div className="filtro-preco">
           <input type="text" placeholder="mín." className="input-preco" />
-          <span className="separador-preco"></span> {/* Traço entre os inputs */}
+          <span className="separador-preco"></span>
           <input type="text" placeholder="máx." className="input-preco" />
         </div>
         <button className="botao-confirmar">Confirmar</button>

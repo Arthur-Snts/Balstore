@@ -27,7 +27,7 @@ class Produto(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nome: str = Field(index=False)
     estoque: int = Field(default=0, index=False)
-    imagem: bytes = Field(index=False)
+    imagem_path: str = Field(index=False)
     preco:float = Field(index=False)
     promocao:int = Field(index=False)
 

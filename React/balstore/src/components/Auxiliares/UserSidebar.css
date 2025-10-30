@@ -41,13 +41,27 @@
 .sidebar-menu {
     display: flex;
     flex-direction: column;
-    border: 1px solid cyan;
     width: 70%;
+    gap: 30px;
 }
 .side-menu-button {
     width: 80%;
-    border: solid 1px purple
-}
-.side-menu-button a {
     text-decoration: none;
+    color: var(--azul-principal);  
+    font-size: 20px;
+    padding-left: 15px; 
+}
+
+.active-button-side {
+    background-color: var(--azul-principal);
+    color: var(--branco);
+    border-radius: 10px;
+}
+
+
+.side-menu-button:hover{
+    background-color: var(--azul-principal);
+    color: var(--branco);
+    border-radius: 10px;
+    transform: scale(1.01);
 }
