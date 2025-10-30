@@ -43,4 +43,26 @@ export function Favoritos({ favorito, setFavorito}){
       )}
     </button>
   );
-}
+};
+
+export const Estrelas = ({ quantidade }) => {
+  // Converte a avaliação para um número com uma casa decimal e calcula a porcentagem
+  const numero_estrela = quantidade;
+  const porcentagemPreenchimento = (numero_estrela / 5.0) * 100;
+
+  return (
+    <div className="avaliacao-estrelas-barra-wrapper">
+        <div className="estrelas-container-base" aria-label={`Avaliação de ${numero_estrela} de 5`}>
+            <div className="estrelas-vazias">
+                ★★★★★
+            </div>
+            <div 
+                className="estrelas-preenchidas" 
+                style={{ width: `${porcentagemPreenchimento}%` }}
+            >
+                ★★★★★
+            </div>
+        </div>
+    </div>
+  );
+};

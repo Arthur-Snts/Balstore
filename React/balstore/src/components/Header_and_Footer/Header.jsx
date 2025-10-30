@@ -21,11 +21,13 @@ function Header_Client ({active}){
     return(
         <>  
             <Link to="/">
-                <img src={Bal_Logo} alt="BALSTORE_icon" className='BAL-icon' to="/"/>
+                <img src={Bal_Logo} alt="BALSTORE_icon" className='BAL-icon'/>
             </Link>
             <div className='search'>
                 <i className="fa fa-search"></i>
-                <input type="search" className='search-bar' placeholder='Pesquisar...'/>
+                    <input type="search" className='search-bar' placeholder='Pesquisar...' />
+
+                
             </div>
             <nav>
                 <ul className='nav-list'>
