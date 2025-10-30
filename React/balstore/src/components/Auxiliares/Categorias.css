@@ -1,7 +1,6 @@
 .categorias {
     display: flex;
-    gap: 50px;
-    justify-content: center;
+    justify-content: space-around;
     margin-top: 30px;
     margin-bottom: 30px;
 }

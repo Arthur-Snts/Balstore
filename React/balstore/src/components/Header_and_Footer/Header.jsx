@@ -31,7 +31,7 @@ function Header_Client ({active}){
                 <ul className='nav-list'>
                     <li><a href="" className={active=== "Perfil"? 'nav-link active-nav-button': 'nav-link'}>Perfil</a></li>
                     <li><a href="" className={active=== "Minha Loja"? 'nav-link active-nav-button': 'nav-link'}>Minha loja</a></li>
-                    <li><a href="" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</a></li>
+                    <li><Link to="/Sobre" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</Link></li>
                 </ul>
             </nav>
             <img src={Carrinho} alt="BALSTORE_carrinho" className='BAL-carrinho'/>
@@ -53,7 +53,7 @@ function Header_Guest({active}) {
             <ul className='nav-list'>
                 <li><Link to="/Cadastro" className={active=== "Sign up"? 'nav-link active-nav-button': 'nav-link'}>Sign up</Link></li>
                 <li><Link to="/Login" className={active=== "Sign in"? 'nav-link active-nav-button': 'nav-link'}>Sign in</Link></li>
-                <li><a href="" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</a></li>
+                <li><Link to="/Sobre" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</Link></li>
             </ul>
         </nav>
         <img src={Carrinho} alt="BALSTORE_carrinho" className='BAL-carrinho'/>
@@ -71,7 +71,7 @@ function Header_Lojist ({user_name, active}) {
                 <li><a href="" className={active=== "Meus Produtos"? 'nav-link active-nav-button': 'nav-link'}>Meus produtos</a></li>
                 <li><a href="" className={active=== "Pedidos"? 'nav-link active-nav-button': 'nav-link'}>Pedidos</a></li>
                 <li><a href="" className={active=== "Configurações"? 'nav-link active-nav-button': 'nav-link'}>Configurações</a></li>
-                <li><a href="" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</a></li>
+                <li><Link to="/Sobre" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</Link></li>
                 <li><a href="" className={active=== "Logout"? 'nav-link active-nav-button': 'nav-link'}>Logout</a></li>
             </ul>
         </nav>

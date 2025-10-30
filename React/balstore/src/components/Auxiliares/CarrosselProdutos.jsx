@@ -36,7 +36,7 @@ function PrevArrow(props) {
         centerPadding: "40px", 
         responsive: [
         { breakpoint: 1650, settings: { slidesToShow: 5 } },
-        { breakpoint: 768, settings: { slidesToShow: 2 } },
+        { breakpoint: 1300, settings: { slidesToShow: 2 } },
         { breakpoint: 480, settings: { slidesToShow: 1 } },
         ],
     };

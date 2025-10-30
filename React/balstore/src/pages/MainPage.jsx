@@ -16,7 +16,7 @@ import produtos_todos from "./produtos_teste"; //Substituir por consulta no banc
 export default function MainPage() {
 
     useEffect(() => {
-        document.title = "Página Inicial";
+        document.title = "Balstore";
     }, []);
 
     const status = "guest"; // Substituir quando implementar login
