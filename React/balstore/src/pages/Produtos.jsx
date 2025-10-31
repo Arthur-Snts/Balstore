@@ -1,31 +1,59 @@
-import Header from "../components/Header_and_Footer/Header"
-import Footer from "../components/Header_and_Footer/Footer"
+import Header from "../components/Header_and_Footer/Header";
+import Footer from "../components/Header_and_Footer/Footer";
 import { useState, useEffect } from "react";
-import ProdutosLojista from "../components/Produtos/ProdutosLojista"
-import AdicionarProduto from "../components/Produtos/AdicionarProduto"
-import EditarProduto from "../components/Produtos/EditarProduto"
-import produtos_todos from "./produtos_teste"; //Substituir por consulta no banco
+import ProdutosLojista from "../components/Produtos/ProdutosLojista";
+import AdicionarProduto from "../components/Produtos/AdicionarProduto";
+import produtos_todos from "./produtos_teste"; // Substituir por consulta no banco
 
+export default function Produto() {
+  useEffect(() => {
+    document.title = "Produto";
+  }, []);
 
+  const status = "lojist";
+  const [mostrarAdicionar, setMostrarAdicionar] = useState(false);
 
+  const handleMostrarAdicionar = () => {
+    setMostrarAdicionar(!mostrarAdicionar);
+  };
 
-export default function Produto (){
+  return (
+    <>
+      <Header status={status} user_name={"oi"} />
 
-    useEffect(() => {
-        document.title = "Produto";
-    }, []);
-    const status = "lojist";
-    return (
-        <>
-        <Header status={status} user_name={"oi"}></Header>
-      
-        <ProdutosLojista produtos={produtos_todos}/>
-        
+      <div className="container-produtos">
+        {/* Botão que mostra/fecha o formulário */}
+        <button
+          className="botao-adicionar"
+          onClick={handleMostrarAdicionar}
+        >
+          {mostrarAdicionar ? "Fechar Formulário" : "Adicionar Produto"}
+        </button>
 
+        {/* Renderização condicional: se mostrarAdicionar for true, só mostra o formulário */}
+        {mostrarAdicionar ? (
+          <AdicionarProduto
+            categorias={[
+              { id: 1, nome: "Eletrônicos" },
+              { id: 2, nome: "Roupas" },
+            ]}
+            props={{
+              filename: "",
+              nome: "",
+              categoria: { id: "", nome: "" },
+              descricao: "",
+              preco: "",
+              estoque: "",
+              desconto: "",
+            }}
+          />
+        ) : (
+          // Caso contrário, mostra a lista de produtos
+          <ProdutosLojista produtos={produtos_todos} />
+        )}
+      </div>
 
-
-        <Footer></Footer>
-        
-        </>
-
-    )}
+      <Footer />
+    </>
+  );
+}
