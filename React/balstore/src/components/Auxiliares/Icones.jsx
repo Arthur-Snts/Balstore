@@ -45,14 +45,15 @@ export function Favoritos({ favorito, setFavorito}){
   );
 };
 
-export const Estrelas = ({ quantidade }) => {
-  // Converte a avaliação para um número com uma casa decimal e calcula a porcentagem
-  const numero_estrela = quantidade;
-  const porcentagemPreenchimento = (numero_estrela / 5.0) * 100;
+export const Estrelas = ({ rating }) => {
+  const ratingValue = parseFloat(rating);
+  const porcentagemPreenchimento = (ratingValue / 5.0) * 100;
 
   return (
     <div className="avaliacao-estrelas-barra-wrapper">
-        <div className="estrelas-container-base" aria-label={`Avaliação de ${numero_estrela} de 5`}>
+        <span className="nota-numerica">{ratingValue.toFixed(1)}</span>
+        
+        <div className="estrelas-container-base" aria-label={`Avaliação de ${ratingValue} de 5`}>
             <div className="estrelas-vazias">
                 ★★★★★
             </div>
