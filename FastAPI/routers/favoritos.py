@@ -38,11 +38,11 @@ def pega_favoritos(session: SessionDep, cli_id:int, fav_id:int = None):
 # ------------------------------------------------------------------------------
 # POST
 
-@router.post("/{cli_id}")
-def cadastra_favoritos(session: SessionDep, cli_id:int, favorito_cadastro:Favorito):
+@router.post("/")
+def cadastra_favoritos(session: SessionDep, favorito_cadastro:Favorito):
 
     favorito_existente = session.exec(
-        select(Favorito).where(Favorito.cliente_id == cli_id, Favorito.produto_id == favorito_cadastro.produto_id)
+        select(Favorito).where(Favorito.cliente_id == favorito_cadastro.cliente_id, Favorito.produto_id == favorito_cadastro.produto_id)
     ).first()
 
     if favorito_existente:

@@ -20,7 +20,7 @@ router = APIRouter(prefix="/enderecos", tags=["enderecos"])
 # ------------------------------------------------------------------------------
 # GET
 @router.get("/")
-def pega_enderecos(session: SessionDep, cli_id:int):
+def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None):
 
     if cli_id:
         enderecos = session.exec(
@@ -29,6 +29,17 @@ def pega_enderecos(session: SessionDep, cli_id:int):
 
         if not enderecos:
             raise HTTPException(400, "Cliente sem Enderecos")
+        
+    if loj_id:
+        enderecos = session.exec(
+            select(Endereco).where(Endereco.loj_id == loj_id)
+        ).all()
+
+        if not enderecos:
+            raise HTTPException(400, "Loja sem Enderecos")
+        
+    if not cli_id and not loj_id:
+        raise HTTPException(400, "Nenhum paramentro passado")
 
     return enderecos
 
