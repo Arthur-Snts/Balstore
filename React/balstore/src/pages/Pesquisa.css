@@ -1,0 +1,61 @@
+@import url(../components/Cores.css);
+
+.pesquisa-content{
+    display: flex;
+    flex-direction: row;
+    height: fit-content
+}
+
+.filter-side-bar{
+    border-right: 2px solid var(--azul-escuro) ;
+    width: 20%;
+    height: 100%;
+    
+}
+
+.section-produtos-buscados{
+    margin-left: 70px;
+    border: solid 1px black;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.result-pesquisa-line{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.result-pesquisa-line div{
+    display: flex;
+    align-items: center;
+    padding-bottom: 2px ;
+}
+.result-pesquisa-line p{
+    padding-top: 15px;
+    margin-left: 10px;
+}
+
+.classificar-por{
+    border: 1px solid var(--azul-escuro);
+    display: flex;
+}
+
+/* #avaliacao{
+
+}
+
+#preco{
+
+} */
+
+.corpo-produtos-buscados{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--azul-principal);
+}

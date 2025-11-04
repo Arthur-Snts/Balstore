@@ -53,3 +53,10 @@
     color: #ff3b3b;
     transform: scale(1.1);
 }
+
+.light-bulb{
+    color: #0c5e94;
+    height: 20px;
+    width: 20px;
+    opacity: 0.9;
+}
