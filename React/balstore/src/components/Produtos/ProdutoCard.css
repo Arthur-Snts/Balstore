@@ -5,6 +5,7 @@
   flex-direction: column;
   justify-content: space-between;
   border: solid #0c5e94 2px;
+  border-radius: 10px;
   
 }
 .top-card-section {
@@ -17,6 +18,8 @@
 .produto-img {
   height: 100%;
   width: 100%;
+  border-top-right-radius: 7px;
+  border-top-left-radius: 7px;
 }
 
 .mid-card-section {

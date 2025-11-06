@@ -47,24 +47,13 @@ export function Favoritos({ favorito, setFavorito}){
 };
 
 export const Estrelas = ({ rating }) => {
-  const ratingValue = parseFloat(rating);
-  const porcentagemPreenchimento = (ratingValue / 5.0) * 100;
+  const ratingValue = parseInt(rating);
 
   return (
-    <div className="avaliacao-estrelas-barra-wrapper">
-        <span className="nota-numerica">{ratingValue.toFixed(1)}</span>
-        
-        <div className="estrelas-container-base" aria-label={`Avaliação de ${ratingValue} de 5`}>
-            <div className="estrelas-vazias">
-                ★★★★★
-            </div>
-            <div 
-                className="estrelas-preenchidas" 
-                style={{ width: `${porcentagemPreenchimento}%` }}
-            >
-                ★★★★★
-            </div>
-        </div>
+    <div className="avaliacao-estrelas-wrapper">
+      <div className="estrelas-fixas">
+        {"★".repeat(ratingValue)}
+      </div>
     </div>
   );
 };

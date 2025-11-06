@@ -60,3 +60,15 @@
     width: 20px;
     opacity: 0.9;
 }
+
+.avaliacao-estrelas-wrapper {
+    display: flex;
+    align-items: center;
+}
+  
+.estrelas-fixas {
+    font-size: 1.6em !important;
+    color: gold !important;
+    white-space: nowrap !important;
+  }
+  
