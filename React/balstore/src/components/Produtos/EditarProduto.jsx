@@ -1,4 +1,4 @@
-import "./AdicionarProduto.css"
+import "./EditarProduto.css"
 import "../Cores.css"
 import { useState } from "react";
 

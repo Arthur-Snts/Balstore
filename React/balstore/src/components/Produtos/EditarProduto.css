@@ -1,93 +1,152 @@
+/* AdicionarProduto.css */
+
+/* --- Layout Principal --- */
+
 .adicionando {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 60px;
-  margin-top: 40px;
+    display: flex; /* Habilita o layout flexível */
+    max-width: 900px; /* Limita a largura do container principal */
+    margin: 40px auto; /* Centraliza o container na página */
+    gap: 40px; /* Espaço entre a imagem e o formulário */
+    padding: 20px;
+    /* Alinhar itens ao topo para que a imagem e o formulário comecem no mesmo ponto */
+    align-items: flex-start; 
 }
 
-/* ===== BLOCO DE IMAGEM ===== */
+/* --- Estilização da Área da Imagem --- */
+
 .inserir_imagem {
-  width: 220px;
-  height: 220px;
-  background-color: #757575;
-  border-radius: 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 15px;
-  gap: 10px;
-  cursor: pointer;
-  transition: 0.3s;
+    /* Ocupa aproximadamente 40% da largura, mantendo proporção visual */
+    flex-basis: 40%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    /* Configuração do Box/Container da Imagem (Similar à imagem) */
+    background-color: #6a6a6a; /* Cor de fundo cinza escuro */
+    border-radius: 20px; /* Borda arredondada */
+    aspect-ratio: 1 / 1; /* Torna o container quadrado (pode ser ajustado) */
+    padding: 20px; /* Espaçamento interno */
+    color: white; /* Cor do texto no container */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.inserir_imagem:hover {
-  opacity: 0.8;
+/* Esconde o input de arquivo padrão */
+.inserir_imagem input[type="file"] {
+    display: none;
 }
 
+/* Estilização do Label "Escolher imagem" (substituindo o ícone e texto "Inserir imagem") */
 .custom-file-upload {
-  background-color: transparent;
-  color: white;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-  padding: 0;
+    background-color: transparent; /* Fundo transparente */
+    color: white; /* Texto branco */
+    padding: 10px 20px;
+    border: 2px solid white; /* Borda branca */
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px; /* Espaço após o botão */
+    transition: background-color 0.3s;
 }
 
-.custom-file-upload input[type="file"] {
-  display: none;
+.custom-file-upload:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Efeito de hover suave */
 }
 
-/* ===== FORMULÁRIO ===== */
+.file-name {
+    /* Estilização para o nome do arquivo selecionado */
+    font-weight: bold;
+    margin-top: 5px;
+    display: block; /* Garante que o nome do arquivo fique em uma nova linha */
+}
+
+/* --- Estilização do Formulário --- */
+
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 400px;
+    flex-basis: 60%; /* Ocupa o restante da largura */
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Espaço entre os campos do formulário */
+    width: 100%;
 }
 
-.form input,
+.form input[type="text"],
 .form select,
 .form textarea {
-  background-color: #fbfbfc;
-  border: none;
-  border-bottom: 1px solid #a7a7a7;
-  padding: 10px;
-  font-size: 15px;
-  color: #333;
-  outline: none;
-  resize: none;
+    /* Estilo de input com linha de baixo (conforme a imagem) */
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #ccc; /* Linha de baixo */
+    outline: none; /* Remove o contorno ao focar */
+    font-size: 16px;
+    color: #333; /* Cor do texto digitado */
+    background: transparent; /* Fundo transparente para campos */
 }
 
-.form input::placeholder,
-.form textarea::placeholder {
-  font-style: italic;
-  color: #9b9b9b;
+.form textarea {
+    /* Ajustes para textarea */
+    resize: vertical; /* Permite redimensionar verticalmente */
+    height: 120px; /* Altura inicial maior */
+    line-height: 1.5;
+    padding-bottom: 0; /* Remove padding extra na parte inferior */
+    border: 1px solid #ccc; /* Borda completa para a área de descrição */
+    border-radius: 5px;
+    padding: 10px;
 }
 
-/* ===== BOTÃO AZUL CENTRALIZADO ===== */
-.form .cadastro-button {
-  align-self: center;
-  background-color: var(--azul-principal);
-  color: var(--branco);
-  border: none;
-  border-radius: 40px;
-  padding: 12px 40px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
+/* Estilo do placeholder para a cor cinza claro */
+.form ::placeholder {
+    color: #aaa; 
+    opacity: 1; 
 }
 
-.form .cadastro-button:hover {
-  background-color: var(--azul-escuro);
+/* Remove a seta do select em navegadores que suportam customização mais fácil (opcional) */
+.form select {
+    /* No seu HTML, o select está sozinho, mas na imagem, parece ter uma seta personalizada ou padrão */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Se precisar da seta, adicione um ícone como background-image e padding-right */
+    /* Exemplo: background-image: url('data:image/svg+xml;utf8,<svg ...'); */
 }
 
-/* ===== TEXTO DO NOME DO ARQUIVO ===== */
-.file-name {
-  font-size: 0.9rem;
-  color: #eee;
+/* --- Estilização do Botão (o seu é "Cadastrar", na imagem é "Próximo") --- */
+
+.cadastro-button {
+    /* Estilo do botão "Próximo" da imagem */
+    background-color: #1a6496; /* Cor azul escuro */
+    color: white;
+    border: none;
+    border-radius: 25px; /* Borda bem arredondada */
+    padding: 12px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    align-self: flex-end; /* Alinha o botão à direita (se houver espaço) */
+    margin-top: 15px; /* Espaço acima do botão */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+.cadastro-button:hover {
+    background-color: #15557e; /* Cor mais escura no hover */
+}
+
+/* --- Responsividade (Ajuste para telas menores) --- */
+
+@media (max-width: 768px) {
+    .adicionando {
+        flex-direction: column; /* Empilha os elementos em telas pequenas */
+        gap: 20px;
+    }
+    
+    .inserir_imagem, .form {
+        flex-basis: 100%; /* Ocupa a largura total */
+        width: 100%;
+    }
+
+    .cadastro-button {
+        align-self: stretch; /* Ocupa a largura total do container do formulário */
+    }
 }
