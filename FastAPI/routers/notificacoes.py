@@ -69,7 +69,7 @@ def atualiza_notificacao(session: SessionDep, status_novo: str, not_id: int):
     if not notificacao_existente:
         raise HTTPException(400, "Notificação não encontrada")
     
-    notificacao_existente.status == status_novo
+    notificacao_existente.status = status_novo
 
     session.add(notificacao_existente)
     session.commit()

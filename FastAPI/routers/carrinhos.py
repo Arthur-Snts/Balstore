@@ -22,20 +22,18 @@ router = APIRouter(prefix="/carrinhos", tags=["carrinhos"])
 # ------------------------------------------------------------------------------
 # GET
 @router.get("/{cli_id}")
-def pega_carrinho(cli_id:int, session: SessionDep):
+def pega_carrinho(session: SessionDep, cli_id:int):
 
     carrinho = session.exec(
         select(Carrinho).where(Carrinho.cliente_id == cli_id)
     ).all()
 
-    carrinho_total = session.exec(
-        select(Carrinho, Produto).where(Carrinho.cliente_id == cli_id, Produto.id == Carrinho.produto_id)
-    ).all()
+    
 
     if not carrinho:
         raise HTTPException(400, "Carrinho do Cliente vazio")
     
-    return carrinho_total
+    return carrinho
 # ------------------------------------------------------------------------------
 # POST
 @router.post("/")

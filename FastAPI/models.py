@@ -130,6 +130,8 @@ class Compra(SQLModel, table=True):
     data: datetime = Field(default_factory=datetime.utcnow,index=False)
     situacao: str = Field(default="Aguardando Pagamento", index=False)
     cod_rastreio: Optional[str] = Field(index=False)
+    cod_pagamento: str = Field(index=False)
+    frete: float = Field(index=False)
 
     cliente: "Cliente" = Relationship(back_populates="compras")
     produtos: list["Compra_Produto"] = Relationship(back_populates="compra")
