@@ -9,7 +9,8 @@ const produtos = [
     alt: "Carrinho de controle remoto vermelho",
     favorito: false,
     categoria: "Brinquedos",
-    promocao: 15
+    promocao: 15,
+    estoque: 125 // Adicionado estoque inicial
   },
   // Cosméticos
   {
@@ -21,7 +22,8 @@ const produtos = [
     alt: "Batom líquido vermelho",
     favorito: false,
     categoria: "Cosméticos",
-    promocao: 0
+    promocao: 0,
+    estoque: 88 // Adicionado estoque inicial
   },
   // Esporte
   {
@@ -33,7 +35,8 @@ const produtos = [
     alt: "Bola de futebol branca e preta",
     favorito: false,
     categoria: "Esporte",
-    promocao: 20
+    promocao: 20,
+    estoque: 35 // Adicionado estoque inicial
   },
   // Roupas
   {
@@ -45,7 +48,8 @@ const produtos = [
     alt: "Camiseta polo azul",
     favorito: false,
     categoria: "Roupas",
-    promocao: 0
+    promocao: 0,
+    estoque: 150 // Adicionado estoque inicial
   },
   // Eletrônicos
   {
@@ -57,7 +61,8 @@ const produtos = [
     alt: "Fone de ouvido preto",
     favorito: false,
     categoria: "Eletrônicos",
-    promocao: 10
+    promocao: 10,
+    estoque: 62 // Adicionado estoque inicial
   },
   // Papelaria
   {
@@ -69,7 +74,8 @@ const produtos = [
     alt: "Caderno universitário colorido",
     favorito: false,
     categoria: "Papelaria",
-    promocao: 0
+    promocao: 0,
+    estoque: 200 // Adicionado estoque inicial
   },
   // Bolsas
   {
@@ -81,7 +87,8 @@ const produtos = [
     alt: "Bolsa de couro marrom",
     favorito: false,
     categoria: "Bolsas",
-    promocao: 25
+    promocao: 25,
+    estoque: 45 // Adicionado estoque inicial
   },
   // Calçados
   {
@@ -93,7 +100,8 @@ const produtos = [
     alt: "Tênis casual branco",
     favorito: false,
     categoria: "Calçados",
-    promocao: 0
+    promocao: 0,
+    estoque: 99 // Adicionado estoque inicial
   },
   // Cozinha
   {
@@ -105,7 +113,8 @@ const produtos = [
     alt: "Conjunto de panelas coloridas",
     favorito: false,
     categoria: "Cozinha",
-    promocao: 30
+    promocao: 30,
+    estoque: 28 // Adicionado estoque inicial
   },
   // Móveis
   {
@@ -117,7 +126,8 @@ const produtos = [
     alt: "Cadeira gamer preta",
     favorito: false,
     categoria: "Móveis",
-    promocao: 0
+    promocao: 0,
+    estoque: 15 // Adicionado estoque inicial
   }
 ];
 
@@ -128,23 +138,27 @@ const categorias = [
   "Móveis", "Ferramentas", "Limpeza", "Livros"
 ];
 
+// Função auxiliar para gerar um número aleatório de estoque (entre 10 e 200)
+function gerarEstoqueAleatorio() {
+    return Math.floor(Math.random() * (200 - 10 + 1)) + 10;
+}
+
 categorias.forEach(categoria => {
   for (let i = 1; i <= 10; i++) {
-    // Gera aleatoriamente se está em promoção (30% de chance)
     const estaEmPromocao = Math.random() < 0.3;
-    // Se estiver em promoção, gera um desconto entre 5% e 50%
     const desconto = estaEmPromocao ? Math.floor(Math.random() * 46) + 5 : 0;
     
     produtos.push({
       id: id++,
       nome: `${categoria} Produto ${i}`,
-      preco: parseFloat((Math.random() * 300 + 20).toFixed(2)), // ✅ Agora é número
-      avaliacao: parseFloat((Math.random() * 2 + 3).toFixed(1)), // ✅ Agora é número
+      preco: parseFloat((Math.random() * 300 + 20).toFixed(2)),
+      avaliacao: parseFloat((Math.random() * 2 + 3).toFixed(1)),
       imagem_path: `https://picsum.photos/300/300?random=${id}`,
       alt: `${categoria} Produto ${i}`,
       favorito: false,
       categoria,
-      promocao: desconto
+      promocao: desconto,
+      estoque: gerarEstoqueAleatorio() // 👈 Estoque gerado aleatoriamente para os novos produtos
     });
   }
 });

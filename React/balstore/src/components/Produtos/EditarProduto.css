@@ -1,152 +1,152 @@
-/* AdicionarProduto.css */
+/* EditarProduto.css */
 
-/* --- Layout Principal --- */
+/* Cores.css (presumindo que você tenha variáveis definidas aqui, como no exemplo abaixo) 
+   Exemplo:
+   :root {
+       --cor-primaria: #0d47a1; 
+       --cor-secundaria: #1565c0; 
+       --cor-texto-claro: #ffffff;
+       --cor-texto-escuro: #333333;
+       --cor-borda-input: #ccc;
+       --cor-fundo-imagem: #808080;
+       --cor-texto-imagem: #ffffff;
+       --cor-icone-imagem: #ffffff;
+   }
+*/
 
 .adicionando {
-    display: flex; /* Habilita o layout flexível */
-    max-width: 900px; /* Limita a largura do container principal */
-    margin: 40px auto; /* Centraliza o container na página */
+    display: flex;
     gap: 40px; /* Espaço entre a imagem e o formulário */
-    padding: 20px;
-    /* Alinhar itens ao topo para que a imagem e o formulário comecem no mesmo ponto */
-    align-items: flex-start; 
+    align-items: flex-start; /* Alinha o topo dos elementos */
+    padding: 30px;
+    max-width: 1000px; /* Largura máxima para centralizar ou limitar */
+    margin: 0 auto; /* Centraliza o container */
 }
 
-/* --- Estilização da Área da Imagem --- */
+/* --- Container da Imagem --- */
 
 .inserir_imagem {
-    /* Ocupa aproximadamente 40% da largura, mantendo proporção visual */
-    flex-basis: 40%; 
+    width: 300px; /* Largura do contêiner da imagem */
+    height: 300px; /* Altura do contêiner da imagem */
+    border-radius: 20px; /* Arredondamento dos cantos */
+    background-color: var(--cor-fundo-imagem, #808080); /* Cor de fundo cinza da imagem */
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    
-    /* Configuração do Box/Container da Imagem (Similar à imagem) */
-    background-color: #6a6a6a; /* Cor de fundo cinza escuro */
-    border-radius: 20px; /* Borda arredondada */
-    aspect-ratio: 1 / 1; /* Torna o container quadrado (pode ser ajustado) */
-    padding: 20px; /* Espaçamento interno */
-    color: white; /* Cor do texto no container */
+    align-items: center;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: var(--cor-texto-imagem, #ffffff);
+    /* Para simular o ícone/texto de "Inserir imagem" */
+    position: relative;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave, opcional */
 }
 
-/* Esconde o input de arquivo padrão */
-.inserir_imagem input[type="file"] {
-    display: none;
-}
 
-/* Estilização do Label "Escolher imagem" (substituindo o ícone e texto "Inserir imagem") */
-.custom-file-upload {
-    background-color: transparent; /* Fundo transparente */
-    color: white; /* Texto branco */
-    padding: 10px 20px;
-    border: 2px solid white; /* Borda branca */
-    border-radius: 5px;
+
+
+.inserir_imagem .custom-file-upload {
+    /* Estiliza o botão/rótulo de escolha de arquivo */
     cursor: pointer;
-    margin-bottom: 15px; /* Espaço após o botão */
-    transition: background-color 0.3s;
+    /* Estilos para o rótulo principal */
+    font-size: 16px;
+    font-weight: 500;
 }
 
-.custom-file-upload:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Efeito de hover suave */
-}
 
-.file-name {
-    /* Estilização para o nome do arquivo selecionado */
-    font-weight: bold;
+
+.inserir_imagem .file-name {
+    display: block;
     margin-top: 5px;
-    display: block; /* Garante que o nome do arquivo fique em uma nova linha */
+    font-size: 14px;
+    font-style: italic;
+    word-break: break-all;
 }
 
-/* --- Estilização do Formulário --- */
+
+
+/* --- Formulário de Campos --- */
 
 .form {
-    flex-basis: 60%; /* Ocupa o restante da largura */
+    flex-grow: 1; /* Permite que o formulário ocupe o espaço restante */
     display: flex;
     flex-direction: column;
-    gap: 25px; /* Espaço entre os campos do formulário */
-    width: 100%;
+    gap: 20px; /* Espaço entre os campos do formulário */
+    width: 100%; /* Ocupa a largura disponível no flex container */
+    max-width: 500px; /* Limite a largura do formulário se necessário */
 }
 
 .form input[type="text"],
 .form select,
 .form textarea {
-    /* Estilo de input com linha de baixo (conforme a imagem) */
     width: 100%;
-    padding: 8px 0;
+    padding: 10px 0; /* Padding vertical para corresponder à imagem */
     border: none;
-    border-bottom: 1px solid #ccc; /* Linha de baixo */
-    outline: none; /* Remove o contorno ao focar */
+    border-bottom: 1px solid var(--cor-borda-input, #ccc); /* Linha inferior */
     font-size: 16px;
-    color: #333; /* Cor do texto digitado */
-    background: transparent; /* Fundo transparente para campos */
+    color: var(--cor-texto-escuro, #333);
+    outline: none; /* Remove o outline padrão ao focar */
+    background-color: transparent; /* Fundo transparente */
 }
+
+
+/* Remover seta padrão do select no dropdown (opcional, dependendo do browser) */
+
+
+
 
 .form textarea {
-    /* Ajustes para textarea */
-    resize: vertical; /* Permite redimensionar verticalmente */
-    height: 120px; /* Altura inicial maior */
-    line-height: 1.5;
-    padding-bottom: 0; /* Remove padding extra na parte inferior */
-    border: 1px solid #ccc; /* Borda completa para a área de descrição */
+    resize: none; /* Impede o redimensionamento */
+    border: 1px solid var(--cor-borda-input, #ccc); /* Borda em caixa para textarea */
+    min-height: 120px; /* Altura mínima para o campo de descrição */
+    padding: 10px; /* Adiciona padding interno ao textarea */
     border-radius: 5px;
-    padding: 10px;
+    margin-bottom: 20px; /* Espaço após o textarea */
 }
 
-/* Estilo do placeholder para a cor cinza claro */
-.form ::placeholder {
-    color: #aaa; 
-    opacity: 1; 
-}
 
-/* Remove a seta do select em navegadores que suportam customização mais fácil (opcional) */
-.form select {
-    /* No seu HTML, o select está sozinho, mas na imagem, parece ter uma seta personalizada ou padrão */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    /* Se precisar da seta, adicione um ícone como background-image e padding-right */
-    /* Exemplo: background-image: url('data:image/svg+xml;utf8,<svg ...'); */
-}
 
-/* --- Estilização do Botão (o seu é "Cadastrar", na imagem é "Próximo") --- */
-
+/* O botão "Próximo" (ou "Cadastrar" no seu código React) */
 .cadastro-button {
-    /* Estilo do botão "Próximo" da imagem */
-    background-color: #1a6496; /* Cor azul escuro */
-    color: white;
+    background-color: var(--cor-secundaria, #1565c0); /* Cor azul do botão */
+    color: var(--cor-texto-claro, #ffffff);
     border: none;
-    border-radius: 25px; /* Borda bem arredondada */
+    border-radius: 25px; /* Cantos arredondados */
     padding: 12px 30px;
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    align-self: flex-end; /* Alinha o botão à direita (se houver espaço) */
-    margin-top: 15px; /* Espaço acima do botão */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+    align-self: flex-end; /* Alinha o botão à direita (se o formulário for maior que o botão) */
+    width: 100%; /* Ocupa a largura total do formulário */
+    max-width: 150px; /* Limita a largura do botão como na imagem */
 }
 
 .cadastro-button:hover {
-    background-color: #15557e; /* Cor mais escura no hover */
+    background-color: var(--cor-primaria, #0d47a1); /* Um azul ligeiramente mais escuro no hover */
 }
 
-/* --- Responsividade (Ajuste para telas menores) --- */
-
+/* Responsividade (Opcional, mas recomendado) */
 @media (max-width: 768px) {
     .adicionando {
-        flex-direction: column; /* Empilha os elementos em telas pequenas */
-        gap: 20px;
+        flex-direction: column; /* Empilha a imagem e o formulário em telas menores */
+        gap: 30px;
+        align-items: center;
     }
-    
-    .inserir_imagem, .form {
-        flex-basis: 100%; /* Ocupa a largura total */
+
+    .inserir_imagem {
         width: 100%;
+        max-width: 300px; /* Mantém a largura máxima do bloco de imagem */
+        height: 250px;
+    }
+
+    .form {
+        max-width: 100%;
     }
 
     .cadastro-button {
-        align-self: stretch; /* Ocupa a largura total do container do formulário */
+        width: 100%; /* Botão ocupa a largura total em telas pequenas */
+        max-width: none;
     }
 }
