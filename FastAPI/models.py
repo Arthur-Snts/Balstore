@@ -94,7 +94,7 @@ class Carrinho(SQLModel, table=True):
     cliente_presenteado: "Cliente" = Relationship(back_populates="presentes")
 
     cliente: "Cliente" = Relationship(back_populates="carrinhos")
-    produto: "Produto" = Relationship(back_populates="carrinhos")
+    produto: "Produto" = Relationship(back_populates="carrinhos",sa_relationship_kwargs={"lazy": "joined"})
 
 
 class Amigo(SQLModel, table=True):
