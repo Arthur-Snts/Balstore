@@ -56,8 +56,6 @@
 
 .checkbox-categoria input[type="checkbox"] {
   margin-right: 10px;
-  -webkit-appearance: none;
-  appearance: none;
   width: 16px;
   height: 16px;
   border: 1px solid #aaa;

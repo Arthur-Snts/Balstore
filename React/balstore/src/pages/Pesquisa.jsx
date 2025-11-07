@@ -11,7 +11,6 @@ import { useState, useEffect } from "react";
 
 export default function Pesquisa(){
 
-
     let busca_produto = "Busca" //puxar input do header via API
 
     useEffect(() => {
@@ -20,27 +19,58 @@ export default function Pesquisa(){
 
     const status = "guest"; // Substituir quando implementar login
 
-    const itensPorPagina = 50;
-
-    //let totalPaginas = ; pegar número total de produtos e dividir por itensPorPagina
-    let paginaAtual = 0 // puxar do html
-
-    const [ativo, setAtivo] = useState(false);
-
     const [filtroAvaliacao, setFiltroAvaliacao] = useState(null);
+    const [ordenacaoPreco, setOrdenacaoPreco] = useState(null);
 
+    const [filtros, setFiltros] = useState({
+        categorias: [],
+        precoMin: "",
+        precoMax: ""
+    });
 
-    const produtosFiltrados = filtroAvaliacao
-    ? produtos_todos.filter(produto => produto.avaliacao >= filtroAvaliacao)
-    : produtos_todos;
+    const itensPorPagina = 12;
+    const [paginaAtual, setPaginaAtual] = useState(0); // ✅ começa em 0
 
+    // ✅ 1. FILTRAR PRODUTOS
+    const produtosFiltrados = produtos_todos.filter(produto => {
+        const filtroCategoriaOK =
+            filtros.categorias.length === 0 || filtros.categorias.includes(produto.categoria);
+
+        const filtroPrecoOK =
+            (!filtros.precoMin || produto.preco >= filtros.precoMin) &&
+            (!filtros.precoMax || produto.preco <= filtros.precoMax);
+
+        const filtroAvaliacaoOK =
+            !filtroAvaliacao || produto.avaliacao >= filtroAvaliacao;
+
+        return filtroCategoriaOK && filtroPrecoOK && filtroAvaliacaoOK;
+    });
+
+    // ✅ 2. ORDENAÇÃO
+    const produtosOrdenados = [...produtosFiltrados].sort((a, b) => {
+        if (ordenacaoPreco === "crescente") return a.preco - b.preco;
+        if (ordenacaoPreco === "decrescente") return b.preco - a.preco;
+        return 0;
+    });
+
+    // ✅ 3. PAGINAÇÃO
+    const totalPaginas = Math.ceil(produtosOrdenados.length / itensPorPagina);
+    const indexInicial = paginaAtual * itensPorPagina;
+    const indexFinal = indexInicial + itensPorPagina;
+
+    const produtosFinal = produtosOrdenados.slice(indexInicial, indexFinal);
+
+    // ✅ 4. Resetar a paginação quando filtros mudarem
+    useEffect(() => {
+        setPaginaAtual(0);   // (IMPORTANTE: agora funciona)
+    }, [filtroAvaliacao, ordenacaoPreco, filtros]);
 
     return (
             <>
                 <Header status={status}/>
                 <div className="pesquisa-content">
                     <aside className="filter-side-bar">
-                        <Filtros />
+                        <Filtros onChangeFiltros={setFiltros}/>
                     </aside>
                     <section className="section-produtos-buscados">
                         <div className="result-pesquisa-line">
@@ -60,14 +90,18 @@ export default function Pesquisa(){
                                     id="avaliacao" 
                                     onChange={(e) => setFiltroAvaliacao(e.target.value)}
                                 >
-                                    <option className="neutro">Avaliação</option>
+                                    <option className="neutro" value="0">Avaliação</option>
                                     <option className="estrelas-fixas" value="5"><Estrelas rating={5} /></option>
                                     <option className="estrelas-fixas" value="4"><Estrelas rating={4} /></option>
                                     <option className="estrelas-fixas" value="3"><Estrelas rating={3} /></option>
                                     <option className="estrelas-fixas" value="2"><Estrelas rating={2} /></option>
                                     <option className="estrelas-fixas" value="1"><Estrelas rating={1} /></option>
                                 </select>
-                                <select name="menu-preco" id="preco">
+                                <select 
+                                    name="menu-preco" 
+                                    id="preco"
+                                    onChange={(e) => setOrdenacaoPreco(e.target.value === "neutro" ? null : e.target.value)}
+                                >
                                     <option value="neutro">Preço</option>
                                     <option value="crescente">Preço: Crescente</option>
                                     <option value="decrescente">Preço: Decrescente</option>
@@ -76,15 +110,41 @@ export default function Pesquisa(){
                          </div>
 
                         <div className="corpo-produtos-buscados">
-                            {produtosFiltrados
-                            .slice(paginaAtual * itensPorPagina, (paginaAtual + 1) * itensPorPagina)
-                            .map((produto)=> (
-                                <ProdutoCard produto={produto} favorito={false //Substituir caso esteja logado}
-                                }></ProdutoCard>
+                            {produtosFinal.map((produto) => (
+                                <ProdutoCard 
+                                    key={produto.id}
+                                    produto={produto}
+                                    favorito={false}
+                                />
                             ))}
                         </div>
+                        
+                        <div className="paginacao">
+                            <button
+                                disabled={paginaAtual === 0}
+                                onClick={() => setPaginaAtual(paginaAtual - 1)}
+                            >
+                                {"<<"}
+                            </button>
 
-                       
+                            {Array.from({ length: totalPaginas }, (_, i) => (
+                                <button
+                                    key={i}
+                                    className={paginaAtual === i ? "pagina-ativa" : ""}
+                                    onClick={() => setPaginaAtual(i)}
+                                >
+                                    {i + 1}
+                                </button>
+                            ))}
+
+                            <button
+                                disabled={paginaAtual === totalPaginas - 1}
+                                onClick={() => setPaginaAtual(paginaAtual + 1)}
+                            >
+                                {">>"}
+                            </button>
+                        </div>
+
                     </section>
                 </div>
                 <Footer/>

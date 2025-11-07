@@ -110,3 +110,35 @@
     padding-bottom: 20px;
     margin-top: 30px;
 }
+
+.paginacao {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px 0;
+}
+
+.paginacao button {
+    padding: 6px 12px;
+    border: 1px solid var(--azul-escuro);
+    background-color: white;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.paginacao button:hover {
+    background-color: var(--azul-principal);
+    color: white;
+    transition: 200ms;
+}
+
+.paginacao button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.pagina-ativa {
+    background-color: var(--amarelo);
+    color: black;
+}
