@@ -2,12 +2,11 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    gap: 3px;
 }
 
 .nota-numerica {
-    font-size: 0.9em;
-    font-weight: 700;
+    font-size: 1em;
+    font-weight: 600;
     color: #333;
 }
 
@@ -60,15 +59,10 @@
     width: 20px;
     opacity: 0.9;
 }
-
-.avaliacao-estrelas-wrapper {
-    display: flex;
-    align-items: center;
-}
   
 .estrelas-fixas {
-    font-size: 1.6em !important;
-    color: gold !important;
-    white-space: nowrap !important;
+    font-size: 22px ;
+    color: gold !important ;
+    white-space: nowrap ;
   }
   

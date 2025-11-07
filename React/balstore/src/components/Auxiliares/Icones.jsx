@@ -50,10 +50,8 @@ export const Estrelas = ({ rating }) => {
   const ratingValue = parseInt(rating);
 
   return (
-    <div className="avaliacao-estrelas-wrapper">
-      <div className="estrelas-fixas">
-        {"★".repeat(ratingValue)}
-      </div>
+    <div className="estrelas-fixas">
+      {"★".repeat(ratingValue)}
     </div>
   );
 };

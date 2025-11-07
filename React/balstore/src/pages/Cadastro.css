@@ -74,13 +74,13 @@
 
 .link-form{
     color: var(--azul-principal) !important;
-    text-decoration: underline !important;
+    text-decoration: none !important;
     cursor: pointer;
     font-size: 21px;
 }
 
 .active {
     color: var(--azul-escuro) !important;
-    text-decoration: none;
+    text-decoration: underline;
     font-size: 21px;
 }

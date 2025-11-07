@@ -20,12 +20,19 @@ export default function Pesquisa(){
 
     const status = "guest"; // Substituir quando implementar login
 
-    const itensPorPagina = 24;
+    const itensPorPagina = 50;
 
     //let totalPaginas = ; pegar número total de produtos e dividir por itensPorPagina
     let paginaAtual = 0 // puxar do html
 
     const [ativo, setAtivo] = useState(false);
+
+    const [filtroAvaliacao, setFiltroAvaliacao] = useState(null);
+
+
+    const produtosFiltrados = filtroAvaliacao
+    ? produtos_todos.filter(produto => produto.avaliacao >= filtroAvaliacao)
+    : produtos_todos;
 
 
     return (
@@ -46,16 +53,19 @@ export default function Pesquisa(){
                                 <button
                                     className={ativo ? "amarelo" : ""}
                                     onClick={() => setAtivo(!ativo)}>
-                                
                                     Promoção
                                 </button>
-                                <select name="menu-classificacao" id="avaliacao">
-                                    <option value="neutro">Avaliação</option>
-                                    <option value="5-star"><Estrelas rating={5 || 0} /></option>
-                                    <option value="4-star"><Estrelas rating={4} /></option>
-                                    <option value="3-star"><Estrelas rating={3} /></option>
-                                    <option value="2-star"><Estrelas rating={2} /></option>
-                                    <option value="1-star"><Estrelas rating={1} /></option>
+                                <select 
+                                    name="menu-classificacao" 
+                                    id="avaliacao" 
+                                    onChange={(e) => setFiltroAvaliacao(e.target.value)}
+                                >
+                                    <option className="neutro">Avaliação</option>
+                                    <option className="estrelas-fixas" value="5"><Estrelas rating={5} /></option>
+                                    <option className="estrelas-fixas" value="4"><Estrelas rating={4} /></option>
+                                    <option className="estrelas-fixas" value="3"><Estrelas rating={3} /></option>
+                                    <option className="estrelas-fixas" value="2"><Estrelas rating={2} /></option>
+                                    <option className="estrelas-fixas" value="1"><Estrelas rating={1} /></option>
                                 </select>
                                 <select name="menu-preco" id="preco">
                                     <option value="neutro">Preço</option>
@@ -66,7 +76,7 @@ export default function Pesquisa(){
                          </div>
 
                         <div className="corpo-produtos-buscados">
-                            {produtos_todos
+                            {produtosFiltrados
                             .slice(paginaAtual * itensPorPagina, (paginaAtual + 1) * itensPorPagina)
                             .map((produto)=> (
                                 <ProdutoCard produto={produto} favorito={false //Substituir caso esteja logado}
