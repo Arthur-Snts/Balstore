@@ -1,64 +1,64 @@
-import Header from '../components/Header_and_Footer/Header';
-import Footer from '../components/Header_and_Footer/Footer';
-import Carrossel from '../components/Auxiliares/Carrossel';
-import Categorias from '../components/Auxiliares/Categorias';
-import CarrosselProdutos from '../components/Auxiliares/CarrosselProdutos';
-import "./MainPage.css";
-import ProdutoCard from '../components/Produtos/ProdutoCard';
-import { useEffect } from 'react';
+import React from 'react';
+// Importa o componente Sidebar
+import UserSidebar from '../components/Auxiliares/UserSidebar'; 
+// 💡 NOVO: Importa o componente Header
+import Header from '../components/Header_and_Footer/Header'; 
 
+// Importa um possível componente de Layout principal, se houver
+// import Layout from '../components/Layout/Layout'; 
 
-import produtos_todos from "./produtos_teste"; //Substituir por consulta no banco
+// Importa o CSS específico para esta página
+import './ListaDesejos.css'; 
 
-
-
+// Mock de dados do usuário para o exemplo
+const userData = {
+    nome_user: 'Ana Caroline',
+    num_amigos: 42
+};
 
 export default function ListaDesejos() {
-
-    useEffect(() => {
-        document.title = "Página Inicial";
-    }, []);
-
-    const status = "guest"; // Substituir quando implementar login
-
-    const categorias = [
-        "Brinquedos", "Cosméticos", "Esporte", "Roupas", "Eletrônicos", "Papelaria", "Bolsas", "Calçados", "Cozinha", 
-        "Móveis", "Ferramentas", "Limpeza", "Livros"
-    ] // Substituir por consulta ao banco
-
-    const categoria = categorias[Math.floor(Math.random() * categorias.length)];
-
-    const produtosFiltrados = produtos_todos.filter(
-        (produto) => produto.categoria === categoria
-    );
-
+    // Define o item do menu ativo da Sidebar
+    const activeSidebarItem = "Lista de Desejos"; 
     
+    // Define o status do usuário para o Header (Cliente logado)
+    const userStatus = "client";
     
+    // Define o item do menu principal ativo (provavelmente 'Perfil' para páginas de usuário)
+    const activeHeaderItem = "Perfil";
 
     return (
-        <>
-            <Header status={status}/>
-                <Carrossel/>
-                <Categorias/>
-                <div className="categoria-recomendada">
-                    <div className="titulo-categoria-recomendada">
-                        <p>Categoria {categoria}</p>
-                    </div>
-                    <CarrosselProdutos produtosFiltrados={produtosFiltrados}></CarrosselProdutos>
-                </div>
-                <div className="recomendados">
-                    <div className="titulo-categoria-recomendada">
-                        <p>Produtos Recomendados</p>
-                    </div>
-                    <div className="produtos_todos">
-                        {produtos_todos.map((produto)=> (
-                            <ProdutoCard produto={produto} favorito={false //Substituir caso esteja logado}
-                            }></ProdutoCard>
-                        ))}
-                    </div>
-                </div>
-            <Footer/>
-        </>
+        // Você pode envolver isso em um componente de layout, se aplicável
+        // <Layout>
+        
+        <div className="lista-desejos-page">
+            
+            {/* 💡 NOVO: Renderiza o Header no topo da página */}
+            <Header 
+                status={userStatus} 
+                active={activeHeaderItem} 
+                // Se o status fosse "lojist", user_name também seria necessário.
+            />
 
-    )
+            <div className="main-content-area">
+                
+                {/* Renderiza o UserSidebar */}
+                <UserSidebar 
+                    props={userData} 
+                    active={activeSidebarItem} 
+                />
+                
+                <main className="user-profile-content">
+                    <h1>Minha Lista de Desejos</h1> 
+                    
+                    <section>
+                        <h2>Itens Salvos ({activeSidebarItem})</h2>
+                        <p>Aqui você verá todos os produtos que você salvou na sua lista de desejos.</p>
+                        {/* Conteúdo da lista de desejos viria aqui */}
+                    </section>
+                </main>
+            </div>
+        </div>
+        
+        // </Layout>
+    );
 }
