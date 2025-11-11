@@ -41,7 +41,7 @@
 }
 
 .classificar-por{
-    border: 1px solid var(--azul-escuro);
+    border: 1px solid var(--azul-principal);
     background-color: var(--azul-principal);
 }
 .classificar-por div{
@@ -109,6 +109,7 @@
     gap: 40px;
     padding-bottom: 20px;
     margin-top: 30px;
+    height: 80%;
 }
 
 .paginacao {
@@ -141,4 +142,14 @@
 .pagina-ativa {
     background-color: var(--amarelo);
     color: black;
+}
+
+.nenhum-produto{
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.msg-erro{
+    color: var(--azul-principal);
 }

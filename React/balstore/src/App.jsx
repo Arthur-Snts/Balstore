@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import Pesquisa from "./pages/Pesquisa";
+import ConfigCliente from "./pages/ConfigCliente";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path="/Login" element={<Login />} /> 
             <Route path="/Cadastro" element={<Cadastro />}/>
             <Route path="/Pesquisa" element={<Pesquisa />}/>
+            <Route path="/configuracao/cliente" element={<ConfigCliente />}/>
             {/*  Adcionando páginas aqui, lembrar de usar UseEffect de título em cada página, exemplo na MainPage */}
           </Routes>
         </Router>
