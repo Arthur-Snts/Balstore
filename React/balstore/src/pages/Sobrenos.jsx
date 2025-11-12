@@ -13,7 +13,7 @@ export default function Sobrenos () {
 
     return(
         <>
-            <Header status={status}></Header>
+            <Header status={status} active={"Sobre nós"}></Header>
             <div div className="sobrenos">
                 <div className="fotos_sobre">
                     <div className="foto_sobre">
