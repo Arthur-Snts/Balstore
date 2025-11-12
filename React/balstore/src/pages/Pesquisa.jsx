@@ -34,7 +34,7 @@ export default function Pesquisa() {
         precoMax: ""
     });
 
-    const itensPorPagina = 12;
+    const itensPorPagina = 36;
     const [paginaAtual, setPaginaAtual] = useState(0);
 
     useEffect(() => {

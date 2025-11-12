@@ -37,7 +37,7 @@ export default function Endereco({enderecos}){
                         <p><strong>Rua:</strong> {endereco.rua}, <strong>Nº:</strong> {endereco.numero}</p>
                         <p><strong>Bairro:</strong> {endereco.bairro}</p>
                         <p><strong>Cidade:</strong> {endereco.cidade} - <strong>UF:</strong> {endereco.estado}</p>
-                        <p><strong>CEP:</strong> {endereco.CEP}</p>
+                        <p><strong>CEP:</strong> {endereco.cep}</p>
                     </div>
                 ))}
             </div>
