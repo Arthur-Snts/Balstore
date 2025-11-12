@@ -5,6 +5,7 @@ from fastapi import HTTPException, Depends, APIRouter, UploadFile
 from typing import Annotated
 from datetime import datetime
 import os
+from sqlalchemy.orm import selectinload
 
 
 
@@ -25,27 +26,36 @@ router = APIRouter(prefix="/produtos", tags=["produtos"])
 @router.get("/")
 def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome:str=None, pro_categoria:str=None):
 
-    produtos = session.exec(select(Produto)).all()
+    query = select(Produto).options(selectinload(Produto.categoria), 
+                                    selectinload(Produto.comentarios), 
+                                    selectinload(Produto.favoritos), 
+                                    selectinload(Produto.carrinhos), 
+                                    selectinload(Produto.notificacoes), 
+                                    selectinload(Produto.compras), 
+                                    selectinload(Produto.loja))
 
     if loj_id:
-        produtos = session.exec(
-            select(Produto).where(Produto.loja_id == loj_id)
-        ).all()
+        query = query.where(Produto.loja_id == loj_id)
     if pro_id:
-        produtos = session.exec(
-            select(Produto).where(Produto.id == pro_id)
-        ).all()
+        query = query.where(Produto.id == pro_id)
     if pro_nome:
-        produtos = session.exec(
-            select(Produto).where(Produto.nome.contains(pro_nome))
-        ).all()
+        query = query.where(Produto.nome.contains(pro_nome))
     if pro_categoria:
-        produtos = session.exec(
-            select(Produto, Categoria).where(Produto.categoria_id == Categoria.id, Categoria.nome == pro_categoria)
-        ).all()
+        categoria = session.exec(select(Categoria).where(Categoria.nome == pro_categoria)).first()
+        query = query.where(Produto.categoria_id == categoria.id)
+        
+    produtos = session.exec(query).all()
 
+    print(produtos)
+    resultado = []
+    for c in produtos:
+        resultado.append({
+            **c.model_dump(),
+            "notificacoes": [n.model_dump() for n in c.notificacoes] if c.notificacoes else [],
+        })
 
-    return produtos
+    return resultado
+    
 
 # ------------------------------------------------------------------------------
 # CADASTRO

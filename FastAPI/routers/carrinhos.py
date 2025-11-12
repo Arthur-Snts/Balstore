@@ -3,6 +3,7 @@ from config import engine
 from sqlmodel import Session, select
 from fastapi import HTTPException, Depends, APIRouter
 from typing import Annotated
+from sqlalchemy.orm import selectinload
 
 
 def get_session():
@@ -25,15 +26,21 @@ router = APIRouter(prefix="/carrinhos", tags=["carrinhos"])
 def pega_carrinho(session: SessionDep, cli_id:int):
 
     carrinho = session.exec(
-        select(Carrinho).where(Carrinho.cliente_id == cli_id)
+        select(Carrinho).options(selectinload(Carrinho.produto), selectinload(Carrinho.cliente)).where(Carrinho.cliente_id == cli_id)
     ).all()
-
-    
 
     if not carrinho:
         raise HTTPException(400, "Carrinho do Cliente vazio")
-    
-    return carrinho
+
+    resultado = []
+    for c in carrinho:
+        resultado.append({
+            **c.model_dump(),
+            "produto": c.produto.model_dump() if c.produto else None,
+            "cliente": c.cliente.model_dump() if c.cliente else None
+        })
+
+    return resultado
 # ------------------------------------------------------------------------------
 # POST
 @router.post("/")
