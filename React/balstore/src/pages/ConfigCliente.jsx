@@ -1,7 +1,6 @@
 import Header from "../components/Header_and_Footer/Header"
 import Footer from "../components/Header_and_Footer/Footer"
 import { useState, useEffect } from "react";
-import user_big_icon from "../assets/user-icon-default.png"
 import Sidebar from "../components/Auxiliares/UserSidebar"
 import EditarCliente from "../components/Cliente/EditarCliente"
 import Endereços from "../components/Cliente/Endereco"
@@ -22,14 +21,63 @@ export default function ConfigContaCliente(){
         nome : "Ana Maria Alice da Conceição",
         email: "anamaria@gmail.com"
     };
-    const enderecos = {
+    const enderecos = [{
+        id: 1,
         rua: "Alceu Valença",
         numero: "20",
         bairro: "Peneirão",
         cidade: "João Picanha",
         uf: "RJ",
         cep: "56700-000"
-    }
+    },{
+        id: 1,
+        rua: "Alceu Valença",
+        numero: "20",
+        bairro: "Peneirão",
+        cidade: "João Picanha",
+        uf: "RJ",
+        cep: "56700-000"
+    },{
+        id: 1,
+        rua: "Alceu Valença",
+        numero: "20",
+        bairro: "Peneirão",
+        cidade: "João Picanha",
+        uf: "RJ",
+        cep: "56700-000"
+    },{
+        id: 1,
+        rua: "Alceu Valença",
+        numero: "20",
+        bairro: "Peneirão",
+        cidade: "João Picanha",
+        uf: "RJ",
+        cep: "56700-000"
+    },{
+        id: 1,
+        rua: "Alceu Valença",
+        numero: "20",
+        bairro: "Peneirão",
+        cidade: "João Picanha",
+        uf: "RJ",
+        cep: "56700-000"
+    },{
+        id: 1,
+        rua: "Alceu Valença",
+        numero: "20",
+        bairro: "Peneirão",
+        cidade: "João Picanha",
+        uf: "RJ",
+        cep: "56700-000"
+    },{
+        id: 1,
+        rua: "Alceu Valença",
+        numero: "20",
+        bairro: "Peneirão",
+        cidade: "João Picanha",
+        uf: "RJ",
+        cep: "56700-000"
+    }]
 
     const [state, setState] = useState("Profile")
 
@@ -42,8 +90,8 @@ export default function ConfigContaCliente(){
                 </aside>
                 <section className="user-config-and-address">
                     <div className="links-profile-or-address">
-                        <a onClick={()=> setState("Profile")} className={state === "Profile"? "active": "inactive"}>Editar Perfil</a>
-                        <a onClick={()=> setState("Address")} className={state === "Address"? "active": "inactive"}>Endereços</a>
+                        <a onClick={()=> setState("Profile")} className={state === "Profile"? "selected": "unselected"}>Editar Perfil</a>
+                        <a onClick={()=> setState("Address")} className={state === "Address"? "selected": "unselected"}>Endereços</a>
                     </div>
                     <div className="image-and-content">
                         {state === "Profile" ? <EditarCliente props={user_edit}/> : <Endereços enderecos={enderecos}/>}
