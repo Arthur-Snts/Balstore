@@ -7,10 +7,9 @@ import EditarProduto from "./EditarProduto";
 export default function ProdutosLojista({ produtos }) {
   const [listaProdutos, setListaProdutos] = useState(produtos);
   const [isOpenExcluir, setIsOpenExcluir] = useState(false);
-  const [modo, setModo] = useState("lista"); // 'lista' ou 'editar'
+  const [modo, setModo] = useState("lista"); 
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
 
-  // ---- MODAL DE EXCLUSÃO ----
   const abrirModalExcluir = (produto) => {
     setProdutoSelecionado(produto);
     setIsOpenExcluir(true);
@@ -22,7 +21,6 @@ export default function ProdutosLojista({ produtos }) {
     setIsOpenExcluir(false);
   };
 
-  // ---- EDIÇÃO ----
   const abrirEdicao = (produto) => {
     setProdutoSelecionado(produto);
     setModo("editar");
@@ -97,7 +95,7 @@ export default function ProdutosLojista({ produtos }) {
             <button className="voltar-button" onClick={cancelarEdicao}>
               ← Voltar
             </button>
-            <h1>Editar Produto</h1>
+            
           </div>
 
           <EditarProduto

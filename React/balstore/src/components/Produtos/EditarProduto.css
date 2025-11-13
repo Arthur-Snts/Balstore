@@ -1,152 +1,93 @@
-/* EditarProduto.css */
-
-/* Cores.css (presumindo que você tenha variáveis definidas aqui, como no exemplo abaixo) 
-   Exemplo:
-   :root {
-       --cor-primaria: #0d47a1; 
-       --cor-secundaria: #1565c0; 
-       --cor-texto-claro: #ffffff;
-       --cor-texto-escuro: #333333;
-       --cor-borda-input: #ccc;
-       --cor-fundo-imagem: #808080;
-       --cor-texto-imagem: #ffffff;
-       --cor-icone-imagem: #ffffff;
-   }
-*/
-
 .adicionando {
     display: flex;
-    gap: 40px; /* Espaço entre a imagem e o formulário */
-    align-items: flex-start; /* Alinha o topo dos elementos */
-    padding: 30px;
-    max-width: 1000px; /* Largura máxima para centralizar ou limitar */
-    margin: 0 auto; /* Centraliza o container */
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 30px;
 }
-
-/* --- Container da Imagem --- */
 
 .inserir_imagem {
-    width: 300px; /* Largura do contêiner da imagem */
-    height: 300px; /* Altura do contêiner da imagem */
-    border-radius: 20px; /* Arredondamento dos cantos */
-    background-color: var(--cor-fundo-imagem, #808080); /* Cor de fundo cinza da imagem */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.custom-file-upload {
+  display: inline-block;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: var(--azul-principal);
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.custom-file-upload:hover {
+  background-color: var(--azul-escuro);
+}
+
+.custom-file-upload input[type="file"] {
+  display: none;
+}
+
+.file-name {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.form{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: var(--cor-texto-imagem, #ffffff);
-    /* Para simular o ícone/texto de "Inserir imagem" */
-    position: relative;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave, opcional */
+    gap: 20px;
 }
 
-
-
-
-.inserir_imagem .custom-file-upload {
-    /* Estiliza o botão/rótulo de escolha de arquivo */
-    cursor: pointer;
-    /* Estilos para o rótulo principal */
-    font-size: 16px;
-    font-weight: 500;
+.form input{
+    border: none;
+    border-bottom: 3px solid black;
+    background-color: gainsboro;
+    color: black;
+    padding-left: 10px;
+    outline: none;
+    width: 300px;
 }
 
-
-
-.inserir_imagem .file-name {
-    display: block;
-    margin-top: 5px;
-    font-size: 14px;
+.form input::placeholder{
+    color: black;
     font-style: italic;
-    word-break: break-all;
 }
 
-
-
-/* --- Formulário de Campos --- */
-
-.form {
-    flex-grow: 1; /* Permite que o formulário ocupe o espaço restante */
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Espaço entre os campos do formulário */
-    width: 100%; /* Ocupa a largura disponível no flex container */
-    max-width: 500px; /* Limite a largura do formulário se necessário */
-}
-
-.form input[type="text"],
-.form select,
-.form textarea {
-    width: 100%;
-    padding: 10px 0; /* Padding vertical para corresponder à imagem */
+.form select {
     border: none;
-    border-bottom: 1px solid var(--cor-borda-input, #ccc); /* Linha inferior */
-    font-size: 16px;
-    color: var(--cor-texto-escuro, #333);
-    outline: none; /* Remove o outline padrão ao focar */
-    background-color: transparent; /* Fundo transparente */
+    border-bottom: 3px solid black;
+    background-color: gainsboro;
+    color: black;
+    padding-left: 10px;
+    outline: none;
+    width: 300px;
 }
-
-
-/* Remover seta padrão do select no dropdown (opcional, dependendo do browser) */
-
-
-
 
 .form textarea {
-    resize: none; /* Impede o redimensionamento */
-    border: 1px solid var(--cor-borda-input, #ccc); /* Borda em caixa para textarea */
-    min-height: 120px; /* Altura mínima para o campo de descrição */
-    padding: 10px; /* Adiciona padding interno ao textarea */
-    border-radius: 5px;
-    margin-bottom: 20px; /* Espaço após o textarea */
-}
-
-
-
-/* O botão "Próximo" (ou "Cadastrar" no seu código React) */
-.cadastro-button {
-    background-color: var(--cor-secundaria, #1565c0); /* Cor azul do botão */
-    color: var(--cor-texto-claro, #ffffff);
     border: none;
-    border-radius: 25px; /* Cantos arredondados */
-    padding: 12px 30px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
-    align-self: flex-end; /* Alinha o botão à direita (se o formulário for maior que o botão) */
-    width: 100%; /* Ocupa a largura total do formulário */
-    max-width: 150px; /* Limita a largura do botão como na imagem */
+    border-bottom: 3px solid black;
+    background-color: gainsboro;
+    color: black;
+    padding-left: 10px;
+    outline: none;
+    width: 300px;
 }
 
-.cadastro-button:hover {
-    background-color: var(--cor-primaria, #0d47a1); /* Um azul ligeiramente mais escuro no hover */
+.form textarea::placeholder{
+    color: black;
+    font-style: italic;
 }
 
-/* Responsividade (Opcional, mas recomendado) */
-@media (max-width: 768px) {
-    .adicionando {
-        flex-direction: column; /* Empilha a imagem e o formulário em telas menores */
-        gap: 30px;
-        align-items: center;
-    }
-
-    .inserir_imagem {
-        width: 100%;
-        max-width: 300px; /* Mantém a largura máxima do bloco de imagem */
-        height: 250px;
-    }
-
-    .form {
-        max-width: 100%;
-    }
-
-    .cadastro-button {
-        width: 100%; /* Botão ocupa a largura total em telas pequenas */
-        max-width: none;
-    }
+.form .cadastro-button{
+    background-color: var(--azul-principal);
+    color: var(--branco);
+    padding: 20px;
+    border-radius: 20px;
+    border: none;
+    width: 300px;
 }

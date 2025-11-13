@@ -34,11 +34,14 @@ export default function AdicionarProduto({categorias, props}){
                         <option value={categoria.id}>{categoria.nome}</option>
                     ))}
                 </select>
-                <textarea name="descricao"placeholder="Descrição do Produto">{props.descricao}</textarea>
+                <label >
+                    <p>Descrição:</p>
+                    <textarea name="descricao"placeholder="Descrição do Produto">{props.descricao}</textarea>
+                </label>
                 <input type="text" name="preco" placeholder="Preço" className="preco-prod" value={props.preco}/>
                 <input type="text" name="estoque" placeholder="Estoque" className="estoque-prod" value={props.estoque}/>
                 <input type="text" name="desconto" placeholder="Desconto" className="desconto-prod" value={props.desconto}/>
-                <button className="cadastro-button">Cadastrar</button>
+                <button className="cadastro-button">Editar</button>
             </div>
         </div>
     )
