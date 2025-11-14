@@ -30,11 +30,11 @@ export default function ProdutoHorizontal({props, children}) {
                             )}
                             {props.preco && (
                                 <p className="preco">
-                                R$ {(
+                                R$ {Number((
                                     props.promocao > 0
                                     ? props.preco - (props.preco * props.promocao) / 100
                                     : props.preco
-                                ).toFixed(2)}
+                                )).toFixed(2)}
                                 </p>
                             )}
                             {(props.promocao || props.promocao === 0) && (
