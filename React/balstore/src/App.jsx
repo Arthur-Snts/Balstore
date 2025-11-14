@@ -19,7 +19,7 @@ function App() {
             <Route path="/Login" element={<Login />} /> 
             <Route path="/Cadastro" element={<Cadastro />}/>
             <Route path="/Pesquisa" element={<Pesquisa />}/>
-            <Route path="/ConfigCli" element={<ConfigCliente />}/>
+            <Route path="/Perfil/Config" element={<ConfigCliente />}/>
             {/*  Adcionando páginas aqui, lembrar de usar UseEffect de título em cada página, exemplo na MainPage */}
           </Routes>
         </Router>
