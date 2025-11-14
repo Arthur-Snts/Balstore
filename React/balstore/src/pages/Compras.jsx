@@ -35,7 +35,10 @@ export default function Compras () {
                             {produtos_todos.map((produto, index) => (
                                 <ProdutoHorizontal props={produto} key={index}>
                                     <div className="buttons-children">
-                                        
+                                        <button>Copiar Código</button>
+                                        <button>Avaliar Produto</button>
+                                        <button>Editar Avaliação</button>
+
                                     </div>
                                 </ProdutoHorizontal>
                             ))}
