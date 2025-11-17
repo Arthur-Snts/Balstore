@@ -4,8 +4,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: solid #0c5e94 2px;
-  
+  border: none;
+  box-shadow: 2px 2px 2px 2px rgba(12, 94, 148, 0.3);
 }
 .top-card-section {
   max-height: 50%;

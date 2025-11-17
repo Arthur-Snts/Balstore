@@ -123,7 +123,7 @@ categorias.forEach(categoria => {
     produtos.push({
       id: id++,
       nome: `${categoria} Produto ${i}`,
-      preco: (Math.random() * 300 + 20).toFixed(2),
+      preco: Number((Math.random() * 300 + 20).toFixed(2)),
       avaliacao: (Math.random() * 2 + 3).toFixed(1), // de 3.0 a 5.0
       imagem_path: `https://picsum.photos/300/300?random=${id}`,
       alt: `${categoria} Produto ${i}`,

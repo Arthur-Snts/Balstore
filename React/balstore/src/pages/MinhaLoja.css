@@ -1,0 +1,55 @@
+.titulo {
+    background-color: var(--azul-escuro);
+    background-image: linear-gradient(to bottom, var(--azul-principal), var(--azul-escuro));
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin-top: -30px;
+    gap: 30px;
+}
+.nome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.nome h1 {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 45px;
+}
+
+.informacoes .nota-numerica {
+    color: white;
+    display: none;
+}
+
+.informacoes .avaliacao-estrelas-barra-wrapper {
+    width: 300px;
+    font-size: 40px;
+}
+
+.informacoes {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.informacoes p {
+    display: block;
+    text-align: center;
+    width: 300px;
+    font-size: 20px;
+}
+
+.produtos_loja {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+    padding: 50px;
+}
