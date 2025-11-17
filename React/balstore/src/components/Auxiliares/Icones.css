@@ -2,12 +2,11 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    gap: 3px;
 }
 
 .nota-numerica {
-    font-size: 0.9em;
-    font-weight: 700;
+    font-size: 1em;
+    font-weight: 600;
     color: #333;
 }
 
@@ -53,3 +52,17 @@
     color: #ff3b3b;
     transform: scale(1.1);
 }
+
+.light-bulb{
+    color: #0c5e94;
+    height: 20px;
+    width: 20px;
+    opacity: 0.9;
+}
+  
+.estrelas-fixas {
+    font-size: 1.4em ;
+    color: gold !important ;
+    white-space: nowrap ;
+  }
+  

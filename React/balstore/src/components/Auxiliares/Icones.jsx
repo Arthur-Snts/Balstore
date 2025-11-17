@@ -1,4 +1,5 @@
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { HiOutlineLightBulb } from "react-icons/hi";
 import './Icones.css'
 
 export const EstrelasAvaliacao = ({ rating }) => {
@@ -43,4 +44,21 @@ export function Favoritos({ favorito, setFavorito}){
       )}
     </button>
   );
+};
+
+export const Estrelas = ({ rating }) => {
+  const ratingValue = parseInt(rating);
+
+  return (
+    <div className="estrelas-fixas">
+      {"★".repeat(ratingValue)}
+    </div>
+  );
+};
+
+export function LightBulb(){
+  return(
+    <HiOutlineLightBulb className="light-bulb"/>
+  )
+  
 }

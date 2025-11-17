@@ -1,13 +1,15 @@
 .perfil-container {
   display: flex;
   align-items: center;
-  gap: 20px;
+  height: 100%;
+  width: 80%;
+  gap: 120px;
   font-family: Arial, sans-serif;
 }
 
 .avatar img {
-  width: 120px;
-  height: 120px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
 }
 
@@ -15,7 +17,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 250px;
+  width: 50%;
 }
 
 .perfil-form input {

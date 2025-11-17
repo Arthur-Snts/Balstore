@@ -1,6 +1,7 @@
 .card {
   width: 170px;
   min-height: 300px;
+  max-height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -17,6 +18,8 @@
 .produto-img {
   height: 100%;
   width: 100%;
+  border-top-right-radius: 7px;
+  border-top-left-radius: 7px;
 }
 
 .mid-card-section {
@@ -28,12 +31,15 @@
   width: 100%
 }
 .nome-texto {
-  padding: 7px;
-  display: flex;
-  flex-wrap: wrap;
-  text-align: center;
-  width: 100%;
-  font-size: 21px;
+  padding: 10px 7px 0px;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;     /* número de linhas desejadas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: left;
+  width: 85%;
+  font-size: 17px;
 }
 .avaliacao-produto {
   width: 100%;
@@ -51,4 +57,6 @@
 }
 .preco {
   margin: 5px;
+  font-size: 18px;
+  font-weight: 600;
 }
