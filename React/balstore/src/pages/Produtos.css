@@ -1,0 +1,24 @@
+.container-produtos{
+    display: flex;
+    flex-direction: column;
+}
+
+.botoes_produtos{
+    align-self: center;
+    display: flex;
+    gap: 30px;
+}
+
+.botoes_produtos .active-botao{
+    background-color: var(--azul-principal);
+    color: var(--branco);
+    border-radius: 10px;
+    transform: scale(1.01);
+    padding: 10px;
+    border: none;
+}
+
+.botao {
+    border: none;
+    color: var(--azul-principal);
+}
