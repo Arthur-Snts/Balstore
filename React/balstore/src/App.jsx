@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 // O Link importa aonde for o link, aí envolve o que for "linkável, exemplo no Header.jsx e Footer.jsx"
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
+import ListaDesejos from "./pages/ListaDesejos";
 import Produto from "./pages/Produtos";
 import Sobrenos from "./pages/Sobrenos";
 import EditarLoja from "./pages/EditarLoja";
@@ -24,6 +25,7 @@ function App() {
             <Route path="/" element={<MainPage />}/>
             <Route path="/Login" element={<Login />} /> 
             <Route path="/Cadastro" element={<Cadastro />}/>
+            <Route path="/ListaDesejos" element={<ListaDesejos/>}/>
             <Route path="/Produto" element={<Produto />}/>
 
             <Route path="/Sobre" element={<Sobrenos/>}/>
