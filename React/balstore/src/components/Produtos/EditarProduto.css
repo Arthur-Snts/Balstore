@@ -50,6 +50,7 @@
     color: black;
     padding-left: 10px;
     outline: none;
+    width: 300px;
 }
 
 .form input::placeholder{
@@ -64,6 +65,7 @@
     color: black;
     padding-left: 10px;
     outline: none;
+    width: 300px;
 }
 
 .form textarea {
@@ -73,6 +75,7 @@
     color: black;
     padding-left: 10px;
     outline: none;
+    width: 300px;
 }
 
 .form textarea::placeholder{
@@ -86,4 +89,5 @@
     padding: 20px;
     border-radius: 20px;
     border: none;
+    width: 300px;
 }

@@ -40,11 +40,11 @@ def pega_comentarios(session: SessionDep, pro_id:int, cli_id:int = None):
 # ------------------------------------------------------------------------------
 # POST
 
-@router.post("/{pro_id}")
-def cadastra_comentarios(session: SessionDep, pro_id:int, comentario_cadastro:Comentario, cli_id:int):
+@router.post("/")
+def cadastra_comentarios(session: SessionDep, comentario_cadastro:Comentario):
 
     comentario_existente = session.exec(
-        select(Comentario).where(Comentario.produto_id == pro_id, Comentario.cliente_id == cli_id)
+        select(Comentario).where(Comentario.produto_id == comentario_cadastro.produto_id, Comentario.cliente_id == comentario_cadastro.cliente_id)
     ).first()
 
     if comentario_existente:

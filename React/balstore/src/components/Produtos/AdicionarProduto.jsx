@@ -34,7 +34,10 @@ export default function AdicionarProduto({categorias}){
                         <option value={categoria.id}>{categoria.nome}</option>
                     ))}
                 </select>
-                <textarea name="descricao"placeholder="Descrição do Produto"></textarea>
+                <label >
+                    <p>Descrição:</p>
+                    <textarea name="descricao"placeholder="Descrição do Produto"></textarea>
+                </label>
                 <input type="text" name="preco" placeholder="Preço" className="preco-prod"/>
                 <input type="text" name="estoque" placeholder="Estoque" className="estoque-prod"/>
                 <input type="text" name="desconto" placeholder="Desconto" className="desconto-prod"/>

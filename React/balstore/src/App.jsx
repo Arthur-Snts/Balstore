@@ -6,6 +6,15 @@ import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import Pesquisa from "./pages/Pesquisa";
 import ConfigCliente from "./pages/ConfigCliente"
+import ListaDesejos from "./pages/ListaDesejos";
+import Produto from "./pages/Produtos";
+import Sobrenos from "./pages/Sobrenos";
+import EditarLoja from "./pages/EditarLoja";
+import Pagamento from "./pages/Pagamento";
+import Pedidos from "./pages/Pedidos";
+import Compras from "./pages/Compras";
+import MinhaLoja from "./pages/MinhaLoja";
+import Carrinho from "./pages/Carrinho";
 
 
 function App() {
@@ -20,6 +29,16 @@ function App() {
             <Route path="/Cadastro" element={<Cadastro />}/>
             <Route path="/Pesquisa" element={<Pesquisa />}/>
             <Route path="/Perfil/Config" element={<ConfigCliente />}/>
+            <Route path="/ListaDesejos" element={<ListaDesejos/>}/>
+            <Route path="/Produto" element={<Produto />}/>
+
+            <Route path="/Sobre" element={<Sobrenos/>}/>
+            <Route path="/Editar Loja" element={<EditarLoja/>}/>
+            <Route path="/Pagamento" element={<Pagamento/>}/>
+            <Route path="/Pedidos" element={<Pedidos/>}/>
+            <Route path="/Minhas Compras" element={<Compras/>}/>
+            <Route path="/Loja" element={<MinhaLoja/>}/>
+            <Route path="/Carrinho" element={<Carrinho/>}/>
             {/*  Adcionando páginas aqui, lembrar de usar UseEffect de título em cada página, exemplo na MainPage */}
           </Routes>
         </Router>

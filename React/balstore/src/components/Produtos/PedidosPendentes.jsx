@@ -3,7 +3,7 @@ import ProdutoHorizontal from "./ProdutoHorizontal"
 import { useState } from "react"
 import Modal from "../Auxiliares/Modal"
 
-export default function ProdutosLojista({produtos}){
+export default function PedidosPendentes({produtos}){
 
     const [listaProdutos, setListaProdutos] = useState(produtos);
     const [isOpen, setIsOpen] = useState(false);

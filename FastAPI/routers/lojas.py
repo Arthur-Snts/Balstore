@@ -4,6 +4,7 @@ from sqlmodel import Session, select
 from fastapi import HTTPException, Depends, APIRouter
 from typing import Annotated
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.orm import selectinload
 
 
 def get_session():
@@ -26,7 +27,7 @@ def busca_ou_login_loja(session: SessionDep,loj_email: str = None, loj_senha: st
 
     if loj_email and loj_senha:
         loja = session.exec(
-            select(Loja).where(Loja.email == loj_email)
+            select(Loja).options(selectinload(Loja.produtos), selectinload(Loja.notificacoes)).where(Loja.email == loj_email)
         ).first()
 
         if not loja:
@@ -37,24 +38,28 @@ def busca_ou_login_loja(session: SessionDep,loj_email: str = None, loj_senha: st
         else:
             raise HTTPException(401, "Senha Incorreta")
 
-    if loj_email:
-        loja = session.exec(
-            select(Loja).where(Loja.email == loj_email)
-        ).first()   
-    if loj_nome:
-        loja = session.exec(
-            select(Loja).where(Loja.nome.contains(loj_nome))
-        ).all()
-    if loj_cnpj:
-        loja = session.exec(
-            select(Loja).where(Loja.cnpj == loj_cnpj)
-        ).first()
-    if loj_id:
-        loja = session.exec(
-            select(Loja).where(Loja.id == loj_id)
-        ).first()
+    query = select(Loja).options(selectinload(Loja.produtos), selectinload(Loja.notificacoes))
 
-    return loja
+    if loj_email:
+        query = query.where(Loja.email == loj_email)
+    if loj_nome:
+        query = query.where(Loja.nome.contains(loj_nome))
+    if loj_cnpj:
+        query = query.where(Loja.cnpj == loj_cnpj)
+    if loj_id:
+        query = query.where(Loja.id == loj_id)
+
+    lojas = session.exec(query).all()
+
+    resultado = []
+    for c in lojas:
+        resultado.append({
+            **c.model_dump(),
+            "produtos": [p.model_dump() for p in c.produtos] if c.produtos else [],
+            "notificacoes": [n.model_dump() for n in c.notificacoes] if c.notificacoes else [],
+        })
+
+    return resultado
 
 # ------------------------------------------------------------------------------
 # CADASTRO

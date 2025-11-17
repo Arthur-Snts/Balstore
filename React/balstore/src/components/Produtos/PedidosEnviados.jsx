@@ -2,7 +2,7 @@ import "./PedidosEnviados.css"
 import ProdutoHorizontal from "./ProdutoHorizontal"
 
 
-export default function ProdutosLojista({produtos}){
+export default function PedidosEnviados({produtos}){
 
 
     const renameKeys = (obj, keyMap) => {
