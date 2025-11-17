@@ -3,6 +3,7 @@ from config import engine
 from sqlmodel import Session, select
 from fastapi import HTTPException, Depends, APIRouter
 from typing import Annotated
+from sqlalchemy.orm import selectinload
 
 
 def get_session():
@@ -23,9 +24,10 @@ router = APIRouter(prefix="/enderecos", tags=["enderecos"])
 def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None):
 
     if cli_id:
-        enderecos = session.exec(
-            select(Endereco).where(Endereco.cli_id == cli_id)
-        ).all()
+        query = query.where(Endereco.cli_id == cli_id)
+        
+    if loj_id:
+        query = query.where(Endereco.loj_id == loj_id)
 
         if not enderecos:
             raise HTTPException(400, "Cliente sem Enderecos")
@@ -41,7 +43,7 @@ def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None):
     if not cli_id and not loj_id:
         raise HTTPException(400, "Nenhum paramentro passado")
 
-    return enderecos
+    return resultado
 
 # ------------------------------------------------------------------------------
 # POST

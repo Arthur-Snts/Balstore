@@ -52,11 +52,20 @@ class Cliente(SQLModel, table=True):
     email: str = Field(index=False, unique=True)
     senha: str = Field(index=False)
 
+    amigos_enviados: list["Amigo"] = Relationship(
+        back_populates="cliente_de",
+        sa_relationship_kwargs={"foreign_keys": "[Amigo.amigo_de]"},
+    )
+
+    amigos_recebidos: list["Amigo"] = Relationship(
+        back_populates="cliente_amigo",
+        sa_relationship_kwargs={"foreign_keys": "[Amigo.amigo]"},
+    )
     favoritos: list["Favorito"] = Relationship(back_populates="cliente")
-    carrinhos: list["Carrinho"] = Relationship(back_populates="cliente")
+    carrinhos: list["Carrinho"] = Relationship(back_populates="cliente",sa_relationship_kwargs={"foreign_keys": "[Carrinho.cliente_id]"})
     comentarios: list["Comentario"] = Relationship(back_populates="cliente")
     enderecos: list["Endereco"] = Relationship(back_populates="cliente")
-    presentes: list["Carrinho"] = Relationship(back_populates="cliente_presenteado")
+    presentes: list["Carrinho"] = Relationship(back_populates="cliente_presenteado",sa_relationship_kwargs={"foreign_keys": "[Carrinho.presente_para]"})
     compras: list["Compra"] = Relationship(back_populates="cliente")
     notificacoes: list["Notificacao"] = Relationship(back_populates="cliente")
 
@@ -89,11 +98,11 @@ class Carrinho(SQLModel, table=True):
     cliente_id: int = Field(foreign_key="cliente.id")
     produto_id: int = Field(foreign_key="produto.id")
     qnt_produto: int = Field(default=1, index=False)
-    presente_para: Optional[int] = Field(default=None)
 
-    cliente_presenteado: "Cliente" = Relationship(back_populates="presentes")
+    presente_para: Optional[int] = Field(default=None, foreign_key="cliente.id")
 
-    cliente: "Cliente" = Relationship(back_populates="carrinhos")
+    cliente: "Cliente" = Relationship(back_populates="carrinhos", sa_relationship_kwargs={"foreign_keys": "[Carrinho.cliente_id]"})
+    cliente_presenteado: "Cliente" = Relationship(back_populates="presentes",sa_relationship_kwargs={"foreign_keys": "[Carrinho.presente_para]"})
     produto: "Produto" = Relationship(back_populates="carrinhos")
 
 
@@ -101,6 +110,16 @@ class Amigo(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     amigo_de: int = Field(foreign_key="cliente.id")
     amigo: int = Field(foreign_key="cliente.id")
+
+    cliente_de: "Cliente" = Relationship(
+        back_populates="amigos_enviados",
+        sa_relationship_kwargs={"foreign_keys": "[Amigo.amigo_de]"},
+    )
+
+    cliente_amigo: "Cliente" = Relationship(
+        back_populates="amigos_recebidos",
+        sa_relationship_kwargs={"foreign_keys": "[Amigo.amigo]"},
+    )
     solicitacao: str = Field(index=False)
 
 
@@ -130,6 +149,8 @@ class Compra(SQLModel, table=True):
     data: datetime = Field(default_factory=datetime.utcnow,index=False)
     situacao: str = Field(default="Aguardando Pagamento", index=False)
     cod_rastreio: Optional[str] = Field(index=False)
+    cod_pagamento: str = Field(index=False)
+    frete: float = Field(index=False)
 
     cliente: "Cliente" = Relationship(back_populates="compras")
     produtos: list["Compra_Produto"] = Relationship(back_populates="compra")

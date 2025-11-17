@@ -1,0 +1,28 @@
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+    border-bottom: 2px solid var(--azul-principal);
+    width: 50%;
+    justify-self: center;
+    padding-bottom: 30px;
+}
+
+.nav button {
+    background-color: transparent;
+    border: none;
+    color: var(--azul-principal);
+    padding: 10px;
+    border-radius: 10px;
+    width: 150px;
+}
+
+.nav .active_pedidos {
+    background-color: var(--azul-principal);
+    color: white;
+    transform: scale(1.1);
+    
+
+}

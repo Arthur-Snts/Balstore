@@ -1,11 +1,13 @@
-.produtos{
+/* ====== CONTAINER PRINCIPAL ====== */
+.produtos {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 40px;
 }
 
-.produtos .search-product{
+/* ====== CAMPO DE PESQUISA ====== */
+.produtos .search-product {
     background-color: var(--cinza-texto);
     opacity: 0.4;
     border: none;
@@ -16,7 +18,7 @@
     text-align: center;
 }
 
-.search-product i{
+.search-product i {
     color: var(--preto);
 }
 
@@ -29,11 +31,11 @@
     outline: none;
 }
 
-.search-product input::placeholder{
+.search-product input::placeholder {
     color: var(--branco);
 }
 
-
+/* ====== LISTA DE PRODUTOS ====== */
 .produtos-div {
     display: flex;
     flex-direction: column;
@@ -41,26 +43,76 @@
     width: 80%;
 }
 
-.buttons-children{
+/* ====== BOTÕES EDITAR / EXCLUIR ====== */
+.buttons-children {
     display: flex;
     margin-top: -30px;
     gap: 60px;
 }
 
-.buttons-children i{
+.buttons-children i {
     text-decoration: none;
-
 }
 
-.edit-button{
+.edit-button {
+    color: var(--azul-principal);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.3s;
+}
+
+.edit-button:hover {
+    text-decoration: underline;
+}
+
+.delete-button {
+    color: red;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.3s;
+}
+
+.delete-button:hover {
+    text-decoration: underline;
+}
+
+/* ====== ÁREA DE EDIÇÃO ====== */
+.editar-produto-container {
+    width: 80%;
+    margin: auto;
+}
+
+.top-editar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.top-editar h1 {
+    font-size: 1.5rem;
     color: var(--azul-principal);
 }
 
-.delete-button{
-    color: red;
+.voltar-button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--azul-principal);
+    transition: 0.3s;
 }
 
-.modal_content{
+.voltar-button:hover {
+    text-decoration: underline;
+}
+
+/* ====== MODAL (mantido igual ao antigo) ====== */
+.modal_content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -72,12 +124,12 @@
     color: var(--azul-principal);
 }
 
-.modal_content .buttons-modal{
+.modal_content .buttons-modal {
     display: flex;
     gap: 100px;
 }
 
-.buttons-modal .cancel-button{
+.buttons-modal .cancel-button {
     background-color: var(--amarelo);
     color: var(--azul-principal);
     border: none;
@@ -86,7 +138,7 @@
     width: 150px;
 }
 
-.buttons-modal .confirm-button{
+.buttons-modal .confirm-button {
     background-color: var(--branco);
     color: var(--azul-principal);
     border: 2px solid var(--amarelo);
