@@ -49,15 +49,16 @@
 
 .buttons-children i{
     text-decoration: none;
-
 }
 
 .edit-button{
     color: var(--azul-principal);
+    cursor: pointer;
 }
 
 .delete-button{
     color: red;
+    cursor: pointer;
 }
 
 .modal_content{

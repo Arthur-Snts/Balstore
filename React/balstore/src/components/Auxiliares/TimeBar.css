@@ -1,0 +1,33 @@
+.timer-container {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.timer-label {
+  font-size: 16px;
+  color: #2f3b4c;
+  margin-bottom: 6px;
+}
+
+.progress-bar {
+  width: 200px;
+  height: 15px;
+  background-color: #f3f3f3;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: black;
+  border-radius: 20px;
+  transition: width 1s linear;
+}
+
+.timer-text {
+  margin-top: 6px;
+  font-weight: bold;
+  color: #333;
+}

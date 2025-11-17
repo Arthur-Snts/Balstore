@@ -1,0 +1,94 @@
+.Modal_Pagamento {
+    background-color: gainsboro;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px;
+    margin-top: -30px;
+    margin-bottom: -30px;
+}
+
+.quadro_branco {
+    background-color: white;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    padding: 60px;
+    border-radius: 30px;
+}
+
+.content_pagamento {
+    display: flex;
+    border-bottom: 2px solid var(--cinza-texto);
+    border-top: 2px solid var(--cinza-texto);
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 30px;
+    gap: 50px;
+}
+
+.left_pagamento {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.valores p {
+    font-size: 21px;
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+.valores p i {
+    font-style: normal;
+    font-weight: bold;
+}
+
+.confirmacao {
+    display: flex;
+    flex-direction: column;
+}
+
+.confirmacao p{
+    color: var(--cinza-texto);
+}   
+
+.confirmacao h4{
+    font-size: 20px;
+}
+
+.right_pagamento {
+    display: flex;
+    flex-direction: column;
+}
+
+.right_pagamento p {
+    color: var(--cinza-texto);
+}
+
+.right_pagamento .data {
+    color: var(--azul-principal);
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.central_pagamento {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.central_pagamento button{
+    background-color: var(--amarelo);
+    border: none;
+    padding: 10px;
+    border-radius: 40px;
+    color: var(--azul-principal);
+}

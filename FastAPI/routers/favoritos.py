@@ -3,6 +3,8 @@ from config import engine
 from sqlmodel import Session, select
 from fastapi import HTTPException, Depends, APIRouter
 from typing import Annotated
+from sqlalchemy.orm import selectinload
+
 
 def get_session():
     with Session(engine) as session:
@@ -21,28 +23,37 @@ router = APIRouter(prefix="/favoritos", tags=["favoritos"])
 # GET
 @router.get("/{cli_id}")
 def pega_favoritos(session: SessionDep, cli_id:int, fav_id:int = None):
-
-    cliente = session.exec(
-        select(Cliente).where(Cliente.id == cli_id)
-    ).first()
-
-    if not cliente:
-        raise HTTPException(400, "Cliente não encontrado")
     
-    if fav_id:
-        favorito = session.exec(select(Favorito).where(Favorito.id == fav_id)).first()
-        return favorito
+    query = select(Favorito).options(selectinload(Favorito.cliente), 
+                                    selectinload(Favorito.produto),)
 
-    return cliente.favoritos
+
+    if fav_id:
+        query = query.where(Favorito.produto_id == cli_id)
+
+    if cli_id:
+        query = query.where(Favorito.cliente_id == cli_id)
+
+    favoritos = session.exec(query).all()
+
+    resultado = []
+    for c in favoritos:
+        resultado.append({
+            **c.model_dump(),
+            "produto": c.produto.model_dump() if c.produto else None,
+            "cliente": c.cliente.model_dump() if c.cliente else None,
+            })
+
+    return resultado
 
 # ------------------------------------------------------------------------------
 # POST
 
-@router.post("/{cli_id}")
-def cadastra_favoritos(session: SessionDep, cli_id:int, favorito_cadastro:Favorito):
+@router.post("/")
+def cadastra_favoritos(session: SessionDep, favorito_cadastro:Favorito):
 
     favorito_existente = session.exec(
-        select(Favorito).where(Favorito.cliente_id == cli_id, Favorito.produto_id == favorito_cadastro.produto_id)
+        select(Favorito).where(Favorito.cliente_id == favorito_cadastro.cliente_id, Favorito.produto_id == favorito_cadastro.produto_id)
     ).first()
 
     if favorito_existente:

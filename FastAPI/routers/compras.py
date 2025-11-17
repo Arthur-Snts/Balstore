@@ -86,7 +86,7 @@ def cadastra_compra(session: SessionDep, cli_id:int, compra_cadastra:Compra, pro
 # PUT
 
 @router.put("/{com_id}")
-def atualiza_compra(session: SessionDep,com_id:int, cod_rastreio: str =None, situacao: str = None):
+def atualiza_compra(session: SessionDep,com_id:int, cod_rastreio: str =None, cod_pagamento: str =None, situacao: str = None, frete: float = None):
     
     compra_atualizar = session.exec(
         select(Compra).where(Compra.id == com_id)
