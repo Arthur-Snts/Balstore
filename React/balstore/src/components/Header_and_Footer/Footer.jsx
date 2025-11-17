@@ -24,7 +24,7 @@ export default function Footer (){
                             <li><a href="" className='footer-link'>Perfil</a></li>
                             <li><a href="" className='footer-link'>Lista de Amigos</a></li>
                             <li><a href="" className='footer-link'>Venda na Balstore</a></li>
-                            <li><a href="" className='footer-link'>Sobre Nós</a></li>
+                            <li><Link to="/Sobre" className='footer-link'>Sobre Nós</Link></li>
                         </ul>
                     </div>
                     <div className="githubs">

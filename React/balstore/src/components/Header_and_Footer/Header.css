@@ -72,6 +72,12 @@ nav{
     width: auto;
 }
 
+.perfil {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .user_name {
     color: var(--branco);
     text-align: center;

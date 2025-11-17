@@ -17,6 +17,9 @@ export default function Cadastro (){
 
     const [cadastro, setCadastro] = useState("Cliente")
 
+    const [cpf, setCPF] = useState()
+    const [cnpj, setCNPJ] = useState()
+
     return(
         <>
             <Header status={status}></Header>
@@ -30,7 +33,8 @@ export default function Cadastro (){
                         </div>
                         <input type="text" placeholder="Nome..." className="input-nome"/>
                         <input type="email" placeholder="Email..." className="input-email"/>
-                        {cadastro === "Cliente"? <input type="text" placeholder="CPF..." className="input-CPF"/>:<input type="text" placeholder="CNPJ..." className="input-CNPJ"/>}
+                        {cadastro === "Cliente" && <input type="text" placeholder="CPF..." className="input-CPF" value={cpf} onChange={(e)=> setCPF(e.target.value)}/>}
+                        {cadastro === "Lojista" && <input type="text" placeholder="CNPJ..." className="input-CNPJ" value={cnpj} onChange={(e)=> setCNPJ(e.target.value)}/>}
                         <input type="password" placeholder="Senha..." className="input-senha" />
                         <input type="password" placeholder="Confirmar Senha..." className="input-senha" />
                     </div>

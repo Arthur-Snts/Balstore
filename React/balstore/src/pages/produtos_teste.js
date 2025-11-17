@@ -8,7 +8,9 @@ const produtos = [
     imagem_path: "https://picsum.photos/300/300?random=1",
     alt: "Carrinho de controle remoto vermelho",
     favorito: false,
-    categoria: "Brinquedos"
+    categoria: "Brinquedos",
+    promocao: 15,
+    estoque: 125 // Adicionado estoque inicial
   },
   // Cosméticos
   {
@@ -19,7 +21,9 @@ const produtos = [
     imagem_path: "https://picsum.photos/300/300?random=2",
     alt: "Batom líquido vermelho",
     favorito: false,
-    categoria: "Cosméticos"
+    categoria: "Cosméticos",
+    promocao: 0,
+    estoque: 88 // Adicionado estoque inicial
   },
   // Esporte
   {
@@ -30,7 +34,9 @@ const produtos = [
     imagem_path: "https://picsum.photos/300/300?random=3",
     alt: "Bola de futebol branca e preta",
     favorito: false,
-    categoria: "Esporte"
+    categoria: "Esporte",
+    promocao: 20,
+    estoque: 35 // Adicionado estoque inicial
   },
   // Roupas
   {
@@ -41,7 +47,9 @@ const produtos = [
     imagem_path: "https://picsum.photos/300/300?random=4",
     alt: "Camiseta polo azul",
     favorito: false,
-    categoria: "Roupas"
+    categoria: "Roupas",
+    promocao: 0,
+    estoque: 150 // Adicionado estoque inicial
   },
   // Eletrônicos
   {
@@ -52,7 +60,9 @@ const produtos = [
     imagem_path: "https://picsum.photos/300/300?random=5",
     alt: "Fone de ouvido preto",
     favorito: false,
-    categoria: "Eletrônicos"
+    categoria: "Eletrônicos",
+    promocao: 10,
+    estoque: 62 // Adicionado estoque inicial
   },
   // Papelaria
   {
@@ -63,7 +73,9 @@ const produtos = [
     imagem_path: "https://picsum.photos/300/300?random=6",
     alt: "Caderno universitário colorido",
     favorito: false,
-    categoria: "Papelaria"
+    categoria: "Papelaria",
+    promocao: 0,
+    estoque: 200 // Adicionado estoque inicial
   },
   // Bolsas
   {
@@ -74,7 +86,9 @@ const produtos = [
     imagem_path: "https://picsum.photos/300/300?random=7",
     alt: "Bolsa de couro marrom",
     favorito: false,
-    categoria: "Bolsas"
+    categoria: "Bolsas",
+    promocao: 25,
+    estoque: 45 // Adicionado estoque inicial
   },
   // Calçados
   {
@@ -85,7 +99,9 @@ const produtos = [
     imagem_path: "https://picsum.photos/300/300?random=8",
     alt: "Tênis casual branco",
     favorito: false,
-    categoria: "Calçados"
+    categoria: "Calçados",
+    promocao: 0,
+    estoque: 99 // Adicionado estoque inicial
   },
   // Cozinha
   {
@@ -96,7 +112,9 @@ const produtos = [
     imagem_path: "https://picsum.photos/300/300?random=9",
     alt: "Conjunto de panelas coloridas",
     favorito: false,
-    categoria: "Cozinha"
+    categoria: "Cozinha",
+    promocao: 30,
+    estoque: 28 // Adicionado estoque inicial
   },
   // Móveis
   {
@@ -107,7 +125,9 @@ const produtos = [
     imagem_path: "https://picsum.photos/300/300?random=10",
     alt: "Cadeira gamer preta",
     favorito: false,
-    categoria: "Móveis"
+    categoria: "Móveis",
+    promocao: 0,
+    estoque: 15 // Adicionado estoque inicial
   }
 ];
 
@@ -118,17 +138,27 @@ const categorias = [
   "Móveis", "Ferramentas", "Limpeza", "Livros"
 ];
 
+// Função auxiliar para gerar um número aleatório de estoque (entre 10 e 200)
+function gerarEstoqueAleatorio() {
+    return Math.floor(Math.random() * (200 - 10 + 1)) + 10;
+}
+
 categorias.forEach(categoria => {
   for (let i = 1; i <= 10; i++) {
+    const estaEmPromocao = Math.random() < 0.3;
+    const desconto = estaEmPromocao ? Math.floor(Math.random() * 46) + 5 : 0;
+    
     produtos.push({
       id: id++,
       nome: `${categoria} Produto ${i}`,
-      preco: (Math.random() * 300 + 20).toFixed(2),
+      preco: Number((Math.random() * 300 + 20).toFixed(2)),
       avaliacao: (Math.random() * 2 + 3).toFixed(1), // de 3.0 a 5.0
       imagem_path: `https://picsum.photos/300/300?random=${id}`,
       alt: `${categoria} Produto ${i}`,
       favorito: false,
-      categoria
+      categoria,
+      promocao: desconto,
+      estoque: gerarEstoqueAleatorio() // 👈 Estoque gerado aleatoriamente para os novos produtos
     });
   }
 });
