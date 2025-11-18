@@ -3,14 +3,17 @@ import "../Cores.css"
 import Bal_Logo from '../../assets/BALstore.png';
 import Carrinho from '../../assets/carrinho-logo-balstore.png'
 import User from '../../assets/user_lojista.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 
 export default function Header({status, user_name, active}) {
 
+    
+
     return (
         <header className='header'>
-            {status === "guest" && <Header_Guest active={active}/>}
+            {status === "guest" && <Header_Guest active={active} />}
             {status === "client" && <Header_Client active={active}/>}
             {status === "lojist" && <Header_Lojist user_name={user_name} active={active}/>}
         </header>
@@ -18,21 +21,27 @@ export default function Header({status, user_name, active}) {
 };
 
 function Header_Client ({active}){
+
+    const navigate = useNavigate();
+    const [texto, setTexto] = useState("");
+
+    const handleNavigate = (e) => {
+        e.preventDefault(); 
+        navigate(`/Pesquisa?q=${texto}`);
+    };
     return(
         <>  
             <Link to="/">
                 <img src={Bal_Logo} alt="BALSTORE_icon" className='BAL-icon'/>
             </Link>
-            <div className='search'>
+            <form className='search' onSubmit={handleNavigate}>
                 <i className="fa fa-search"></i>
-                    <input type="search" className='search-bar' placeholder='Pesquisar...' />
-
-                
-            </div>
+                <input type="search" className='search-bar' placeholder='Pesquisar...' onChange={(e) => setTexto(e.target.value)} value={texto}/>
+            </form>
             <nav>
                 <ul className='nav-list'>
-                    <li><a href="" className={active=== "Perfil"? 'nav-link active-nav-button': 'nav-link'}>Perfil</a></li>
-                    <li><a href="" className={active=== "Minha Loja"? 'nav-link active-nav-button': 'nav-link'}>Minha loja</a></li>
+                    <li><Link to="/Perfil/Compras" className={active=== "Perfil"? 'nav-link active-nav-button': 'nav-link'}>Perfil</Link></li>
+                    <li><Link to="/Login" className={active=== "Minha Loja"? 'nav-link active-nav-button': 'nav-link'}>Minha loja</Link></li>
                     <li><Link to="/Sobre" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</Link></li>
                 </ul>
             </nav>
@@ -41,15 +50,23 @@ function Header_Client ({active}){
 }
 
 function Header_Guest({active}) {
+
+    const navigate = useNavigate();
+    const [texto, setTexto] = useState("");
+
+    const handleNavigate = (e) => {
+        e.preventDefault(); 
+        navigate(`/Pesquisa?q=${texto}`);
+    };
     return(
     <>
         <Link to="/">
             <img src={Bal_Logo} alt="BALSTORE_icon" className='BAL-icon' to="/"/>
         </Link>
-        <div className='search'>
+        <form className='search' onSubmit={handleNavigate}>
             <i className="fa fa-search"></i>
-            <input type="search" className='search-bar' placeholder='Pesquisar...'/>
-        </div>
+            <input type="search" className='search-bar' placeholder='Pesquisar...' onChange={(e) => setTexto(e.target.value)} value={texto}/>
+        </form>
         
         <nav>
             <ul className='nav-list'>
@@ -70,11 +87,11 @@ function Header_Lojist ({user_name, active}) {
         </Link>
         <nav>
             <ul className='nav-list'>
-                <li><a href="" className={active=== "Meus Produtos"? 'nav-link active-nav-button': 'nav-link'}>Meus produtos</a></li>
-                <li><a href="" className={active=== "Pedidos"? 'nav-link active-nav-button': 'nav-link'}>Pedidos</a></li>
-                <li><a href="" className={active=== "Configurações"? 'nav-link active-nav-button': 'nav-link'}>Configurações</a></li>
+                <li><Link to="/Loja/Produtos" className={active=== "Meus Produtos"? 'nav-link active-nav-button': 'nav-link'}>Meus produtos</Link></li>
+                <li><Link to="/Loja/Pedidos" className={active=== "Pedidos"? 'nav-link active-nav-button': 'nav-link'}>Pedidos</Link></li>
+                <li><Link to="/Loja/Editar" className={active=== "Configurações"? 'nav-link active-nav-button': 'nav-link'}>Configurações</Link></li>
                 <li><Link to="/Sobre" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</Link></li>
-                <li><a href="" className={active=== "Logout"? 'nav-link active-nav-button': 'nav-link'}>Logout</a></li>
+                <li><a className={active=== "Logout"? 'nav-link active-nav-button': 'nav-link'}>Logout</a></li>
             </ul>
         </nav>
         <div className="perfil">

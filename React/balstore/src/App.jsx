@@ -37,7 +37,7 @@ function App() {
 
 
             <Route path="/Pesquisa" element={<Pesquisa />}/>
-            <Route path="/Produto" element={<ProdutoInd/>}/>
+            <Route path="/Produto/:id" element={<ProdutoInd/>}/>
             <Route path="/Carrinho" element={<Carrinho/>}/>
             <Route path="/Pagamento" element={<Pagamento/>}/>
 
