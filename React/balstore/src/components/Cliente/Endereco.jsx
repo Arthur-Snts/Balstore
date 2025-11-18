@@ -5,6 +5,7 @@ import "../Cores.css"
 
 
 export default function Endereco({enderecos}){
+    
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenExcluir, setIsOpenExcluir] = useState(false);
     const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -52,7 +53,7 @@ export default function Endereco({enderecos}){
                     name="rua"
                     placeholder="Rua"
                     className="rua"
-                    defaultValue={enderecoSelecionado.rua}
+                    defaultValue={enderecoSelecionado?.rua}
                 />
 
                 <div className="linha">
@@ -60,13 +61,13 @@ export default function Endereco({enderecos}){
                         type="text"
                         name="bairro"
                         placeholder="Bairro"
-                        defaultValue={enderecoSelecionado.bairro}
+                        defaultValue={enderecoSelecionado?.bairro}
                     />
                     <input
                         type="text"
                         name="numero"
                         placeholder="Nº"
-                        defaultValue={enderecoSelecionado.numero}
+                        defaultValue={enderecoSelecionado?.numero}
                     />
                 </div>
 
@@ -76,19 +77,19 @@ export default function Endereco({enderecos}){
                         name="estado"
                         placeholder="UF"
                         style={{width:"60px"}}
-                        defaultValue={enderecoSelecionado.uf}
+                        defaultValue={enderecoSelecionado?.uf}
                     />
                     <input
                         type="text"
                         name="cidade"
                         placeholder="Cidade"
-                        defaultValue={enderecoSelecionado.cidade}
+                        defaultValue={enderecoSelecionado?.cidade}
                     />
                     <input
                         type="text"
                         name="CEP"
                         placeholder="CEP"
-                        defaultValue={enderecoSelecionado.cep}
+                        defaultValue={enderecoSelecionado?.cep}
                     />
                 </div>
 

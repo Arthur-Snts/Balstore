@@ -23,7 +23,9 @@ export default function Compras () {
         <>
             <Header status={status} active={"Perfil"}/>
             <div className="compras_geral">
-                <UserSidebar props={user} active={"Minhas Compras"}/>
+                <aside className="user-side-config">
+                    <UserSidebar props={user} active={"Compras"}/>
+                </aside>
                 <div className="right-compras">
                     <div className='search-product'>
                             <i className="fa fa-search"></i>

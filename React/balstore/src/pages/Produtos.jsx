@@ -6,7 +6,7 @@ import AdicionarProduto from "../components/Produtos/AdicionarProduto";
 import "./Produtos.css"
 import produtos_todos from "./produtos_teste"; // Substituir por consulta no banco
 
-export default function Produto() {
+export default function Produtos() {
   useEffect(() => {
     document.title = "Produto";
   }, []);
