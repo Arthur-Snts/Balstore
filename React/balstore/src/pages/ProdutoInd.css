@@ -1,0 +1,124 @@
+.produto-mostrar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 150px;
+    margin-bottom: 50px;
+}
+
+.produto-mostrar img {
+    width: 600px;
+}
+
+.produto-mostrar .produto-informacao {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.produto-informacao .titulo-produto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.produto-informacao .frete {
+    display: flex;
+    flex-direction: column;
+}
+
+.frete select {
+    text-align: center;
+    border: none;
+    appearance: unset;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    color: var(--azul-principal);
+}
+
+.produto-informacao .valores-produto {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.valores-produto p {
+    margin-bottom: 0;
+}
+
+.contagem {
+    display: flex;
+    width: 500px;
+    gap: 30px;
+}
+
+.contador {
+    display: flex;
+    width: 100px;
+    border: 2px solid var(--azul-principal);
+    text-align: center;
+    border-radius: 10px;
+}
+
+.contador button, .contador p {
+    width: 100px;
+    text-align: center;
+    border: none;
+    background-color: transparent;
+    margin: 0;
+}
+
+.produto-buttons {
+    display: flex;
+    gap: 50px;
+    margin-top: 100px;
+}
+
+.produto-buttons button {
+    width: 300px;
+}
+
+.button_amarelo {
+    color: var(--azul-principal);
+    background-color: var(--amarelo);
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.button_azul {
+    color: var(--amarelo);
+    background-color: var(--azul-principal);
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.produto-preco {
+    margin: 5px;
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--amarelo);
+}
+
+.carrossel_categoria {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.carrossel_categoria h3 {
+    align-self: flex-start;
+    margin-left: 12.5%;
+    color: var(--azul-principal);
+}
+
+.carrossel_categoria .carrossel-produtos {
+    border-top: 2px solid var(--azul-principal);
+    padding-top: 30px;
+}
