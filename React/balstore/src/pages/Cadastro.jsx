@@ -24,19 +24,19 @@ export default function Cadastro (){
         <>
             <Header status={status}></Header>
             <div className="cadastro-div">
-                <div className="form">
+                <div className="form-cadastro">
                     <h1>Cadastro</h1>
-                    <div className="formulario">
+                    <div className="formulario-cadastro">
                         <div className="links-cadastro">
                             <a onClick={()=> setCadastro("Cliente")} className={cadastro === "Cliente"? "active": "link-form"}>Cliente</a> 
                             <a onClick={()=> setCadastro("Lojista")} className={cadastro === "Lojista"? "active": "link-form"}>Loja</a>
                         </div>
-                        <input type="text" placeholder="Nome..." className="input-nome"/>
-                        <input type="email" placeholder="Email..." className="input-email"/>
-                        {cadastro === "Cliente" && <input type="text" placeholder="CPF..." className="input-CPF" value={cpf} onChange={(e)=> setCPF(e.target.value)}/>}
-                        {cadastro === "Lojista" && <input type="text" placeholder="CNPJ..." className="input-CNPJ" value={cnpj} onChange={(e)=> setCNPJ(e.target.value)}/>}
-                        <input type="password" placeholder="Senha..." className="input-senha" />
-                        <input type="password" placeholder="Confirmar Senha..." className="input-senha" />
+                        <input type="text" placeholder="Nome..." className="input-cadastro-nome"/>
+                        <input type="email" placeholder="Email..." className="input-cadastro-email"/>
+                        {cadastro === "Cliente" && <input type="text" placeholder="CPF..." className="input-cadastro-CPF" value={cpf} onChange={(e)=> setCPF(e.target.value)}/>}
+                        {cadastro === "Lojista" && <input type="text" placeholder="CNPJ..." className="input-cadastro-CNPJ" value={cnpj} onChange={(e)=> setCNPJ(e.target.value)}/>}
+                        <input type="password" placeholder="Senha..." className="input-cadastro-senha" />
+                        <input type="password" placeholder="Confirmar Senha..." className="input-cadastro-senha" />
                     </div>
                     <button className="button-entrar">Cadastrar</button>
                 </div>

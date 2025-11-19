@@ -24,15 +24,15 @@ export default function Login (){
                 <div className="foto">
                     {login === "Cliente" ? <img src={login_cliente}/> : <img src={login_lojista}/>}
                 </div>
-                <div className="form">
+                <div className="form-login">
                     <h1>Login</h1>
-                    <div className="formulario">
+                    <div className="formulario-login">
                         <div className="links-login">
                             <a onClick={()=> setLogin("Cliente")} className={login === "Cliente"? "active": "link-form"}>Cliente</a> 
                             <a onClick={()=> setLogin("Lojista")} className={login === "Lojista"? "active": "link-form"}>Loja</a>
                         </div>
-                        <input type="email" placeholder="Email..." className="input-email"/>
-                        <input type="password" placeholder="Senha..." className="input-senha" />
+                        <input type="email" placeholder="Email..." className="input-login-email"/>
+                        <input type="password" placeholder="Senha..." className="input-login-senha" />
                     </div>
                     <button className="button-entrar">Entrar</button>
                 </div>

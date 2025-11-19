@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: center;
     gap: 270px;
-    height: 700px;
+    height: 800px;
 }
 .foto img{
     width: 500px;
@@ -15,7 +15,7 @@
   border-right: 3px solid var(--azul-principal);
 }
 
-.form {
+.form-login {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -23,19 +23,19 @@
     height: 500px;
 }
 
-.formulario{
+.formulario-login{
     display: flex;
     flex-direction: column;
     width: 400px;
-    gap: 30px;
+    gap: 40px;
 }
-.form h1{
+.form-login h1{
     color: var(--azul-principal);
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
 }
 
-.formulario input {
+.formulario-login input {
   padding: 10px;
   border: none;
   border-bottom: 2px solid var(--azul-principal);
@@ -44,7 +44,7 @@
   font-size: 21px;
 }
 
-.formulario input:focus {
+.formulario-login input:focus {
   border-color: var(--azul-principal);
 }
 
