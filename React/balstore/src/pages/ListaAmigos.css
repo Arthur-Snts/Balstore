@@ -1,0 +1,28 @@
+.amigos-content {
+    display: flex;
+    justify-content: start;
+}
+
+
+.busca {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.busca svg {
+    font-size: 60px;
+    text-align: center;
+    color: var(--azul-principal);
+    padding: 10px;
+    border-radius: 20px;
+}
+.listagem-amigos {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    align-items: center;
+    width: 70%;
+}

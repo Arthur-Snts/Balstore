@@ -5,6 +5,7 @@
     justify-content: center;
     width: 85%;
     gap: 40px;
+    height: 98%;
 }
 
 .btn-add {
@@ -95,7 +96,8 @@
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 30px
+  gap: 30px;
+  overflow-y: scroll;
 }
 
 .endereco-card {
