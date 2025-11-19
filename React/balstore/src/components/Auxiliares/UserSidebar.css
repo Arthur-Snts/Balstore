@@ -1,12 +1,10 @@
 @import url(../Cores.css);
 
 .barra-lateral-user {
-    border-right: solid 2px var(--azul-principal) ;
     height: 90vh;
-    width: 30%;
     display: flex;
     flex-direction: column;
-    align-items: end;
+    align-items: center;
     gap: 30px;
 }
 
@@ -50,12 +48,19 @@
     color: var(--azul-principal);  
     font-size: 20px;
     padding-left: 15px; 
+    height: 40px;
+    display: flex;
+    align-items: center ;
+    transition: 99ms;
 }
 
 .active-button-side {
     background-color: var(--azul-principal);
     color: var(--branco);
     border-radius: 10px;
+    height: 40px;
+    display: flex;
+    align-items: center ;
 }
 
 
@@ -63,5 +68,8 @@
     background-color: var(--azul-principal);
     color: var(--branco);
     border-radius: 10px;
-    transform: scale(1.01);
+    height: 40px;
+    display: flex;
+    align-items: center ;
+    transition: 99ms;
 }
