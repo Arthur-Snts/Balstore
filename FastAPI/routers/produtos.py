@@ -36,22 +36,41 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
 
     if loj_id:
         query = query.where(Produto.loja_id == loj_id)
+        produtos = session.exec(query).all()
+        if not produtos:
+           raise HTTPException(404, "id da loja inexistente") 
     if pro_id:
         query = query.where(Produto.id == pro_id)
+        produtos = session.exec(query).all()
+        if not produtos:
+           raise HTTPException(404, "id do produto inexistente")
     if pro_nome:
         query = query.where(Produto.nome.contains(pro_nome))
+        produtos = session.exec(query).all()
+        if not produtos:
+           raise HTTPException(404, "nome inexistente")
     if pro_categoria:
         categoria = session.exec(select(Categoria).where(Categoria.nome == pro_categoria)).first()
         query = query.where(Produto.categoria_id == categoria.id)
+        produtos = session.exec(query).all()
+        if not produtos:
+           raise HTTPException(404, "categoria inexistente")
         
     produtos = session.exec(query).all()
+
 
     print(produtos)
     resultado = []
     for c in produtos:
         resultado.append({
             **c.model_dump(),
+            "categoria": c.categoria.model_dump() if c.categoria else None,
+            "comentarios": [come.model_dump() for come in c.comentarios] if c.comentarios else [],
+            "favoritos": [f.model_dump() for f in c.favoritos] if c.favoritos else [],
+            "carrinhos": [car.model_dump() for car in c.carrinhos] if c.carrinhos else [],
             "notificacoes": [n.model_dump() for n in c.notificacoes] if c.notificacoes else [],
+            "compras": [comp.model_dump() for comp in c.compras] if c.compras else [],
+            "loja": c.loja.model_dump() if c.loja else None,
         })
 
     return resultado
