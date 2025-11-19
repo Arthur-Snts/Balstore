@@ -23,27 +23,25 @@ router = APIRouter(prefix="/enderecos", tags=["enderecos"])
 @router.get("/")
 def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None):
 
-    query = select(Endereco).options(selectinload(Endereco.cliente), 
-                                    selectinload(Endereco.notificacoes)) 
-
     if cli_id:
         query = query.where(Endereco.cli_id == cli_id)
         
     if loj_id:
         query = query.where(Endereco.loj_id == loj_id)
 
+        if not enderecos:
+            raise HTTPException(400, "Cliente sem Enderecos")
+        
+    if loj_id:
+        enderecos = session.exec(
+            select(Endereco).where(Endereco.loj_id == loj_id)
+        ).all()
+
+        if not enderecos:
+            raise HTTPException(400, "Loja sem Enderecos")
+        
     if not cli_id and not loj_id:
         raise HTTPException(400, "Nenhum paramentro passado")
-    
-    enderecos = session.exec(query).all()
-    
-    resultado = []
-    for c in enderecos:
-        resultado.append({
-            **c.model_dump(),
-            "cliente": c.cliente.model_dump() if c.cliente else None,
-            "notificacoes": [n.model_dump() for n in c.notificacoes] if c.notificacoes else []
-        })
 
     return resultado
 

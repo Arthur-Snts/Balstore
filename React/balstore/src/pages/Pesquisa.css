@@ -1,0 +1,158 @@
+@import url(../components/Cores.css);
+
+.pesquisa-content{
+    display: flex;
+    flex-direction: row;
+}
+
+.filter-side-bar{
+    border-right: 2px solid var(--azul-escuro) ;
+    width: 20%;
+    margin-top: -30px;
+    margin-bottom: -30px;
+}
+
+.section-produtos-buscados{
+    margin-left: 60px;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: fit-content;
+    gap: 10px
+}
+
+.result-pesquisa-line{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    margin-left: 5px
+}
+.result-pesquisa-line div{
+    display: flex;
+    align-items: center;
+    padding-bottom: 2px;
+}
+.result-pesquisa-line p{
+    padding-top: 15px;
+    margin-left: 10px;
+    font-size: large;
+}
+
+.classificar-por{
+    border: 1px solid var(--azul-principal);
+    background-color: var(--azul-principal);
+    height: 65px;
+    display: flex;
+    align-items: center;
+}
+.classificar-por div{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 70%;
+    height: 100%
+}
+.classificar-por div p{
+    margin-top: 14px;
+    font-size: larger;
+    color: var(--branco);
+}
+.classificar-por button{
+    background-color: var(--branco);
+    color: var(--azul-escuro);
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    height: 70%;
+    width: 12%;
+}
+.classificar-por button.amarelo{
+    background-color: var(--amarelo);
+}
+
+.classificar-por button:hover {
+    background-color: var(--amarelo);
+    transition: 200ms;
+}
+
+
+#avaliacao{
+    background-color: white;
+    color: var(--azul-escuro);
+    font-weight: 600;
+    font-size: 14px !important;
+    border: none;
+    height: 70%;
+    width: 22%;
+    padding: 10px;
+}
+.neutro {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#preco{
+    background-color: white;
+    color: var(--azul-escuro);
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    height: 70%;
+    width: 17%;
+    padding: 5px;
+}
+
+.corpo-produtos-buscados{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding-bottom: 20px;
+    margin-top: 30px;
+    height: 80%;
+}
+
+.paginacao {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px 0;
+}
+
+.paginacao button {
+    padding: 6px 12px;
+    border: 1px solid var(--azul-escuro);
+    background-color: white;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.paginacao button:hover {
+    background-color: var(--azul-principal);
+    color: white;
+    transition: 200ms;
+}
+
+.paginacao button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.pagina-ativa {
+    background-color: var(--amarelo);
+    color: black;
+}
+
+.nenhum-produto{
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.msg-erro{
+    color: var(--azul-principal);
+}

@@ -21,7 +21,6 @@ export default function ListaDesejos() {
 
     const [favorito, setFavorito] = useState(false)
 
-    const activeSidebarItem = "Lista de Desejos"; 
     const userStatus = "client";
     const activeHeaderItem = "Perfil";
 
@@ -31,7 +30,9 @@ export default function ListaDesejos() {
         <div className="lista-desejos-page">  
             <Header status={userStatus} active={activeHeaderItem} />
             <div className="main-content-area">
-                <UserSidebar props={userData} active={activeSidebarItem}/>     
+                <aside className="user-side-config">
+                    <UserSidebar props={userData} active={"Lista de Desejos"}/>
+                </aside>    
                 <main className="user-profile-content">
                     {produtos.map((produto, index)=>(
                         <ProdutoHorizontal props={produto} key={index}>

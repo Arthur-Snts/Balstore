@@ -4,9 +4,6 @@ import "../Cores.css"
 
 export default function EditarCliente ({props}){
 
-
-
-
     return (
     <div className="perfil-container">
       <div className="avatar">

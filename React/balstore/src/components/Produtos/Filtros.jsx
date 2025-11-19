@@ -1,4 +1,5 @@
-import './Filtros.css';
+import { useState } from "react";
+import './Filtros.css'
 
 const categorias = [
   "Brinquedos",
@@ -16,7 +17,36 @@ const categorias = [
   "Livros",
 ];
 
-function FiltrosDeProduto() {
+function FiltrosDeProduto({ onChangeFiltros }) {
+  const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
+  const [precoMin, setPrecoMin] = useState("");
+  const [precoMax, setPrecoMax] = useState("");
+
+  const handleCategoriaChange = (e) => {
+    const categoria = e.target.value;
+
+    const novasCategorias = e.target.checked
+      ? [...categoriasSelecionadas, categoria]
+      : categoriasSelecionadas.filter((c) => c !== categoria);
+
+    setCategoriasSelecionadas(novasCategorias);
+
+    // Atualiza os filtros no componente pai
+    onChangeFiltros({
+      categorias: novasCategorias,
+      precoMin,
+      precoMax
+    });
+  };
+
+  const confirmarPreco = () => {
+    onChangeFiltros({
+      categorias: categoriasSelecionadas,
+      precoMin,
+      precoMax
+    });
+  };
+
   return (
     <div className="filtros-container">
       <div className="filtros-cabecalho">
@@ -24,29 +54,56 @@ function FiltrosDeProduto() {
         <h2 className="titulo-filtros">FILTROS</h2>
       </div>
 
-      <div className="secao-filtro">
-        <h3 className="subtitulo-filtro">Por Categoria</h3>
-        <div className="lista-categorias">
-          {categorias.map((categoria) => (
-            <label key={categoria} className="checkbox-categoria">
-              <input type="checkbox" name="categoria" value={categoria} />
-              {categoria}
-            </label>
-          ))}
+      {/* CORREÇÃO: forms -> form */}
+      <form>
+        <div className="secao-filtro">
+          <h3 className="subtitulo-filtro">Por Categoria</h3>
+          <div className="lista-categorias">
+            {categorias.map((categoria) => (
+              <label key={categoria} className="checkbox-categoria">
+                <input
+                  type="checkbox"
+                  name="categoria"
+                  value={categoria}
+                  onChange={handleCategoriaChange}
+                />
+                {categoria}
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <hr className="separador" />
+        <hr className="separador" />
 
-      <div className="secao-filtro">
-        <h3 className="subtitulo-filtro">Por Preço</h3>
-        <div className="filtro-preco">
-          <input type="text" placeholder="mín." className="input-preco" />
-          <span className="separador-preco"></span>
-          <input type="text" placeholder="máx." className="input-preco" />
+        <div className="secao-filtro">
+          <h3 className="subtitulo-filtro">Por Preço</h3>
+          <div className="filtro-preco">
+            <input
+              type="number"
+              placeholder="mín."
+              className="input-preco"
+              value={precoMin}
+              onChange={(e) => setPrecoMin(e.target.value)}
+            />
+            <span className="separador-preco"></span>
+            <input
+              type="number"
+              placeholder="máx."
+              className="input-preco"
+              value={precoMax}
+              onChange={(e) => setPrecoMax(e.target.value)}
+            />
+          </div>
+
+          <button
+            className="botao-confirmar"
+            type="button"
+            onClick={confirmarPreco}
+          >
+            Confirmar
+          </button>
         </div>
-        <button className="botao-confirmar">Confirmar</button>
-      </div>
+      </form>
     </div>
   );
 }
