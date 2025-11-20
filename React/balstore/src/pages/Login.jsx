@@ -3,41 +3,127 @@ import Footer from "../components/Header_and_Footer/Footer"
 import { useState, useEffect } from "react";
 import login_cliente from "../assets/login_cliente.png"
 import login_lojista from "../assets/login_lojista.png"
+import Loading from "./Loading"
+import Alert from "../components/Auxiliares/Alert"
 import "./Login.css"
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 export default function Login (){
 
     useEffect(() => {
+        localStorage.removeItem("token_loja");
+        localStorage.removeItem("refresh_token_loja");
+        localStorage.removeItem("token");
+        localStorage.removeItem("refresh_token");
         document.title = "Login";
     }, []);
+
+    const navigate = useNavigate()
 
 
     const status = "guest"; // Substituir quando implementar login
 
-    const [login, setLogin] = useState("Cliente")
+    const [login, setLogin] = useState("cliente")
+
+
+    const [cli_email, setCliEmail] = useState("");
+    const [cli_senha, setCliSenha] = useState("");
+    const [loj_email, setLojEmail] = useState("");
+    const [loj_senha, setLojSenha] = useState("");
+
+    const [loading, setLoading] = useState(false)
+
+    async function handleLogincliente() {
+
+        setLoading(true)
+        
+        const res = await fetch(`http://localhost:8000/clientes/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify( {cli_email: cli_email, 
+                                cli_senha: cli_senha })
+        });
+
+
+        const data = await res.json();
+        if (data.access_token) {
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("refresh_token", data.refresh_token);
+        
+        navigate("/", {state: {
+        alert: { tipo: "sucesso", mensagem: "Login realizado com sucesso!" }
+      }})
+        } else {
+        
+        navigate("/Login", {state: {
+        alert: { tipo: "erro", mensagem: `Falha no Login: ${data.detail}!` }
+      }})
+        }
+        setLoading(false)
+    }
+
+    async function handleLoginloja() {
+        setLoading(true)
+        
+        const res = await fetch(`http://localhost:8000/lojas/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify( {loj_email: loj_email, 
+                                loj_senha: loj_senha })
+        });
+
+
+        const data = await res.json();
+        if (data.access_token) {
+        localStorage.setItem("token_loja", data.access_token);
+        localStorage.setItem("refresh_token_loja", data.refresh_token);
+        
+        navigate("/Loja/Produtos", {state: {
+        alert: { tipo: "sucesso", mensagem: "Login realizado com sucesso!" }
+        }})
+            } else {
+            
+            navigate("/Login", {state: {
+            alert: { tipo: "erro", mensagem: `Falha no Login: ${data.detail}!` }
+        }})
+            }
+
+        setLoading(false)
+    }
+
+    const location = useLocation()
+    const alert = location.state?.alert;
+    
+    
+
 
     return(
         <>
+        {alert && (<Alert tipo={alert?.tipo} mensagem={alert?.mensagem}/>)}
+        {loading == true ? <Loading></Loading>:
+        <>
+            
             <Header status={status}></Header>
+            
             <div className="login-div">
                 <div className="foto">
-                    {login === "Cliente" ? <img src={login_cliente}/> : <img src={login_lojista}/>}
+                    {login === "cliente" ? <img src={login_cliente}/> : <img src={login_lojista}/>}
                 </div>
                 <div className="form">
                     <h1>Login</h1>
                     <div className="formulario">
                         <div className="links-login">
-                            <a onClick={()=> setLogin("Cliente")} className={login === "Cliente"? "active": "link-form"}>Cliente</a> 
-                            <a onClick={()=> setLogin("Lojista")} className={login === "Lojista"? "active": "link-form"}>Loja</a>
+                            <a onClick={()=> setLogin("cliente")} className={login === "cliente"? "active": "link-form"}>Cliente</a> 
+                            <a onClick={()=> setLogin("lojista")} className={login === "lojista"? "active": "link-form"}>Loja</a>
                         </div>
-                        <input type="email" placeholder="Email..." className="input-email"/>
-                        <input type="password" placeholder="Senha..." className="input-senha" />
+                        {login == "cliente" ? <><input type="email" placeholder="Email..." className="input-email" onChange={(e) => setCliEmail(e.target.value)} value={cli_email}/> <input type="password" placeholder="Senha..." className="input-senha" onChange={(e) => setCliSenha(e.target.value)} value={cli_senha}/></> :
+                        <><input type="email" placeholder="Email..." className="input-email" onChange={(e) => setLojEmail(e.target.value)} value={loj_email}/> <input type="password" placeholder="Senha..." className="input-senha" onChange={(e) => setLojSenha(e.target.value)} value={loj_senha}/></>}
                     </div>
-                    <button className="button-entrar">Entrar</button>
+                    <button className="button-entrar" onClick={login == "cliente"? handleLogincliente : handleLoginloja}>Entrar</button>
                 </div>
             </div>
             <Footer></Footer>
-        </>
+        </>}</>
     )
 }

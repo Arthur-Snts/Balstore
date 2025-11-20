@@ -1,13 +1,44 @@
 import Header from "../components/Header_and_Footer/Header"
 import Footer from "../components/Header_and_Footer/Footer"
 import { useEffect, useState } from "react"
+import Loading from "./Loading"
+import { useNavigate } from "react-router-dom"
+import {verificar_token_cliente, verificar_token_loja} from "../statements"
 import "./Pagamento.css"
 
 import TimeBar from "../components/Auxiliares/TimeBar"
 
 export default function Pagamento () {
 
-    const status = "client"
+    const navigate = useNavigate();
+    const [cliente, setCliente] = useState(null)
+    const [loja, setLoja] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    const [status, setStatus] = useState("")
+
+    useEffect(() => {
+
+        setLoading(true)
+        async function carregarUsuario() {
+            let token = localStorage.getItem("token");
+            let token_loja = localStorage.getItem("token_loja")
+            if (token){
+                const user_devolvido = await verificar_token_cliente(navigate);
+                
+                setCliente(user_devolvido);
+                setStatus("client")
+            }
+                else{
+                    navigate("/Login", {state: {
+            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente para acessar essa página` }
+        }})
+                }
+                
+        }
+        carregarUsuario();
+        setLoading(false)
+    }, []);
 
 
     useEffect(() => {
@@ -20,9 +51,7 @@ export default function Pagamento () {
         cod_pagamento: "oasnfoasofiasiopfnasipnfaipdpasmdaod",
         data: "18/09/2026"
     }
-    const cliente = {
-        nome: "Arthur"
-    }
+    
     const endereco = {
         rua: "Josefa",
         numero: "756",
@@ -41,6 +70,8 @@ export default function Pagamento () {
 
 
     return(
+        <>
+        {loading == true ? <Loading/> :
         <>
             <Header status={status}/>
             <div className="Modal_Pagamento">
@@ -67,7 +98,7 @@ export default function Pagamento () {
                         <div className="right_pagamento">
                             <p style={{fontSize:"20px", color:"green", fontWeight:"bold"}}>Compra Feita</p>
                             <p className="data">{compra.data}</p>
-                            <p>Enviado para: {cliente.nome}</p>
+                            <p>Enviado para: {cliente?.nome}</p>
                             <p>Endereço:</p>
                             <p>{endereco.rua}, Nº {endereco.numero}, {endereco.cidade} - {endereco.estado} </p>
 
@@ -76,6 +107,6 @@ export default function Pagamento () {
                 </div>
             </div>
             <Footer></Footer>
-        </>
+        </>}</>
     )
 }

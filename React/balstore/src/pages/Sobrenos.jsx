@@ -1,20 +1,65 @@
-import Header from "../components/Header_and_Footer/Header"
-import Footer from "../components/Header_and_Footer/Footer"
 import arthur from "../assets/arthur.png"
 import artur from "../assets/artur.png"
 import eliton from "../assets/eliton.png"
 import victor from "../assets/victor.png"
 import vitor from "../assets/vitor.png"
+import Header from "../components/Header_and_Footer/Header"
+import Footer from "../components/Header_and_Footer/Footer"
 import "./Sobrenos.css"
+
+import Loading from "./Loading"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import {verificar_token_cliente, verificar_token_loja} from "../statements"
+
 
 export default function Sobrenos () {
 
-    const status = "guest"
+    useEffect(() => {
+        document.title = "Sobre Nós";
+    }, []);
+
+    const navigate = useNavigate();
+    const [cliente, setCliente] = useState(null)
+    const [loja, setLoja] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    const [status, setStatus] = useState("")
+
+    useEffect(() => {
+
+        setLoading(true)
+        async function carregarUsuario() {
+            let token = localStorage.getItem("token");
+            let token_loja = localStorage.getItem("token_loja")
+            if (token){
+                const user_devolvido = await verificar_token_cliente(navigate);
+                
+                setCliente(user_devolvido);
+                setStatus("client")
+            }
+                else if (token_loja){
+                    const loja_devolvida = await verificar_token_loja(navigate);
+                
+                    setLoja(loja_devolvida);
+                    setStatus("lojist")
+                }
+                else {
+                    setStatus("guest")
+                }
+        }
+        carregarUsuario();
+        setLoading(false)
+    }, []);
+
+    
 
     return(
-        <>
-            <Header status={status} active={"Sobre nós"}></Header>
-            <div div className="sobrenos">
+        <>  
+            {loading? <Loading/> : 
+            <>
+            <Header status={status} active={"Sobre nós"} user_name={loja?.nome}></Header>
+            <div className="sobrenos">
                 <div className="fotos_sobre">
                     <div className="foto_sobre">
                         <img src={arthur} />
@@ -45,6 +90,7 @@ export default function Sobrenos () {
                 <p>Obrigado por escolher a Balstore. Estamos ansiosos para atendê-lo e fornecer a você os melhores produtos e serviços.</p>
             </div>
             <Footer></Footer>
+            </>}
         </>
     )
 }

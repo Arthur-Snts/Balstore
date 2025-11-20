@@ -14,13 +14,13 @@ export default function EditarCliente ({props}){
           type="text"
           name="nome"
           placeholder="Nome..."
-          value={props.nome}
+          value={props?.nome}
         />
         <input
           type="email"
           name="email"
           placeholder="Email..."
-          value={props.email}
+          value={props?.email}
         />
         <input
           type="password"

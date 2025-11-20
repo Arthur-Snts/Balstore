@@ -16,6 +16,7 @@ import MinhaLoja from "./pages/MinhaLoja";
 import Carrinho from "./pages/Carrinho";
 import ListaAmigos from "./pages/ListaAmigos";
 import ProdutoInd from "./pages/ProdutoInd";
+import NotFound from "./pages/NotFound";
 
 
 function App() {
@@ -45,6 +46,8 @@ function App() {
             <Route path="/Perfil/Config" element={<ConfigCliente />}/>
             <Route path="/Perfil/Favoritos" element={<ListaDesejos/>}/>
             <Route path="/Perfil/Amizades" element={<ListaAmigos/>}/>
+
+            <Route path="*" element={<NotFound/>}/>
           </Routes>
         </Router>
     </>
