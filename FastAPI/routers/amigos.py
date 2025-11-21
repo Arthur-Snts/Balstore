@@ -3,6 +3,7 @@ from config import  engine
 from sqlmodel import Session, select
 from fastapi import HTTPException, Depends, APIRouter
 from typing import Annotated
+from sqlalchemy.orm import selectinload
 
 
 def get_session():
@@ -26,24 +27,26 @@ router = APIRouter(prefix="/amigos", tags=["amigos"])
 @router.get("/{cli_id}")
 def pega_amigos(cli_id:int, session: SessionDep):
 
-
-   
-    amigos = session.exec(
-        select(Amigo).where(Amigo.amigo_de == cli_id)
-    ).all()
-
-    if not amigos:
-        raise HTTPException(400, "Cliente sem amigos")
+    query = select(Amigo).options(selectinload(Amigo.cliente_de),
+                                    selectinload(Amigo.cliente_amigo))
     
-    lista = []
 
-    for amigo in amigos:
-        pessoa = session.exec(
-            select(Cliente).where(Cliente.id == amigo.amigo)
-        ).first()
-        lista.append(pessoa)
+    query = query.where(Amigo.id == cli_id)
+    id = session.exec(query).all()
+    if not id:
+           raise HTTPException(404, "id de cliente inexistente")
+    
+    amigo = session.exec(query).all()
 
-    return lista
+    resultado = []
+    for c in amigo:
+        resultado.append({
+            **c.model_dump(),
+              "cliente_de": c.cliente_de.model_dump() if c.cliente_de else None,
+            "cliente_amigo": c.cliente_amigo.model_dump() if c.cliente_amigo else None
+        })
+    
+    return resultado
 # ------------------------------------------------------------------------------
 # POST
 

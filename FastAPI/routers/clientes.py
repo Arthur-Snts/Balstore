@@ -86,7 +86,7 @@ def busca_ou_login_cliente(session: SessionDep, cli_email: str = None, cli_senha
     for c in cliente:
         resultado.append({
             **c.model_dump(),
-            "enderecos": [e.model_dump() for e in c.comentarios] if c.comentarios else [],
+            "enderecos": [e.model_dump() for e in c.enderecos] if c.enderecos else [],
             "comentarios": [come.model_dump() for come in c.comentarios] if c.comentarios else [],
             "favoritos": [f.model_dump() for f in c.favoritos] if c.favoritos else [],
             "carrinhos": [car.model_dump() for car in c.carrinhos] if c.carrinhos else [],
@@ -94,8 +94,7 @@ def busca_ou_login_cliente(session: SessionDep, cli_email: str = None, cli_senha
             "compras": [comp.model_dump() for comp in c.compras] if c.compras else [],
             "presentes": [p.model_dump() for p in c.presentes] if c.presentes else [],
             "amigos_enviados": [ae.model_dump() for ae in c.amigos_enviados] if c.amigos_enviados else [],
-            "amigos_recebidos": [ar.model_dump() for ar in c.amigos_recebidos] if c.amigos_recebidos else [],
-            "amigos_recebidos": [ar.model_dump() for ar in c.amigos_recebidos] if c.clie else []
+            "amigos_recebidos": [ar.model_dump() for ar in c.amigos_recebidos] if c.amigos_recebidos else []
 
 
         })
