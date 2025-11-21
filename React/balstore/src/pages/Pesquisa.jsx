@@ -15,7 +15,7 @@ import { useSearchParams } from "react-router-dom";
 export default function Pesquisa() {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const busca_produto = searchParams.get("q") || "Busca";
+    const busca_produto = searchParams.get("q") || "";
     const precoMinFromURL = searchParams.get("min") || "";
     const precoMaxFromURL = searchParams.get("max") || "";
     const avaliacaoFromURL = searchParams.get("av") || null;
@@ -126,7 +126,7 @@ export default function Pesquisa() {
                 <section className="section-produtos-buscados">
                     <div className="result-pesquisa-line">
                         <div><LightBulb /></div>
-                        <p>Resultado para a pesquisa '{busca_produto}'</p>
+                        <p>Resultado para a pesquisa "{busca_produto}"</p>
                     </div>
 
                     <div className="classificar-por">

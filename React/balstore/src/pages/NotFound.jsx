@@ -41,6 +41,11 @@ export default function NotFound() {
         setLoading(false)
     }, []);
 
+    useEffect(() => {
+        document.title = "Página não Encontrada";
+    }, []);
+
+
   return (
     <>
       <Header status={status} user_name={loja?.nome}></Header>

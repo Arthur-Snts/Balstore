@@ -21,7 +21,7 @@ export default function EditarLoja () {
 
     useEffect(() => {
 
-        setLoading(true)
+        
         async function carregarUsuario() {
             let token = localStorage.getItem("token_loja");
             if (token){
@@ -37,18 +37,18 @@ export default function EditarLoja () {
                 }
         }
         carregarUsuario();
-        setLoading(false)
+        
     }, []);
 
     useEffect(() => {
-        document.title = "Editar Loja " + loja?.nome;
+        document.title = "Editar Loja";
     }, []);
     
     
     return(
         <>
             {loading == true? <Loading/> : <>
-            <Header status={status} user_name={loja?.nome}></Header>
+            <Header status={status} user_name={loja?.nome} active={"Configurações"}></Header>
             <div className="login-div">
                 <div className="foto editloj">
                     <img src={editloj}/>
