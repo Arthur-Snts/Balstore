@@ -30,19 +30,17 @@ def pega_notificacao(session: SessionDep, loj_id:int, not_id:int = None):
                                     selectinload(Notificacao.loja))
 
     query = query.where(Notificacao.loj_id == loj_id)
-
-    if not query:
-        raise HTTPException(400, "Loja sem Notificação")
     
     if not_id:
-        query = query.where(Notificacao.id == not_id)
-        
+        query = query.where(Notificacao.id == not_id)    
 
-    cliente = session.exec(query).all()
+    notificacoes = session.exec(query).all()
 
+    if not notificacoes:
+        raise HTTPException(400, "Loja sem Notificação")
 
     resultado = []
-    for c in cliente:
+    for c in notificacoes:
         resultado.append({
             **c.model_dump(),
             "produto": c.produto.model_dump() if c.produto else None,
