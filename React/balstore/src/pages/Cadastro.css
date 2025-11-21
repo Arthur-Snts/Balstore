@@ -23,7 +23,7 @@
     height: 700px;
 }
 
-.formulario{
+.formulario-cadastro{
     display: flex;
     flex-direction: column;
     width: 400px;
@@ -37,16 +37,17 @@
     font-weight: bold;
 }
 
-.formulario input {
+.form .formulario-cadastro input {
   padding: 10px;
   border: none;
   border-bottom: 2px solid var(--azul-principal);
   outline: none;
   transition: border-color 0.3s;
   font-size: 21px;
+  width: 100%;
 }
 
-.formulario input:focus {
+.formulario-cadastro input:focus {
   border-color: var(--azul-principal);
 }
 

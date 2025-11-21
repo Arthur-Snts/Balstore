@@ -26,7 +26,7 @@ export default function Cadastro (){
             <div className="cadastro-div">
                 <div className="form">
                     <h1>Cadastro</h1>
-                    <div className="formulario">
+                    <div className="formulario-cadastro">
                         <div className="links-cadastro">
                             <a onClick={()=> setCadastro("Cliente")} className={cadastro === "Cliente"? "active": "link-form"}>Cliente</a> 
                             <a onClick={()=> setCadastro("Lojista")} className={cadastro === "Lojista"? "active": "link-form"}>Loja</a>

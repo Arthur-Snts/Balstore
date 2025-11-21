@@ -26,7 +26,7 @@ export default function Login (){
                 </div>
                 <div className="form">
                     <h1>Login</h1>
-                    <div className="formulario">
+                    <div className="formulario-login">
                         <div className="links-login">
                             <a onClick={()=> setLogin("Cliente")} className={login === "Cliente"? "active": "link-form"}>Cliente</a> 
                             <a onClick={()=> setLogin("Lojista")} className={login === "Lojista"? "active": "link-form"}>Loja</a>

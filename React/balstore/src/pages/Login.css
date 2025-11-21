@@ -23,7 +23,7 @@
     height: 500px;
 }
 
-.formulario{
+.formulario-login{
     display: flex;
     flex-direction: column;
     width: 400px;
@@ -35,16 +35,17 @@
     font-weight: bold;
 }
 
-.formulario input {
+.form .formulario-login input {
   padding: 10px;
   border: none;
   border-bottom: 2px solid var(--azul-principal);
   outline: none;
   transition: border-color 0.3s;
   font-size: 21px;
+  width: 100%;
 }
 
-.formulario input:focus {
+.formulario-login input:focus {
   border-color: var(--azul-principal);
 }
 
