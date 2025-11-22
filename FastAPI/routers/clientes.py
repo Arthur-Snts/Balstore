@@ -14,7 +14,9 @@ def get_session():
     with Session(engine) as session:
         yield session
 
+
 SessionDep = Annotated[Session, Depends(get_session)]
+
 
 router = APIRouter(prefix="/clientes", tags=["clientes"])
 
@@ -239,55 +241,68 @@ def busca_cliente(session: SessionDep, cli_email: str = None, cli_nome:str=None,
 @router.post("/")
 def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
 
+
     cliente_existente = session.exec(
         select(Cliente).where(Cliente.email == cliente_cadastra.email)
     ).first()
-    
+   
+
 
     if cliente_existente:
         raise HTTPException(400, "Email já cadastrado")
-    
+   
     cliente_existente = session.exec(
         select(Cliente).where(Cliente.cpf == cliente_cadastra.cpf)
     ).first()
 
+
     if cliente_existente:
         raise HTTPException(400, "CPF já cadastrado")
 
+
     cliente_cadastra.senha = generate_password_hash(cliente_cadastra.senha,method="pbkdf2:sha256")
 
-    
+
+   
     session.add(cliente_cadastra)
     session.commit()
     session.refresh(cliente_cadastra)
-    
+   
+
 
     return {"mensagem": "Perfil cadastrado com sucesso", "cliente": cliente_cadastra}
+
 
 # ------------------------------------------------------------------------------
 # DELETE
 @router.delete("/{cli_id}")
 def deleta_cliente(cli_id: int, session: SessionDep):
-    
+   
     cliente = session.get(Cliente, cli_id)
+
 
     if not cliente:
         raise HTTPException(404, "Perfil não encontrado")
 
+
     session.delete(cliente)
     session.commit()
 
+
     return {"mensagem": "Perfil deletado com sucesso"}
+
 
 # ------------------------------------------------------------------------------
 # UPDATE
 @router.put("/{cli_id}")
 def atualiza_cliente(session: SessionDep,cli_id:int,cli_nome:str=None, cli_email:str=None, cli_senha:str=None):
 
+
     cliente = session.get(Cliente, cli_id)
-    
+   
     if not cliente:
         raise HTTPException(404, "Perfil não encontrado pelo ID, Verifique a informação.")
+
 
     if cli_nome:
         cliente.nome = cli_nome
@@ -296,8 +311,12 @@ def atualiza_cliente(session: SessionDep,cli_id:int,cli_nome:str=None, cli_email
     if cli_senha:
         cliente.senha = generate_password_hash(cli_senha, method="pbkdf2:sha256")
 
+
     session.add(cliente)
     session.commit()
     session.refresh(cliente)
 
+
     return {"mensagem": "Perfil editado com sucesso", "cliente": cliente}
+
+
