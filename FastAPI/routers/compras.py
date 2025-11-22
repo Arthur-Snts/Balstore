@@ -71,19 +71,21 @@ def cadastra_compra(session: SessionDep, cli_id:int, compra_cadastra:Compra, pro
 
     if compra_existente:
         raise HTTPException(400, "Compra já cadastrada nesse Cliente")
+    
+
+    for produto in produtos:
+        pro_id = session.exec(select(Produto).where(Produto.id == produto)).first()
+        if not pro_id:
+            raise HTTPException(400, "Um dos Produtos não existe")
+        
 
     session.add(compra_cadastra)
     session.commit()
     session.refresh(compra_cadastra)
 
-
     for produto in produtos:
-        pro_id = session.exec(select(Produto).where(Produto.id == produto)).first()
-        compra_produto = Compra_Produto(pro_id=pro_id.id, com_id=compra_cadastra.id)
+        compra_produto:Compra_Produto = Compra_Produto(pro_id=pro_id.id, com_id=compra_cadastra.id)
         session.add(compra_produto)
-        session.refresh(compra_produto)
-
-    session.commit()
 
     return {"mensagem": "Compra cadastrada com sucesso", "Compra": compra_cadastra}
 

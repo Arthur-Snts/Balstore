@@ -1,8 +1,8 @@
 .carrossel-produtos {
-    display: flex;
     width: 75%;
+    display: flex;
     align-items: center;
-    justify-content: center ;
+    justify-content: center;
     padding-bottom: 30px;
     margin-bottom: 20px;
     border-bottom: 2px solid var(--azul-principal);
@@ -11,11 +11,10 @@
 .carrossel-produtos .slick-slide{
     display: flex;
     justify-content: center;
+    align-items: center;
+    height: 380px;
 }
 
-.card{
-    flex-shrink: 0;
-}
 
 .custom-arrow {
     position: absolute;

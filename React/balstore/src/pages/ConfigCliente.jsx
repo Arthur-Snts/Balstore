@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import Sidebar from "../components/Auxiliares/UserSidebar"
 import EditarCliente from "../components/Cliente/EditarCliente"
 import Endereços from "../components/Cliente/Endereco"
+
+import Loading from "./Loading"
+import { useNavigate } from "react-router-dom"
+import {verificar_token_cliente, verificar_token_loja} from "../statements"
 import "./ConfigCliente.css"
 
 export default function ConfigContaCliente(){
@@ -11,82 +15,43 @@ export default function ConfigContaCliente(){
         document.title = "Configuração de conta";
     }, []);
 
-    const status = "guest";
+    const navigate = useNavigate();
+    const [cliente, setCliente] = useState(null)
+    const [loja, setLoja] = useState(null)
+    const [loading, setLoading] = useState(true)
 
-    const user_teste ={
-        nome_user : "Ana Maria Alice da Conceição",
-        num_amigos : 12
-    };
-    const user_edit ={
-        nome : "Ana Maria Alice da Conceição",
-        email: "anamaria@gmail.com"
-    };
-    const enderecos = [{
-        id: 1,
-        rua: "Alceu Valença",
-        numero: "20",
-        bairro: "Peneirão",
-        cidade: "João Picanha",
-        uf: "RJ",
-        cep: "56700-000"
-    },{
-        id: 1,
-        rua: "Alceu Valença",
-        numero: "20",
-        bairro: "Peneirão",
-        cidade: "João Picanha",
-        uf: "RJ",
-        cep: "56700-000"
-    },{
-        id: 1,
-        rua: "Alceu Valença",
-        numero: "20",
-        bairro: "Peneirão",
-        cidade: "João Picanha",
-        uf: "RJ",
-        cep: "56700-000"
-    },{
-        id: 1,
-        rua: "Alceu Valença",
-        numero: "20",
-        bairro: "Peneirão",
-        cidade: "João Picanha",
-        uf: "RJ",
-        cep: "56700-000"
-    },{
-        id: 1,
-        rua: "Alceu Valença",
-        numero: "20",
-        bairro: "Peneirão",
-        cidade: "João Picanha",
-        uf: "RJ",
-        cep: "56700-000"
-    },{
-        id: 1,
-        rua: "Alceu Valença",
-        numero: "20",
-        bairro: "Peneirão",
-        cidade: "João Picanha",
-        uf: "RJ",
-        cep: "56700-000"
-    },{
-        id: 1,
-        rua: "Alceu Valença",
-        numero: "20",
-        bairro: "Peneirão",
-        cidade: "João Picanha",
-        uf: "RJ",
-        cep: "56700-000"
-    }]
+    const [status, setStatus] = useState("")
+
+    useEffect(() => {
+        async function carregarUsuario() {
+            let token = localStorage.getItem("token");
+            if (token){
+                const user_devolvido = await verificar_token_cliente(navigate);
+                
+                setCliente(user_devolvido);
+                setStatus("client")
+            }
+                else{
+                    navigate("/Login", {state: {
+            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente para acessar essa página` }
+        }})
+                }
+        }
+        carregarUsuario();
+        setLoading(false)
+    }, []);
+
+    
 
     const [state, setState] = useState("Profile")
 
     return(
-        <>
-            <Header status={status}/>
+        <> {loading == true ? <Loading/> :
+            <>
+            <Header status={status} active="Perfil" user_name={loja?.nome}/>
             <div className="config-page">
                 <aside className="user-side-config">
-                    <Sidebar props={user_teste} active={"Configurações"}/>
+                    <Sidebar props={cliente} active={"Configurações"}/>
                 </aside>
                 <section className="user-config-and-address">
                     <div className="links-profile-or-address">
@@ -94,12 +59,14 @@ export default function ConfigContaCliente(){
                         <a onClick={()=> setState("Address")} className={state === "Address"? "selected": "unselected"}>Endereços</a>
                     </div>
                     <div className="image-and-content">
-                        {state === "Profile" ? <EditarCliente props={user_edit}/> : <Endereços enderecos={enderecos}/>}
+                        {state === "Profile" ? <EditarCliente props={cliente}/> : <Endereços enderecos={cliente?.enderecos}/>}
                     </div>         
                 </section>
             </div>
-
             <Footer />
+            </>}
+
+            
         </>
 
     )

@@ -5,17 +5,41 @@ import Modal from "../components/Auxiliares/Modal"
 import { useEffect, useState } from "react"
 import { LuMailPlus } from "react-icons/lu";
 import { IoIosNotifications } from "react-icons/io";
+import Loading from "./Loading"
+import { useNavigate } from "react-router-dom"
+import {verificar_token_cliente, verificar_token_loja} from "../statements"
 
 import "./ListaAmigos.css"
 
 export default function ListaAmigos () {
 
-    const status = "client"
+    const navigate = useNavigate();
+    const [cliente, setCliente] = useState(null)
+    const [loja, setLoja] = useState(null)
+    const [loading, setLoading] = useState(false)
 
-    const user = {
-        "nome_user": "Joaquina",
-        "nmr_amigos": 13
-    }
+    const [status, setStatus] = useState("")
+
+    useEffect(() => {
+
+        setLoading(true)
+        async function carregarUsuario() {
+            let token = localStorage.getItem("token");
+            if (token){
+                const user_devolvido = await verificar_token_cliente(navigate);
+                
+                setCliente(user_devolvido);
+                setStatus("client")
+            }
+                else{
+                    navigate("/Login", {state: {
+            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente para acessar essa página` }
+        }})
+                }
+        }
+        carregarUsuario();
+        setLoading(false)
+    }, []);
 
     useEffect(() => {
         document.title = "Lista de Amigos";
@@ -74,10 +98,10 @@ export default function ListaAmigos () {
             </Modal>
 
         
-            <Header status={status} active={"Perfil"}></Header>
+            <Header status={status} active={"Perfil"} user_name={loja?.nome}></Header>
             <div className="amigos-content">
                 <aside className="user-side-config">
-                    <UserSidebar props={user} active={"Lista de Amigos"}/>
+                    <UserSidebar props={cliente} active={"Lista de Amigos"}/>
                 </aside>
                 <div className="listagem-amigos">
                     <div className="busca">

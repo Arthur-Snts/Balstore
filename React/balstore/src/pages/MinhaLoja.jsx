@@ -5,15 +5,38 @@ import { useEffect, useState } from "react"
 import produtos_todos from "./produtos_teste"
 import ProdutoCard from "../components/Produtos/ProdutoCard"
 import "./MinhaLoja.css"
+import Loading from "./Loading"
+import { useNavigate } from "react-router-dom"
+import {verificar_token_cliente, verificar_token_loja} from "../statements"
 
 export default function MinhaLoja() {
 
-    const status = "client"
+    const navigate = useNavigate();
+    const [cliente, setCliente] = useState(null)
+    const [loja, setLoja] = useState(null)
+    const [loading, setLoading] = useState(false)
 
-    const loj = {
-        nome: "Loja do Amigãozão",
-        email: "ansofpjasnonpo@gmail.com"
-    }
+    const [status, setStatus] = useState("")
+
+    useEffect(() => {
+
+        setLoading(true)
+        async function carregarUsuario() {
+            let token = localStorage.getItem("token");
+            let token_loja = localStorage.getItem("token_loja")
+            
+                if (token_loja){
+                    navigate("/Login", {state: {
+            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente ou desconectado para acessar essa página` }
+        }})
+                }
+                else {
+                    setStatus("guest")
+                }
+        }
+        carregarUsuario();
+        setLoading(false)
+    }, []);
 
     useEffect(() => {
         document.title = "Loja " + loj.nome;
@@ -31,11 +54,11 @@ export default function MinhaLoja() {
 
     return(
         <>
-            <Header status={status}/>
+            <Header status={status} user_name={loja?.nome}/>
                 <div className="titulo">
                     <div className="nome">
-                        <h1>{loj.nome}</h1>
-                        <p>{loj.email}</p>
+                        <h1>{loja?.nome}</h1>
+                        <p>{loja?.email}</p>
                     </div>
                     <div className="informacoes">
                         <p>{produtos_todos.length} Produtos Diferentes</p>
