@@ -240,6 +240,20 @@ export async function getprodutos() {
             return { success: true, produtos: data };}
 
 // ======================================================================================
+// GET PRODUTO
+// ======================================================================================
+export async function getproduto(pro_id) {
+    const res = await fetch(`http://localhost:8000/produtos?pro_id=${pro_id}`)
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, produto: data[0] };}
+
+// ======================================================================================
 // POST FAVORITO
 // ======================================================================================
 export async function postfavorito(produto_id, cliente_id) {
@@ -264,6 +278,126 @@ export async function postfavorito(produto_id, cliente_id) {
 // ======================================================================================
 export async function deletefavorito(fav_id) {
     const res = await fetch(`http://localhost:8000/favoritos/${fav_id}`, {
+                method: "DELETE",
+                
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+            return { success: true };}
+
+// ======================================================================================
+// POST Carrinho
+// ======================================================================================
+export async function postcarrinho(produto_id, cliente_id, presente_para, qnt_produto) {
+    
+    const body =  {"produto_id": produto_id,"cliente_id": cliente_id} ;
+
+    if (presente_para) {
+        body.presente_para = presente_para;
+    }
+    if (qnt_produto) {
+        body.qnt_produto = qnt_produto;
+    }
+    
+    const res = await fetch(`http://localhost:8000/carrinhos`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+        const data = await res.json();
+        return { success: false, status: data.detail };
+    }
+
+    const data = await res.json();
+    return { success: true, carrinho: data.carrinho };
+}
+
+// ======================================================================================
+// PUT CLIENTE
+// ======================================================================================
+export async function putcliente(cliente, cli_senha_nova) {
+    const body =  {} ;
+
+    if (cliente.nome) {
+        body.cli_nome = cliente.nome;
+    }
+    if (cliente.email) {
+        body.cli_email = cliente.email;
+    }
+    if (cli_senha_nova) {
+        body.cli_senha_antiga = cliente.senha;
+        body.cli_senha = cli_senha_nova
+    }
+    const res = await fetch(`http://localhost:8000/clientes/${cliente.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, cliente: data.cliente };
+}
+
+// ======================================================================================
+// POST ENDEREÇO
+// ======================================================================================
+export async function postendereco(endereco) {
+    const res = await fetch("http://localhost:8000/enderecos", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(endereco)
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, endereco: data.Endereco };
+}
+
+// ======================================================================================
+// PUT ENDEREÇO
+// ======================================================================================
+export async function putendereco(endereco) {
+    const res = await fetch(`http://localhost:8000/enderecos/${endereco.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(endereco)
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, endereco: data.Endereco };
+}
+
+// ======================================================================================
+// DELETE ENDEREÇO
+// ======================================================================================
+export async function deleteendereco(endereco_id) {
+    const res = await fetch(`http://localhost:8000/enderecos/${endereco_id}`, {
                 method: "DELETE",
                 
             });

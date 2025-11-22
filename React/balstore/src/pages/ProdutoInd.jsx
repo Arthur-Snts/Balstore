@@ -33,9 +33,8 @@ export default function ProdutoInd () {
                 setStatus("client")
             }
                 else if (token_loja){
-                    navigate("/Login", {state: {
-            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente ou desconectado para acessar essa página` }
-        }})
+                    showAlert(`Você precisa estar conectado como Cliente ou desconectado para acessar essa página` , "info");
+                    navigate("/Login")
                 }
                 else {
                     setStatus("guest")

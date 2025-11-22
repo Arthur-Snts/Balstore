@@ -29,6 +29,8 @@ def pega_comentarios(session: SessionDep, pro_id:int, cli_id:int = None):
 
     
     query = query.where(Comentario.produto_id == pro_id)
+    if cli_id:
+        query = query.where(Comentario.cliente_id == cli_id)
     comentario = session.exec(query).all()
     if not comentario:
         raise HTTPException(400, "Produto sem Comentários")

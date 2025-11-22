@@ -97,7 +97,7 @@ class Carrinho(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     cliente_id: int = Field(foreign_key="cliente.id")
     produto_id: int = Field(foreign_key="produto.id")
-    qnt_produto: int = Field(default=1, index=False)
+    qnt_produto: Optional[int] = Field(default=1, index=False)
 
     presente_para: Optional[int] = Field(default=None, foreign_key="cliente.id")
 

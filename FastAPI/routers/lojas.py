@@ -198,7 +198,10 @@ def busca_loja(session: SessionDep,loj_email: str = None, loj_nome:str=None, loj
             "notificacoes": [n.model_dump() for n in c.notificacoes] if c.notificacoes else [],
         })
 
-    return resultado
+    if len(resultado) == 1:
+        return resultado[0]
+    else:
+        return resultado
 
 # ------------------------------------------------------------------------------
 # CADASTRO

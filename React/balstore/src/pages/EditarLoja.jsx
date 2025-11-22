@@ -31,9 +31,8 @@ export default function EditarLoja () {
                 setStatus("lojist")
             }
                 else{
-                    navigate("/Login", {state: {
-            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Loja para acessar essa página` }
-        }})
+                    showAlert(`Você precisa estar conectado como Loja para acessar essa página` , "info");
+                    navigate("/Login") 
                 }
         }
         carregarUsuario();

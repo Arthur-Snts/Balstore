@@ -217,7 +217,7 @@ def busca_cliente(session: SessionDep, cli_email: str = None, cli_nome:str=None,
     for c in cliente:
         resultado.append({
             **c.model_dump(),
-            "enderecos": [e.model_dump() for e in c.comentarios] if c.comentarios else [],
+            "enderecos": [e.model_dump() for e in c.enderecos] if c.enderecos else [],
             "comentarios": [come.model_dump() for come in c.comentarios] if c.comentarios else [],
             "favoritos": [f.model_dump() for f in c.favoritos] if c.favoritos else [],
             "carrinhos": [car.model_dump() for car in c.carrinhos] if c.carrinhos else [],
@@ -294,28 +294,39 @@ def deleta_cliente(cli_id: int, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # UPDATE
-@router.put("/{cli_id}")
-def atualiza_cliente(session: SessionDep,cli_id:int,cli_nome:str=None, cli_email:str=None, cli_senha:str=None):
+from typing import Optional
+class ClienteUpdate(BaseModel):
+    cli_nome: Optional[str] = None
+    cli_email: Optional[str] = None
+    cli_senha: Optional[str] = None
+    cli_senha_antiga: Optional[str] = None
 
+@router.put("/{cli_id}")
+def atualiza_cliente(cli_id: int, dados: ClienteUpdate, session: SessionDep):
 
     cliente = session.get(Cliente, cli_id)
-   
+
     if not cliente:
-        raise HTTPException(404, "Perfil não encontrado pelo ID, Verifique a informação.")
+        raise HTTPException(404, "Perfil não encontrado")
 
+    if dados.cli_nome:
+        cliente.nome = dados.cli_nome
 
-    if cli_nome:
-        cliente.nome = cli_nome
-    if cli_email:
-        cliente.email = cli_email
-    if cli_senha:
-        cliente.senha = generate_password_hash(cli_senha, method="pbkdf2:sha256")
+    if dados.cli_email:
+        cliente.email = dados.cli_email
 
+    if dados.cli_senha:
+        if not dados.cli_senha_antiga:
+            raise HTTPException(400, "É necessário enviar a senha antiga para alterar a senha.")
+
+        if check_password_hash(cliente.senha, dados.cli_senha_antiga):
+            cliente.senha = generate_password_hash(dados.cli_senha, method="pbkdf2:sha256")
+        else:
+            raise HTTPException(400, "Senha antiga incorreta.")
 
     session.add(cliente)
     session.commit()
     session.refresh(cliente)
-
 
     return {"mensagem": "Perfil editado com sucesso", "cliente": cliente}
 

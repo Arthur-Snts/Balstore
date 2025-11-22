@@ -40,6 +40,11 @@ def pega_compra(session: SessionDep, cli_id:int, data_pos:datetime= None, data_a
         query = query.where(Compra.data >= data_pos, Compra.data <= data_antes).all()
         if not query:
             raise HTTPException(400, "Cliente sem histórico de Compras nesse período")
+        
+    if data_pos:
+        query = query.where(Compra.data >= data_pos).all()
+        if not query:
+            raise HTTPException(400, "Cliente sem histórico de Compras após a esse período")
     
     if com_id:
         query = query.where(Compra.id == com_id).first()

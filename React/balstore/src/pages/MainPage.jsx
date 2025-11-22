@@ -94,7 +94,7 @@ export default function MainPage() {
         
         const resultado_favoritar = await postfavorito(id, cliente.id);
         if (resultado_favoritar?.success){
-            console.log(resultado_favoritar)
+            
             setCliente(prev => ({
             ...prev,
             favoritos: [

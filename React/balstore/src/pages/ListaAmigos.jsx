@@ -32,9 +32,8 @@ export default function ListaAmigos () {
                 setStatus("client")
             }
                 else{
-                    navigate("/Login", {state: {
-            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente para acessar essa página` }
-        }})
+                    showAlert(`Você precisa estar conectado como Cliente para acessar essa página` , "info");
+                    navigate("/Login")
                 }
         }
         carregarUsuario();

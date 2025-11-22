@@ -84,7 +84,6 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
             "loja": c.loja.model_dump() if c.loja else None,
         })
 
-
     return resultado
    
 

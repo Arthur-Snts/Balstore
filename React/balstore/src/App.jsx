@@ -52,8 +52,8 @@ function App() {
             <Route path="/Pagamento" element={<Pagamento/>}/>
 
             <Route path="/Perfil/Compras" element={<Compras/>}/>
-            <Route path="/Perfil/Config" element={<ConfigCliente />}/>
-            <Route path="/Perfil/Favoritos" element={<ListaDesejos/>}/>
+            <Route path="/Perfil/Config" element={<ConfigCliente />}/> {/*Ta feita */}
+            <Route path="/Perfil/Favoritos" element={<ListaDesejos/>}/> {/*Ta feita */}
             <Route path="/Perfil/Amizades" element={<ListaAmigos/>}/>
 
             <Route path="*" element={<NotFound/>}/>

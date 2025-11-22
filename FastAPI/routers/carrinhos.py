@@ -1,7 +1,7 @@
 from models import  Carrinho, Produto
 from config import engine
 from sqlmodel import Session, select
-from fastapi import HTTPException, Depends, APIRouter
+from fastapi import HTTPException, Depends, APIRouter, Request
 from typing import Annotated
 from sqlalchemy.orm import selectinload
 
@@ -44,8 +44,7 @@ def pega_carrinho(session: SessionDep, cli_id:int):
 # ------------------------------------------------------------------------------
 # POST
 @router.post("/")
-def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep):
-
+def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep, request: Request):
     carrinho_existente = session.exec(
         select(Carrinho).where(Carrinho.produto_id == carrinho_cadastra.produto_id, Carrinho.cliente_id == carrinho_cadastra.cliente_id)
     ).first()

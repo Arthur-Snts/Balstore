@@ -13,7 +13,6 @@ export default function Compras () {
 
     const navigate = useNavigate();
     const [cliente, setCliente] = useState(null)
-    const [loja, setLoja] = useState(null)
     const [loading, setLoading] = useState(false)
 
     const [status, setStatus] = useState("")
@@ -23,7 +22,6 @@ export default function Compras () {
         setLoading(true)
         async function carregarUsuario() {
             let token = localStorage.getItem("token");
-            let token_loja = localStorage.getItem("token_loja")
             if (token){
                 const user_devolvido = await verificar_token_cliente(navigate);
                 
@@ -31,9 +29,8 @@ export default function Compras () {
                 setStatus("client")
             }
                 else{
-                    navigate("/Login", {state: {
-            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente para acessar essa página` }
-        }})
+                    showAlert(`Você precisa estar conectado como Cliente para acessar essa página` , "info");
+                    navigate("/Login")  
                 }
                 
         }
@@ -49,7 +46,7 @@ export default function Compras () {
         <>
             {loading == true ? <Loading/> :
             <>
-            <Header status={status} active={"Perfil"} user_name={loja?.nome}/>
+            <Header status={status} active={"Perfil"}/>
             <div className="compras_geral">
                 <aside className="user-side-config">
                     <UserSidebar props={cliente} active={"Minhas Compras"}/>
