@@ -71,7 +71,6 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
 
 
 
-    print(produtos)
     resultado = []
     for c in produtos:
         resultado.append({
@@ -118,7 +117,7 @@ async def cadastra_produto(nome: str , preco: float, estoque: int, categoria_id:
             buffer.write(await imagem.read())
 
 
-        file_url = f"../../../../../FastAPI/uploads/{filename}"
+        file_url = f"/uploads/{filename}"
 
 
         novo_produto = Produto(
@@ -215,7 +214,7 @@ async def atualiza_produto(session: SessionDep,pro_id:int,pro_preco:float=None,p
             buffer.write(await pro_imagem.read())
 
 
-        file_url = f"../../../../../FastAPI/uploads/{filename}"
+        file_url = f"/uploads/{filename}"
 
 
         produto.imagem_path = file_url

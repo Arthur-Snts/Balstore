@@ -20,7 +20,13 @@ export default function Pesquisa() {
     const precoMaxFromURL = searchParams.get("max") || "";
     const avaliacaoFromURL = searchParams.get("av") || null;
     const ordenacaoFromURL = searchParams.get("ord") || null;
-
+    useEffect(() => {
+        const categoriasFromURL = searchParams.get("cat");
+        setFiltros(prev => ({
+            ...prev,
+            categorias: categoriasFromURL ? categoriasFromURL.split(",") : []
+        }));
+    }, [searchParams]);
     useEffect(() => {
         document.title = "Busca por " + busca_produto;
     }, []);
@@ -78,6 +84,9 @@ export default function Pesquisa() {
         if (filtros.precoMax) params.max = filtros.precoMax;
         if (filtroAvaliacao) params.av = filtroAvaliacao;
         if (ordenacaoPreco) params.ord = ordenacaoPreco;
+        if (filtros.categorias.length > 0) params.cat = filtros.categorias.join(","); 
+
+        setSearchParams(params);
 
         setSearchParams(params);  // muda a URL SEM recarregar
     }, [filtros, filtroAvaliacao, ordenacaoPreco]);
@@ -120,7 +129,7 @@ export default function Pesquisa() {
 
             <div className="pesquisa-content">
                 <aside className="filter-side-bar">
-                    <Filtros onChangeFiltros={setFiltros} />
+                    <Filtros onChangeFiltros={setFiltros} filtrosAtuais={filtros}/>
                 </aside>
 
                 <section className="section-produtos-buscados">

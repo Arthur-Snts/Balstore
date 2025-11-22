@@ -200,12 +200,75 @@ export async function postloja(loja) {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ loja_cadastra: loja })
+                body: JSON.stringify(loja)
             });
 
             if (!res.ok) {
-                return { success: false, status: res.status };
+                const data = await res.json();
+                return { success: false, status: data.detail };
             }
 
             const data = await res.json();
             return { success: true, loja: data.loja };}
+
+// ======================================================================================
+// GET CATEGORIAS
+// ======================================================================================
+export async function getcategorias() {
+    const res = await fetch("http://localhost:8000/categorias");
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, categorias: data };}
+
+// ======================================================================================
+// GET PRODUTOS
+// ======================================================================================
+export async function getprodutos() {
+    const res = await fetch("http://localhost:8000/produtos");
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, produtos: data };}
+
+// ======================================================================================
+// POST FAVORITO
+// ======================================================================================
+export async function postfavorito(produto_id, cliente_id) {
+    const res = await fetch("http://localhost:8000/favoritos", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({produto_id: produto_id, cliente_id: cliente_id})
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, favorito: data.Favorito };}
+
+// ======================================================================================
+// DELETE FAVORITO
+// ======================================================================================
+export async function deletefavorito(fav_id) {
+    const res = await fetch(`http://localhost:8000/favoritos/${fav_id}`, {
+                method: "DELETE",
+                
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+            return { success: true };}

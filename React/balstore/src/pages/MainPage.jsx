@@ -7,9 +7,10 @@ import "./MainPage.css";
 import ProdutoCard from '../components/Produtos/ProdutoCard';
 import { useAlert } from "../components/Auxiliares/AlertContext";
 import { useEffect,useState } from 'react';
-import {verificar_token_cliente, verificar_token_loja} from "../statements"
-import produtos_todos from "./produtos_teste"; //Substituir por consulta no banco
+import {deletefavorito, getprodutos, postfavorito, verificar_token_cliente, verificar_token_loja} from "../statements"
 import { useLocation, useNavigate } from 'react-router-dom';
+import { getcategorias } from '../statements';
+import LoadingScreen from './Loading';
 
 
 
@@ -23,14 +24,14 @@ export default function MainPage() {
     const navigate = useNavigate();
     const [cliente, setCliente] = useState(null)
     const [loja, setLoja] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     const [status, setStatus] = useState("")
+    const [categorias, setCategorias] = useState([]);
+    const [produtos, setProdutos] = useState([]);
 
     useEffect(() => {
-
-        setLoading(true)
-        async function carregarUsuario() {
+        async function carregar() {
             let token = localStorage.getItem("token");
             let token_loja = localStorage.getItem("token_loja")
             if (token){
@@ -46,34 +47,89 @@ export default function MainPage() {
                 else {
                     setStatus("guest")
                 }
+
+
+
+                const resultado_categorias = await getcategorias();
+                if (resultado_categorias?.success === true) {
+                    setCategorias(resultado_categorias.categorias);
+                    
+                }
+                
+                const resultado_produtos = await getprodutos();
+                if (resultado_produtos?.success === true) {
+                    setProdutos(resultado_produtos.produtos)
+                }
+
+                setLoading(false)
         }
-        carregarUsuario();
-        setLoading(false)
+        carregar();
+        
     }, []);
 
-    const categorias = [
-        "Brinquedos", "Cosméticos", "Esporte", "Roupas", "Eletrônicos", "Papelaria", "Bolsas", "Calçados", "Cozinha", 
-        "Móveis", "Ferramentas", "Limpeza", "Livros"
-    ] // Substituir por consulta ao banco
+    async function handlefavoritar (id) {
+        if (status == "guest"){
+            showAlert("Você precisa estar conectado como Cliente para favoritar um produto", "info");
+            navigate("/Login");
+            return;
+        }
+
+        if (!cliente || !cliente.favoritos) {
+            showAlert("Erro: dados do cliente não carregados", "error");
+            return;
+        }
+
+        const favoritoExistente = cliente.favoritos.find(f => f.produto_id === id);
+
+        if (favoritoExistente) {
+            const resultado_delete = await deletefavorito(favoritoExistente.id);
+            if (resultado_delete?.success) {
+            
+            setCliente(prev => ({
+                ...prev,
+                favoritos: prev.favoritos.filter(f => f.id !== favoritoExistente.id)
+            }));
+            }return;
+        }
+        
+        const resultado_favoritar = await postfavorito(id, cliente.id);
+        if (resultado_favoritar?.success){
+            console.log(resultado_favoritar)
+            setCliente(prev => ({
+            ...prev,
+            favoritos: [
+                ...prev.favoritos,
+                {
+                    id: resultado_favoritar.favorito.id,
+                    produto_id: id,
+                    cliente_id: cliente.id
+                }
+            ]
+        }));
+        }
+        
+        
+    }
+    
 
     const categoria = categorias[Math.floor(Math.random() * categorias.length)];
 
-    const produtosFiltrados = produtos_todos.filter(
-        (produto) => produto.categoria === categoria
+    const produtosFiltrados = produtos.filter(
+        (produto) => produto.categoria === categoria.nome
     );
 
     const { showAlert } = useAlert();
 
     return (
         <>
-
-            {alert && (<Alert tipo={alert.tipo} mensagem={alert.mensagem}/>)}
+            {loading == true ? <LoadingScreen/>: 
+            <>
             <Header status={status} user_name={loja?.nome}/>
                 <Carrossel/>
                 <Categorias/>
                 <div className="categoria-recomendada">
                     <div className="titulo-categoria-recomendada">
-                        <p>Categoria {categoria}</p>
+                        <p>Categoria {categoria?.nome}</p>
                     </div>
                     <CarrosselProdutos produtosFiltrados={produtosFiltrados}></CarrosselProdutos>
                 </div>
@@ -82,14 +138,13 @@ export default function MainPage() {
                         <p>Produtos Recomendados</p>
                     </div>
                     <div className="produtos_todos">
-                        {produtos_todos.map((produto)=> (
-                            <ProdutoCard produto={produto} favorito={false //Substituir caso esteja logado}
-                            }></ProdutoCard>
+                        {produtos.map((produto)=> (
+                            <ProdutoCard produto={produto} favoritoInicial={status !== "guest" && cliente?.favoritos?.some(f => f.produto_id === produto.id)} onclickFavoritar={handlefavoritar}></ProdutoCard>
                         ))}
                     </div>
                 </div>
             <Footer/>
-        </>
+        </>}</>
 
     )
 }

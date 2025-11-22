@@ -75,7 +75,7 @@ export default function Cadastro (){
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("refresh_token", data.refresh_token);
 
-        showAlert("Login realizado com sucesso!", "success");
+        showAlert("Cadastro realizado com sucesso!", "success");
         navigate("/",)
         } else {
         showAlert("Falha no Login", "erro");
@@ -100,7 +100,7 @@ export default function Cadastro (){
             localStorage.setItem("token_loja", data.access_token);
             localStorage.setItem("refresh_token_loja", data.refresh_token);
 
-            showAlert("Login realizado com sucesso!", "success");
+            showAlert("Cadastro realizado com sucesso!", "success");
             navigate("/Loja/Produtos")
                 } else {
                 showAlert("Falha no Login", "erro");

@@ -35,7 +35,7 @@ function App() {
       <AlertWrapper />
         <Router>
           <Routes>
-            <Route path="/" element={<MainPage />}/>
+            <Route path="/" element={<MainPage />}/> {/*Ta feita */}
              <Route path="/Login" element={<Login />} /> {/*Ta feita */}
             <Route path="/Cadastro" element={<Cadastro />}/> {/*Ta feita */}
             <Route path="/Sobre" element={<Sobrenos/>}/>   {/*Não Precisa */}
