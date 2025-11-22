@@ -170,5 +170,42 @@ export async function verificar_token_loja(navigate) {
         return null;
     }
 }
+// ======================================================================================
+// POST CLIENTE
+// ======================================================================================
+export async function postcliente(cliente) {
+    const res = await fetch("http://localhost:8000/clientes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(cliente)
+            });
 
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
 
+            const data = await res.json();
+            return { success: true, cliente: data.cliente };
+}
+
+// ======================================================================================
+// POST LOJA
+// ======================================================================================
+export async function postloja(loja) {
+    const res = await fetch("http://localhost:8000/lojas", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ loja_cadastra: loja })
+            });
+
+            if (!res.ok) {
+                return { success: false, status: res.status };
+            }
+
+            const data = await res.json();
+            return { success: true, loja: data.loja };}

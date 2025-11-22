@@ -1,6 +1,6 @@
 import "./App.css"
 import MainPage from "./pages/MainPage"
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'; 
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'; 
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import Pesquisa from "./pages/Pesquisa";
@@ -17,19 +17,28 @@ import Carrinho from "./pages/Carrinho";
 import ListaAmigos from "./pages/ListaAmigos";
 import ProdutoInd from "./pages/ProdutoInd";
 import NotFound from "./pages/NotFound";
+import { AlertProvider, useAlert } from "./components/Auxiliares/AlertContext";
+import Alert from "./components/Auxiliares/Alert";
+
+
 
 
 function App() {
-
   
+  function AlertWrapper() {
+    const { alert } = useAlert();
+    return <Alert type={alert?.type} message={alert?.message} />;
+  }
   return (
     <>
+     <AlertProvider>
+      <AlertWrapper />
         <Router>
           <Routes>
             <Route path="/" element={<MainPage />}/>
-            <Route path="/Login" element={<Login />} /> 
-            <Route path="/Cadastro" element={<Cadastro />}/>
-            <Route path="/Sobre" element={<Sobrenos/>}/>   
+             <Route path="/Login" element={<Login />} /> {/*Ta feita */}
+            <Route path="/Cadastro" element={<Cadastro />}/> {/*Ta feita */}
+            <Route path="/Sobre" element={<Sobrenos/>}/>   {/*Não Precisa */}
 
             <Route path="/Loja" element={<MinhaLoja/>}/>
             <Route path="/Loja/Editar" element={<EditarLoja/>}/>
@@ -50,6 +59,7 @@ function App() {
             <Route path="*" element={<NotFound/>}/>
           </Routes>
         </Router>
+      </AlertProvider>
     </>
   );
 }

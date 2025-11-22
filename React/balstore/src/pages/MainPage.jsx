@@ -5,7 +5,7 @@ import Categorias from '../components/Auxiliares/Categorias';
 import CarrosselProdutos from '../components/Auxiliares/CarrosselProdutos';
 import "./MainPage.css";
 import ProdutoCard from '../components/Produtos/ProdutoCard';
-import Alert from '../components/Auxiliares/Alert';
+import { useAlert } from "../components/Auxiliares/AlertContext";
 import { useEffect,useState } from 'react';
 import {verificar_token_cliente, verificar_token_loja} from "../statements"
 import produtos_todos from "./produtos_teste"; //Substituir por consulta no banco
@@ -40,9 +40,8 @@ export default function MainPage() {
                 setStatus("client")
             }
                 else if (token_loja){
-                    navigate("/Login", {state: {
-            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente ou desconectado para acessar essa página` }
-        }})
+                    showAlert("Você precisa estar conectado como Cliente ou desconectado para acessar essa página", "info");
+                    navigate("/Login") 
                 }
                 else {
                     setStatus("guest")
@@ -63,8 +62,7 @@ export default function MainPage() {
         (produto) => produto.categoria === categoria
     );
 
-    const location = useLocation()
-    const alert = location.state?.alert;
+    const { showAlert } = useAlert();
 
     return (
         <>

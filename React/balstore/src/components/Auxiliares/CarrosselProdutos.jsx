@@ -31,7 +31,7 @@ function PrevArrow(props) {
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
         slidesToShow: 6, // Quantos produtos aparecem ao mesmo tempo
-        slidesToScroll: 1,
+        slidesToScroll: 3,
         centerMode: true,
         centerPadding: "40px", 
         responsive: [

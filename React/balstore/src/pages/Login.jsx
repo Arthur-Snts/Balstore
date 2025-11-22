@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import login_cliente from "../assets/login_cliente.png"
 import login_lojista from "../assets/login_lojista.png"
 import Loading from "./Loading"
-import Alert from "../components/Auxiliares/Alert"
+import { useAlert } from "../components/Auxiliares/AlertContext";
 import "./Login.css"
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -50,15 +50,11 @@ export default function Login (){
         if (data.access_token) {
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("refresh_token", data.refresh_token);
-        
-        navigate("/", {state: {
-        alert: { tipo: "sucesso", mensagem: "Login realizado com sucesso!" }
-      }})
+        showAlert("Login Realizado com Sucesso! Bem-Vindo!", "sucesso");
+        navigate("/")
         } else {
-        
-        navigate("/Login", {state: {
-        alert: { tipo: "erro", mensagem: `Falha no Login: ${data.detail}!` }
-      }})
+        showAlert(`Falha no Login: ${data.detail}!`, "erro");
+        navigate("/Login")
         }
         setLoading(false)
     }
@@ -78,29 +74,23 @@ export default function Login (){
         if (data.access_token) {
         localStorage.setItem("token_loja", data.access_token);
         localStorage.setItem("refresh_token_loja", data.refresh_token);
-        
-        navigate("/Loja/Produtos", {state: {
-        alert: { tipo: "sucesso", mensagem: "Login realizado com sucesso!" }
-        }})
+        showAlert("Login Realizado com Sucesso! Bem-Vindo!", "sucesso");
+        navigate("/Loja/Produtos")
             } else {
+            showAlert(`Falha no Login: ${data.detail}!`, "erro");
+            navigate("/Login")}
+        
             
-            navigate("/Login", {state: {
-            alert: { tipo: "erro", mensagem: `Falha no Login: ${data.detail}!` }
-        }})
-            }
 
-        setLoading(false)
-    }
+        setLoading(false)}
 
-    const location = useLocation()
-    const alert = location.state?.alert;
+    const { showAlert } = useAlert();
     
     
 
 
     return(
         <>
-        {alert && (<Alert tipo={alert?.tipo} mensagem={alert?.mensagem}/>)}
         {loading == true ? <Loading></Loading>:
         <>
             

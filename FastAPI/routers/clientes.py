@@ -190,10 +190,10 @@ def busca_cliente(session: SessionDep, cli_email: str = None, cli_nome:str=None,
 
 
     if cli_nome:
-        query = query.where(Cliente.nome == cli_nome)
+        query = query.where(Cliente.nome.contains(cli_nome))
         nome = session.exec(query).all()
         if not nome:
-           raise HTTPException(404, "nome do cliente inexistente")
+           raise HTTPException(404, "nenhum cliente com essa letra")
        
     if cli_cpf:
         query = query.where(Cliente.cpf == cli_cpf)
