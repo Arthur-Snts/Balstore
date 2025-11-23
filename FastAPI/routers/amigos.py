@@ -31,18 +31,20 @@ def pega_amigos(cli_id:int, session: SessionDep):
                                     selectinload(Amigo.cliente_amigo))
     
 
-    query = query.where(Amigo.id == cli_id)
-    id = session.exec(query).all()
-    if not id:
-           raise HTTPException(404, "id de cliente inexistente")
+    query = query.where(Amigo.amigo == cli_id)
+    
     
     amigo = session.exec(query).all()
 
+    
+   
+
     resultado = []
+
     for c in amigo:
         resultado.append({
             **c.model_dump(),
-              "cliente_de": c.cliente_de.model_dump() if c.cliente_de else None,
+            "cliente_de": c.cliente_de.model_dump() if c.cliente_de else None,
             "cliente_amigo": c.cliente_amigo.model_dump() if c.cliente_amigo else None
         })
     
@@ -67,15 +69,7 @@ def adiciona_amigo(amigo:Amigo, session:SessionDep):
     session.commit()
     session.refresh(amigo)
 
-    amizade_inversa = Amigo(id=amigo.id+1, amigo=amigo.amigo_de, amigo_de=amigo.amigo, solicitacao=amigo.solicitacao)
-
-    session.add(amizade_inversa)
-    session.commit()
-    session.refresh(amizade_inversa)
-
-    session.refresh(amigo)
-
-    return {"mensagem": "Amizade cadastrada com sucesso", "Nova Amizade": amigo}
+    return {"mensagem": "Amizade cadastrada com sucesso", "amigo": amigo}
 
 # ------------------------------------------------------------------------------
 # DELETE

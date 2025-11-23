@@ -87,7 +87,7 @@ export default function ProdutoInd () {
                                 <div className="contador">
                                     <button onClick={()=>(setCount(count+1))}>+</button>
                                     <p>{count}</p>
-                                    <button onClick={()=>(setCount(count-1))} disabled={count == 0 ? true: false}>-</button>
+                                    <button onClick={()=>(setCount(count-1))} disabled={count == 1 ? true: false}>-</button>
                                 </div>
                             </div>
                             

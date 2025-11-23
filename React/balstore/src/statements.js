@@ -406,3 +406,57 @@ export async function deleteendereco(endereco_id) {
                 return { success: false, status: data.detail };
             }
             return { success: true };}
+
+// ======================================================================================
+// GET Clientes
+// ======================================================================================
+export async function getclientes(nome) {
+    const res = await fetch(`http://localhost:8000/clientes?cli_nome=${nome}`)
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, clientes: data };}
+
+// ======================================================================================
+// GET Amigos
+// ======================================================================================
+export async function getamigos(cli_id) {
+    const res = await fetch(`http://localhost:8000/amigos/${cli_id}`)
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, amigos: data };}
+
+
+// ======================================================================================
+// POST Amigo
+// ======================================================================================
+export async function postamigo(amigo_id, cliente_id) {
+    const res = await fetch("http://localhost:8000/amigos", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    amigo: cliente_id,
+                    amigo_de: amigo_id,
+                    solicitacao: "Pendente"
+                })
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, amigo: data.amigo };
+}

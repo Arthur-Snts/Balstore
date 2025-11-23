@@ -110,24 +110,29 @@ export default function Cadastro (){
             setLoading(false)
         }
 
-    const handleSubmmit = async () => {
+    const handleSubmmit = async (e) => {
+        e.preventDefault()
         setLoading(true);
 
         if (!nome || !email || !senha || !confirmarsenha ) {
-            setLoading(false);
+           
             showAlert("Complete o Formulário", "erro");
-            return;
+            setLoading(false);
+            
         }
 
         if (!email.endsWith("@gmail.com")) {
-            setLoading(false);
+            
             showAlert("Email no formato errado experimente '@gmail.com'", "erro");
+            
+            setLoading(false);
             return;
         }
 
         if (senha !== confirmarsenha) {
+            showAlert("Senhas não Coincidem", "erro");
             setLoading(false);
-            return;
+            
         }
 
         // Executa cadastro correto

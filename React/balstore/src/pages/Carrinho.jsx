@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import produtos from "./produtos_teste"
 import Loading from "./Loading"
 import { useNavigate } from "react-router-dom"
+import { useAlert } from "../components/Auxiliares/AlertContext"
 import {verificar_token_cliente, verificar_token_loja} from "../statements"
 import "./Carrinho.css"
 
@@ -14,6 +15,7 @@ export default function Carrinho () {
     const [cliente, setCliente] = useState(null)
     const [loja, setLoja] = useState(null)
     const [loading, setLoading] = useState(false)
+    const {showAlert} = useAlert()
 
     const [status, setStatus] = useState("")
 

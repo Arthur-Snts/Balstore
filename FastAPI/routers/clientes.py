@@ -119,7 +119,7 @@ def login(login:Login, session:SessionDep):
     
     cliente = session.exec(select(Cliente).where(Cliente.email == login.cli_email)).first()
     if not cliente or not check_password_hash(cliente.senha, login.cli_senha):
-        raise HTTPException(status_code=401, detail="Credenciais inválidas.")
+        raise HTTPException(status_code=401, detail="Credenciais inválidas")
 
     access_token = criar_access_token({"sub": cliente.id})
     refresh_token = criar_refresh_token({"sub": cliente.id})
@@ -231,7 +231,7 @@ def busca_cliente(session: SessionDep, cli_email: str = None, cli_nome:str=None,
 
         })
 
-    if len(cliente) == 1:
+    if len(resultado) == 1:
         return resultado[0]
     else:
         return resultado
