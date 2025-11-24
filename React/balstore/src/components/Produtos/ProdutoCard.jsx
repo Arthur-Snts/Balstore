@@ -9,6 +9,15 @@ export default function ProdutoCard({produto, favoritoInicial, onclickFavoritar}
 
   const navigate = useNavigate()
 
+  var avaliacao_total = 0
+  var contador_avaliacoes = 0
+  produto.comentarios.map((comentario)=>{
+      avaliacao_total= avaliacao_total + comentario.avaliacao
+      contador_avaliacoes = contador_avaliacoes + 1
+  })
+
+  var avaliacao_media = avaliacao_total/contador_avaliacoes
+
   return (
     <>
       <div className='card' >
@@ -18,7 +27,7 @@ export default function ProdutoCard({produto, favoritoInicial, onclickFavoritar}
           <div className='mid-card-section' onClick={()=>navigate(`/Produto/${produto.id}`)}>
             <p className='nome-texto'>{produto.nome}</p>
               <div className='avaliacao-produto'> 
-                <EstrelasAvaliacao rating = {produto.avaliacao || 0} />
+                <EstrelasAvaliacao rating = {avaliacao_media} />
               </div>
           </div>
           <div className='bottom-card-section'>

@@ -1,6 +1,7 @@
 from models import  Amigo, Cliente
 from config import  engine
 from sqlmodel import Session, select
+from sqlalchemy import or_
 from fastapi import HTTPException, Depends, APIRouter
 from typing import Annotated
 from sqlalchemy.orm import selectinload
@@ -31,7 +32,8 @@ def pega_amigos(cli_id:int, session: SessionDep):
                                     selectinload(Amigo.cliente_amigo))
     
 
-    query = query.where(Amigo.amigo == cli_id)
+    # Retornar amizades onde o cliente é remetente (amigo_de) ou destinatário (amigo)
+    query = query.where(or_(Amigo.amigo == cli_id, Amigo.amigo_de == cli_id))
     
     
     amigo = session.exec(query).all()
@@ -76,10 +78,20 @@ def adiciona_amigo(amigo:Amigo, session:SessionDep):
 
 @router.delete("/{cli_id}")
 def desfaz_amizade(session: SessionDep, cli_id:int, amigo_exclui:int):
-
+    # Deletar amizade em qualquer direção envolvendo cli_id e amigo_exclui
     amigo_deletado = session.exec(
-        select(Amigo).where(Amigo.amigo == amigo_exclui, Amigo.amigo_de == cli_id)
+        select(Amigo).where(
+            (Amigo.amigo_de == cli_id) & (Amigo.amigo == amigo_exclui)
+        )
     ).first()
+
+    if not amigo_deletado:
+        # tentar a direção inversa
+        amigo_deletado = session.exec(
+            select(Amigo).where(
+                (Amigo.amigo_de == amigo_exclui) & (Amigo.amigo == cli_id)
+            )
+        ).first()
 
     if not amigo_deletado:
         raise HTTPException(404, "Amigo não encontrado nas amizades desse Cliente")
@@ -87,23 +99,15 @@ def desfaz_amizade(session: SessionDep, cli_id:int, amigo_exclui:int):
     session.delete(amigo_deletado)
     session.commit()
 
-    amigo_inverso_deletado = session.exec(
-        select(Amigo).where(Amigo.amigo == cli_id, Amigo.amigo_de == amigo_exclui)
-    ).first()
-
-    if amigo_inverso_deletado:
-
-        session.delete(amigo_inverso_deletado)
-        session.commit()
-
     return {"mensagem": "Amigo deletado com sucesso desse Cliente"}
 
 # ------------------------------------------------------------------------------
 # PUT
 @router.put("/{cli_id}")
 def atualiza_amizade(session: SessionDep, cli_id:int, status_novo:str, amigo_id:int):
+    # procurar amizade criada onde amigo_de == amigo_id (quem enviou) e amigo == cli_id (quem recebe)
     amigo_atualizar = session.exec(
-        select(Amigo).where(Amigo.amigo == amigo_id, Amigo.amigo_de == cli_id)
+        select(Amigo).where((Amigo.amigo_de == amigo_id) & (Amigo.amigo == cli_id))
     ).first()
 
     if not amigo_atualizar:

@@ -5,9 +5,13 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {verificar_token_cliente, verificar_token_loja} from "../statements"
 import { useParams } from 'react-router-dom';
-import CarrosselProdutos from "../components/Auxiliares/CarrosselProdutos";
 import { EstrelasAvaliacao, Favoritos } from '../components/Auxiliares/Icones'
 import produtos from "./produtos_teste"
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 
 import "./ProdutoInd.css"
 
@@ -59,6 +63,41 @@ export default function ProdutoInd () {
         document.title = "Produto " + produto?.nome;
     }, []);
 
+    const settings = {
+            dots: false,
+            infinite: true,
+            speed: 500,
+            nextArrow: <NextArrow />,
+            prevArrow: <PrevArrow />,
+            centerMode: produtosFiltrados.length > 6,
+            slidesToShow: produtosFiltrados.length >= 6 ? 6 : produtosFiltrados.length,
+            slidesToScroll: 3,
+            centerPadding: "40px", 
+            responsive: [
+            { breakpoint: 1650, settings: { slidesToShow: 5 } },
+            { breakpoint: 1300, settings: { slidesToShow: 2 } },
+            { breakpoint: 480, settings: { slidesToShow: 1 } },
+            ],
+        };
+    
+        function NextArrow(props) {
+            const { onClick } = props;
+            return (
+                <div className="custom-arrow next" onClick={onClick}>
+                    <FaArrowRight size={30} />
+                </div>
+            );
+        }
+        
+        function PrevArrow(props) {
+            const { onClick } = props;
+            return (
+                <div className="custom-arrow prev" onClick={onClick}>
+                    <FaArrowLeft size={30} />
+                </div>
+            );
+        }
+
     
 
     return(
@@ -102,7 +141,12 @@ export default function ProdutoInd () {
                     </div>
                     
                 </div>
-                <div className="carrossel_categoria"><h3>Você também pode gostar:</h3><CarrosselProdutos produtosFiltrados={produtosFiltrados}></CarrosselProdutos></div>
+                <div className="carrossel_categoria"><h3>Você também pode gostar:</h3> 
+                <Slider {...settings} className="carrossel-produtos">
+                        {produtosFiltrados.map((produto)=> (
+                                <ProdutoCard produto={produto} favoritoInicial={status !== "guest" && cliente?.favoritos?.some(f => f.produto_id === produto.id)} onclickFavoritar={handlefavoritar}></ProdutoCard>
+                        ))}
+                    </Slider></div>
                 
                 Fazer um map em comentarios do produto
             <Footer></Footer>

@@ -15,6 +15,7 @@ import Compras from "./pages/Compras";
 import MinhaLoja from "./pages/MinhaLoja";
 import Carrinho from "./pages/Carrinho";
 import ListaAmigos from "./pages/ListaAmigos";
+import FavoritosAmigo from "./pages/FavoritosAmigo";
 import ProdutoInd from "./pages/ProdutoInd";
 import NotFound from "./pages/NotFound";
 import { AlertProvider, useAlert } from "./components/Auxiliares/AlertContext";
@@ -46,15 +47,17 @@ function App() {
             <Route path="/Loja/Pedidos" element={<Pedidos/>}/>
 
 
-            <Route path="/Pesquisa" element={<Pesquisa />}/>
+            <Route path="/Pesquisa" element={<Pesquisa />}/> {/*Ta feita */}
             <Route path="/Produto/:id" element={<ProdutoInd/>}/>
-            <Route path="/Carrinho" element={<Carrinho/>}/>
-            <Route path="/Pagamento" element={<Pagamento/>}/>
+            <Route path="/Carrinho" element={<Carrinho/>}/> {/*Ta feita */}
+            <Route path="/Pagamento" element={<Pagamento/>}/> {/*Ta feita */}
 
-            <Route path="/Perfil/Compras" element={<Compras/>}/>
+            <Route path="/Perfil/Compras" element={<Compras/>}/> {/*Ta feita */}
             <Route path="/Perfil/Config" element={<ConfigCliente />}/> {/*Ta feita */}
             <Route path="/Perfil/Favoritos" element={<ListaDesejos/>}/> {/*Ta feita */}
-            <Route path="/Perfil/Amizades" element={<ListaAmigos/>}/>
+            <Route path="/Perfil/Amizades" element={<ListaAmigos/>}/> {/*Ta feita */}
+
+            <Route path="/Perfil/Amizades/:id/Favoritos" element={<FavoritosAmigo/>}/>
 
             <Route path="*" element={<NotFound/>}/>
           </Routes>

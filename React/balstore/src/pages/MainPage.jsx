@@ -2,15 +2,18 @@ import Header from '../components/Header_and_Footer/Header';
 import Footer from '../components/Header_and_Footer/Footer';
 import Carrossel from '../components/Auxiliares/Carrossel';
 import Categorias from '../components/Auxiliares/Categorias';
-import CarrosselProdutos from '../components/Auxiliares/CarrosselProdutos';
 import "./MainPage.css";
 import ProdutoCard from '../components/Produtos/ProdutoCard';
 import { useAlert } from "../components/Auxiliares/AlertContext";
 import { useEffect,useState } from 'react';
 import {deletefavorito, getprodutos, postfavorito, verificar_token_cliente, verificar_token_loja} from "../statements"
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getcategorias } from '../statements';
 import LoadingScreen from './Loading';
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 
 
@@ -115,10 +118,47 @@ export default function MainPage() {
     const categoria = categorias[Math.floor(Math.random() * categorias.length)];
 
     const produtosFiltrados = produtos.filter(
-        (produto) => produto.categoria === categoria.nome
+        (produto) => produto.categoria.nome === categoria.nome
     );
 
     const { showAlert } = useAlert();
+
+    
+
+    const settings = {
+        dots: false,
+        infinite: true,
+        speed: 500,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
+        centerMode: produtosFiltrados.length > 6,
+        slidesToShow: produtosFiltrados.length >= 6 ? 6 : produtosFiltrados.length,
+        slidesToScroll: 3,
+        centerPadding: "40px", 
+        responsive: [
+        { breakpoint: 1650, settings: { slidesToShow: 5 } },
+        { breakpoint: 1300, settings: { slidesToShow: 2 } },
+        { breakpoint: 480, settings: { slidesToShow: 1 } },
+        ],
+    };
+
+    function NextArrow(props) {
+        const { onClick } = props;
+        return (
+            <div className="custom-arrow next" onClick={onClick}>
+                <FaArrowRight size={30} />
+            </div>
+        );
+    }
+    
+    function PrevArrow(props) {
+        const { onClick } = props;
+        return (
+            <div className="custom-arrow prev" onClick={onClick}>
+                <FaArrowLeft size={30} />
+            </div>
+        );
+    }
 
     return (
         <>
@@ -131,15 +171,19 @@ export default function MainPage() {
                     <div className="titulo-categoria-recomendada">
                         <p>Categoria {categoria?.nome}</p>
                     </div>
-                    <CarrosselProdutos produtosFiltrados={produtosFiltrados}></CarrosselProdutos>
+                    <Slider {...settings} className="carrossel-produtos">
+                        {produtosFiltrados.map((produto, index)=> (
+                                <ProdutoCard key={index} produto={produto} favoritoInicial={status !== "guest" && cliente?.favoritos?.some(f => f.produto_id === produto.id)} onclickFavoritar={handlefavoritar}></ProdutoCard>
+                        ))}
+                    </Slider>
                 </div>
                 <div className="recomendados">
                     <div className="titulo-categoria-recomendada">
                         <p>Produtos Recomendados</p>
                     </div>
                     <div className="produtos_todos">
-                        {produtos.map((produto)=> (
-                            <ProdutoCard produto={produto} favoritoInicial={status !== "guest" && cliente?.favoritos?.some(f => f.produto_id === produto.id)} onclickFavoritar={handlefavoritar}></ProdutoCard>
+                        {produtos.map((produto, index)=> (
+                            <ProdutoCard key={index} produto={produto} favoritoInicial={status !== "guest" && cliente?.favoritos?.some(f => f.produto_id === produto.id)} onclickFavoritar={handlefavoritar}></ProdutoCard>
                         ))}
                     </div>
                 </div>

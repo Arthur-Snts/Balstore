@@ -319,6 +319,66 @@ export async function postcarrinho(produto_id, cliente_id, presente_para, qnt_pr
 }
 
 // ======================================================================================
+// GET Carrinho
+// ======================================================================================
+export async function getcarrinho(cli_id) {
+    const res = await fetch(`http://localhost:8000/carrinhos/${cli_id}`)
+
+            if (!res.ok) {
+                try {
+                    const data = await res.json();
+                    return { success: false, status: data.detail };
+                } catch (e) {
+                    return { success: false, status: 'error' };
+                }
+            }
+
+            const data = await res.json();
+            return { success: true, carrinho: data };
+}
+
+// ======================================================================================
+// PUT Carrinho (atualiza quantidade)
+// ======================================================================================
+export async function putcarrinho(car_id, qnt_nova) {
+    const res = await fetch(`http://localhost:8000/carrinhos/${car_id}?qnt_nova=${qnt_nova}`, {
+        method: "PUT",
+    });
+
+    if (!res.ok) {
+        try {
+            const data = await res.json();
+            return { success: false, status: data.detail };
+        } catch (e) {
+            return { success: false, status: 'error' };
+        }
+    }
+
+    const data = await res.json();
+    return { success: true, qnt_nova: data.qnt_nova };
+}
+
+// ======================================================================================
+// DELETE Carrinho
+// ======================================================================================
+export async function deletecarrinho(car_id) {
+    const res = await fetch(`http://localhost:8000/carrinhos/${car_id}`, {
+        method: "DELETE",
+    });
+
+    if (!res.ok) {
+        try {
+            const data = await res.json();
+            return { success: false, status: data.detail };
+        } catch (e) {
+            return { success: false, status: 'error' };
+        }
+    }
+
+    return { success: true };
+}
+
+// ======================================================================================
 // PUT CLIENTE
 // ======================================================================================
 export async function putcliente(cliente, cli_senha_nova) {
@@ -373,6 +433,21 @@ export async function postendereco(endereco) {
 }
 
 // ======================================================================================
+// GET ENDEREÇO
+// ======================================================================================
+export async function getendereco(cli_id) {
+    const res = await fetch(`http://localhost:8000/enderecos/?cli_id=${cli_id}`)
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, endereco: data };
+}
+
+// ======================================================================================
 // PUT ENDEREÇO
 // ======================================================================================
 export async function putendereco(endereco) {
@@ -422,6 +497,40 @@ export async function getclientes(nome) {
             return { success: true, clientes: data };}
 
 // ======================================================================================
+// GET Favoritos de um Cliente
+// ======================================================================================
+export async function getfavoritos(cli_id) {
+    const res = await fetch(`http://localhost:8000/favoritos/${cli_id}`)
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, favoritos: data };
+}
+
+// ======================================================================================
+// GET Cliente por ID
+// ======================================================================================
+export async function getcliente(cli_id) {
+    const res = await fetch(`http://localhost:8000/clientes?cli_id=${cli_id}`)
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            // backend pode retornar lista ou um único registro
+            if (Array.isArray(data)) {
+                return { success: true, cliente: data[0] || null };
+            }
+            return { success: true, cliente: data };
+}
+
+// ======================================================================================
 // GET Amigos
 // ======================================================================================
 export async function getamigos(cli_id) {
@@ -445,9 +554,11 @@ export async function postamigo(amigo_id, cliente_id) {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                // amigo_de: remetente (cliente_id)
+                // amigo: destinatário (amigo_id)
                 body: JSON.stringify({
-                    amigo: cliente_id,
-                    amigo_de: amigo_id,
+                    amigo_de: cliente_id,
+                    amigo: amigo_id,
                     solicitacao: "Pendente"
                 })
             });
@@ -459,4 +570,117 @@ export async function postamigo(amigo_id, cliente_id) {
 
             const data = await res.json();
             return { success: true, amigo: data.amigo };
+}
+
+// ======================================================================================
+// PUT Amigo (atualiza status)
+// ======================================================================================
+export async function putamigo(cli_id, status_novo, amigo_id) {
+    const res = await fetch(`http://localhost:8000/amigos/${cli_id}?status_novo=${encodeURIComponent(status_novo)}&amigo_id=${amigo_id}`, {
+        method: "PUT",
+    });
+
+    if (!res.ok) {
+        const data = await res.json();
+        return { success: false, status: data.detail };
+    }
+
+    const data = await res.json();
+    return { success: true, mensagem: data.mensagem };
+}
+
+// ======================================================================================
+// DELETE Amigo
+// ======================================================================================
+export async function deleteamigo(cli_id, amigo_exclui) {
+    const res = await fetch(`http://localhost:8000/amigos/${cli_id}?amigo_exclui=${amigo_exclui}`, {
+        method: "DELETE",
+    });
+
+    if (!res.ok) {
+        const data = await res.json();
+        return { success: false, status: data.detail };
+    }
+
+    return { success: true };
+}
+
+// ======================================================================================
+// POST compra
+// ======================================================================================
+
+export async function postCompra(cli_id, valor_compra, cod_pagamento, frete, listaProdutos, end_id) {
+        
+        const compra = {
+            valor: valor_compra,
+            cod_pagamento: cod_pagamento,
+            frete:frete,
+            cliente_id: cli_id,
+            end_id: end_id
+        }
+        const res = await fetch(`http://localhost:8000/compras/${cli_id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                compra_cadastra: compra,
+                produtos: listaProdutos
+            })
+        });
+
+        if (!res.ok) {
+        const data = await res.json();
+        return { success: false, status: data.detail };
+        }
+
+        const data = await res.json();
+        return { success: true, compra: data.Compra };
+}
+
+
+// ======================================================================================
+// GET compra
+// ======================================================================================
+
+export async function getCompras(cli_id) {
+
+        const res = await fetch(`http://localhost:8000/compras/${cli_id}`)
+
+        if (!res.ok) {
+        const data = await res.json();
+        return { success: false, status: data.detail };
+        }
+
+        const data = await res.json();
+        return { success: true, compras: data };
+}
+
+// ======================================================================================
+// POST Comentario
+// ======================================================================================
+
+export async function postComentario(conteudo, avaliacao, cli_id, pro_id) {
+        
+        const comentario = {
+            conteudo: conteudo,
+            avaliacao: avaliacao,
+            cliente_id:cli_id,
+            produto_id: pro_id
+        }
+        const res = await fetch(`http://localhost:8000/comentarios`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(comentario)
+        });
+
+        if (!res.ok) {
+        const data = await res.json();
+        return { success: false, status: data.detail };
+        }
+
+        const data = await res.json();
+        return { success: true, comentario: data.comentario };
 }

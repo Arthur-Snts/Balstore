@@ -7,13 +7,16 @@ import { LuMailPlus } from "react-icons/lu";
 import { IoIosNotifications } from "react-icons/io";
 import Loading from "./Loading"
 import { useNavigate } from "react-router-dom"
+import { useAlert } from "../components/Auxiliares/AlertContext";
 import user_icon from '../assets/user-icon-default.png'
-import { getamigos, getclientes, postamigo, verificar_token_cliente} from "../statements"
+import { getamigos, getclientes, postamigo, verificar_token_cliente, putamigo, deleteamigo } from "../statements"
 import { FaUserXmark } from "react-icons/fa6";
 
 import "./ListaAmigos.css"
 
 export default function ListaAmigos () {
+
+    const { showAlert } = useAlert();
 
     const navigate = useNavigate();
     const [cliente, setCliente] = useState(null)
@@ -23,9 +26,9 @@ export default function ListaAmigos () {
     const [status, setStatus] = useState("")
 
     const [amigos, setAmigos] = useState([])
-    const [solicitacoesPendentes, setSolicitacoesPendentes] = useState([])
-    const [solicitacoesPendentesMinhas, setSolicitacoesPendentesMinhas] = useState([])
-    const [amigosaceitos, setAmigosAceitos] = useState([])
+    const [solicitacoesRecebidas, setSolicitacoesRecebidas] = useState([])
+    const [solicitacoesEnviadas, setSolicitacoesEnviadas] = useState([])
+    const [amigosAceitos, setAmigosAceitos] = useState([])
 
     useEffect(() => {
         async function carregarUsuario() {
@@ -48,29 +51,40 @@ export default function ListaAmigos () {
         
     }, []);
 
+    // carregar e organizar amizades (recebidas/enviadas/aceitas)
+    async function carregarAmigos() {
+        setLoading(true);
+        if (!cliente) {
+            setLoading(false);
+            return;
+        }
+
+        const resultado = await getamigos(cliente.id);
+        if (!resultado.success) {
+            setSolicitacoesRecebidas([]);
+            setSolicitacoesEnviadas([]);
+            setAmigosAceitos([]);
+            setLoading(false);
+            return;
+        }
+
+        const todos = resultado.amigos || [];
+        const pendentes = todos.filter(a => a.solicitacao === "Pendente");
+
+        const recebidas = pendentes.filter(s => s.amigo === cliente.id);
+        const enviadas = pendentes.filter(s => s.amigo_de === cliente.id);
+
+        const aceitos = todos.filter(a => a.solicitacao === "Aceito");
+
+        setSolicitacoesRecebidas(recebidas);
+        setSolicitacoesEnviadas(enviadas);
+        setAmigosAceitos(aceitos);
+        setLoading(false);
+    }
+
     useEffect(() => {
-            async function carregaramigos() {
-                setLoading(true)
-                if (!cliente) return;
-
-                const resultado = await getamigos(cliente.id)
-                
-                
-    
-                const pendentes = resultado.amigos.filter(a => a.solicitacao === "Pendente");
-                const pendentes_minhas = pendentes.filter(s => s.amigo != cliente.id)
-
-                
-                const aceitos = resultado.amigos.filter(a => a.solicitacao === "Aceito");
-
-                setSolicitacoesPendentes(pendentes); 
-                setSolicitacoesPendentesMinhas(pendentes_minhas) 
-                setAmigosAceitos(aceitos);
-                
-                setLoading(false)
-            }
-            carregaramigos()
-        }, [cliente]);
+        if (cliente) carregarAmigos();
+    }, [cliente]);
 
     useEffect(() => {
         document.title = "Lista de Amigos";
@@ -85,21 +99,21 @@ export default function ListaAmigos () {
         const [procurados, setProcurados] = useState([])
         const [erro, setErro] = useState("")
         
-    
-
-        const abrirModalExcluir = (amizade) => {
-            setAmizadeSelecionada(amizade);
-            setIsOpenExcluir(true);
-        };
 
         useEffect(() => {
             const delay = setTimeout(async () => {
-                if (texto.trim() === "") {
+
+                        if (texto.trim() === "") {
+                            setProcurados([]);
+                            return;
+                        }
+
+                setErro("");
+
+                if (!cliente) {
                     setProcurados([]);
                     return;
                 }
-
-                setErro("");
 
                 const resultado = await getclientes(texto);
 
@@ -123,23 +137,24 @@ export default function ListaAmigos () {
                 // Remover o próprio usuário
                 lista = lista.filter(c => c.id !== cliente.id);
 
-                // Remover clientes já com solicitação pendente
-                
-                const idsPendentes = solicitacoesPendentes.map(s => s.cliente_de.id);
+                // Remover clientes já com solicitação pendente (recebidas/enviadas)
+                const idsPendentesOutros = [
+                    ...solicitacoesRecebidas.map(s => s.cliente_de?.id), // quem enviou para mim
+                    ...solicitacoesEnviadas.map(s => s.cliente_amigo?.id) // quem eu enviei
+                ].filter(Boolean);
 
-                lista = lista.filter(c => !idsPendentes.includes(c.id));
+                lista = lista.filter(c => !idsPendentesOutros.includes(c.id));
 
-                // Remover clientes já com solicitação pendente
-                const idsAceitos = amigosaceitos.map(s => s.cliente_de.id);
-
-                lista = lista.filter(c => !idsAceitos.includes(c.id));
+                // Remover clientes já aceitos
+                const idsAceitosOutros = amigosAceitos.map(s => (s.cliente_de?.id === cliente.id ? s.cliente_amigo?.id : s.cliente_de?.id)).filter(Boolean);
+                lista = lista.filter(c => !idsAceitosOutros.includes(c.id));
 
                 setProcurados(lista);
 
             }, 300);
 
             return () => clearTimeout(delay);
-        }, [texto, solicitacoesPendentes, amigosaceitos, cliente]);
+        }, [texto, solicitacoesRecebidas, solicitacoesEnviadas, amigosAceitos, cliente]);
 
 
 
@@ -150,11 +165,9 @@ export default function ListaAmigos () {
 
             if (resultado.success) {
 
-                // Atualiza pendentes localmente
+                // Atualiza pendentes enviados localmente
                 const novo = resultado.amigo
-                
-
-                setSolicitacoesPendentes(prev => [...prev, novo]);
+                setSolicitacoesEnviadas(prev => [...prev, novo]);
 
                 // Remove da lista de busca
                 setProcurados(prev => prev.filter(p => p.id !== id));
@@ -166,6 +179,69 @@ export default function ListaAmigos () {
             } else {
                 showAlert("Erro ao enviar solicitação", "error");
             }
+        }
+
+        async function aceitarSolicitacao(sol_id) {
+            if (!cliente) return;
+
+            // encontrar a solicitação recebida pelo id
+            const sol = solicitacoesRecebidas.find(s => s.id === sol_id);
+            if (!sol) return;
+            const amigoId = sol.cliente_de?.id;
+            const res = await putamigo(cliente.id, "Aceito", amigoId);
+
+            if (res.success) {
+                // fechar modal de solicitações e recarregar lista
+                setIsOpenSolitations(false);
+                await carregarAmigos();
+                showAlert("Solicitação aceita", "success");
+            } else {
+                showAlert("Erro ao aceitar solicitação", "error");
+            }
+        }
+
+        async function negarSolicitacao(sol_id) {
+            if (!cliente) return;
+
+            const sol = solicitacoesRecebidas.find(s => s.id === sol_id);
+            if (!sol) return;
+            const amigoId = sol.cliente_de?.id;
+            // negar = remover a solicitação existente para permitir novo envio
+            const res = await deleteamigo(cliente.id, amigoId);
+
+            if (res.success) {
+                    // fechar modal e recarregar
+                    setIsOpenSolitations(false);
+                    await carregarAmigos();
+                    showAlert("Solicitação negada", "success");
+            } else {
+                showAlert("Erro ao negar solicitação", "error");
+            }
+        }
+
+        async function removerAmizade(amigoRelId) {
+            if (!cliente) return;
+
+            // achar relação por id
+            const rel = amigosAceitos.find(a => a.id === amigoRelId);
+            if (!rel) return;
+
+            // identificar id do outro usuário na relação
+            const friendId = (rel.cliente_de?.id === cliente.id) ? rel.cliente_amigo?.id : rel.cliente_de?.id;
+            if (!friendId) return;
+
+            const res = await deleteamigo(cliente.id, friendId);
+
+            if (res.success) {
+                    // fechar modal de exclusão e recarregar
+                    setIsOpenExcluir(false);
+                    setAmizadeSelecionada(null);
+                    await carregarAmigos();
+                    showAlert("Amizade removida", "success");
+            } else {
+                showAlert("Erro ao remover amizade", "error");
+            }
+            setIsOpenExcluir(false);
         }
 
         if (loading) {
@@ -196,7 +272,7 @@ export default function ListaAmigos () {
                             <div className="amigo-card" key={perfil.id}>
                                 <img src={user_icon} alt="User Icon" className="amigo-img" />
                                 <p className="amigo-nome">{perfil.nome}</p>
-                                <p>Futuro lugar de Instagram</p>
+                                <p className="instagram">Futuro lugar de Instagram</p>
                                 <button className="btn-solicitacao" onClick={()=>(handleAdicionarAmigo(perfil.id))}>
                                     Enviar Solicitação
                                 </button>
@@ -213,17 +289,17 @@ export default function ListaAmigos () {
                     <p className="modal-subtitle">Aceite ou negue solicitações enviadas para você</p>
 
                     <div className="solicitacoes-container">
-                        {solicitacoesPendentesMinhas.length === 0 && (
+                        {solicitacoesRecebidas.length === 0 && (
                             <p className="nenhuma-solicitacao">Nenhuma solicitação Pendente.</p>
                         )}
 
-                        {solicitacoesPendentesMinhas.map((sol) => (
+                        {solicitacoesRecebidas.map((sol) => (
                             <div className="solicitacao-card" key={sol.id}>
                                 <img src={user_icon} alt="User Icon" className="solicitacao-img" />
 
                                 <div className="solicitacao-info">
                                     <p className="solicitacao-nome">{sol.cliente_de.nome}</p>
-                                    <p className="solicitacao-username">{sol.cliente_de.email}</p>
+                                    <p className="instagram">Futuro Lugar do Instagram</p>
                                 </div>
 
                                 <div className="solicitacao-buttons">
@@ -251,7 +327,7 @@ export default function ListaAmigos () {
             <Modal isOpen={isOpenExcluir} onClose={() => setIsOpenExcluir(false)}>
                 <div className="modal-container">
                     <h3 className="modal-title">
-                        Remover amizade com <span className="destaque-nome">{AmizadeSelecionada?.nome}</span>?
+                        Remover amizade com <span className="destaque-nome">{AmizadeSelecionada?.cliente_de?.nome || AmizadeSelecionada?.cliente_amigo?.nome || AmizadeSelecionada?.nome}</span>?
                     </h3>
 
                     <p className="modal-subtitle">
@@ -292,18 +368,27 @@ export default function ListaAmigos () {
                         <IoIosNotifications  onClick={()=>setIsOpenSolitations(true)}/>
                     </div>
                     <div className="amigos-lista">
-                        {amigosaceitos.map((amigo) => (
-                            <div className="amigo-card2" key={amigo.id}>
-                                <img src={user_icon} alt="User Icon" className="amigo-img2" />
+                        {amigosAceitos.map((amigo) => {
+                            const outro = (amigo.cliente_de?.id === cliente?.id) ? (amigo.cliente_amigo || {}) : (amigo.cliente_de || {});
+                            const outroId = outro?.id;
+                            return (
+                                <div 
+                                    className="amigo-card2" 
+                                    key={amigo.id}
+                                    onClick={() => { if (outroId) navigate(`/Perfil/Amizades/${outroId}/Favoritos`); }}
+                                    style={{ cursor: outroId ? 'pointer' : 'default' }}
+                                >
+                                    <img src={user_icon} alt="User Icon" className="amigo-img2" />
 
-                                <div className="amigo-info2">
-                                    <p className="amigo-nome2">{amigo.nome}</p>
-                                    <p className="amigo-username2">@{amigo.username}</p>
+                                    <div className="amigo-info2">
+                                        <p className="amigo-nome2">{outro.nome}</p>
+                                        <p className="ver-desejos">Ver a Lista de Desejos</p>
+                                    </div>
+
+                                    <FaUserXmark onClick={(e)=>{ e.stopPropagation(); setIsOpenExcluir(true); setAmizadeSelecionada(amigo)}}/>
                                 </div>
-
-                                <FaUserXmark onClick={()=>{setIsOpenExcluir(true); setAmizadeSelecionada(amigo)}}/>
-                            </div>
-                        ))}
+                            )
+                        })}
                     </div>
                 </div>
                 

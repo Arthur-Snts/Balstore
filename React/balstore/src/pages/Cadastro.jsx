@@ -118,7 +118,7 @@ export default function Cadastro (){
            
             showAlert("Complete o Formulário", "erro");
             setLoading(false);
-            
+            return;
         }
 
         if (!email.endsWith("@gmail.com")) {
@@ -132,7 +132,7 @@ export default function Cadastro (){
         if (senha !== confirmarsenha) {
             showAlert("Senhas não Coincidem", "erro");
             setLoading(false);
-            
+            return;
         }
 
         // Executa cadastro correto

@@ -2,7 +2,8 @@ import Header from "../components/Header_and_Footer/Header"
 import Footer from "../components/Header_and_Footer/Footer"
 import { useEffect, useState } from "react"
 import Loading from "./Loading"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
+import { useAlert } from "../components/Auxiliares/AlertContext"
 import {verificar_token_cliente, verificar_token_loja} from "../statements"
 import "./Pagamento.css"
 
@@ -15,6 +16,12 @@ export default function Pagamento () {
     const [loja, setLoja] = useState(null)
     const [loading, setLoading] = useState(false)
 
+
+    
+    const { state } = useLocation();
+    const [compra, setCompra] = useState(state?.compra)
+    const [endereco, setEndereco] = useState({})
+
     const [status, setStatus] = useState("")
 
     useEffect(() => {
@@ -22,7 +29,6 @@ export default function Pagamento () {
         setLoading(true)
         async function carregarUsuario() {
             let token = localStorage.getItem("token");
-            let token_loja = localStorage.getItem("token_loja")
             if (token){
                 const user_devolvido = await verificar_token_cliente(navigate);
                 
@@ -33,6 +39,8 @@ export default function Pagamento () {
                     showAlert(`Você precisa estar conectado como Cliente para acessar essa página` , "info");
                     navigate("/Login")
                 }
+
+            
                 
         }
         carregarUsuario();
@@ -44,21 +52,6 @@ export default function Pagamento () {
             document.title = "Pagamento";
     }, []);
 
-    const compra = {
-        valor: 39.55,
-        frete: 100.34,
-        cod_pagamento: "oasnfoasofiasiopfnasipnfaipdpasmdaod",
-        data: "18/09/2026"
-    }
-    
-    const endereco = {
-        rua: "Josefa",
-        numero: "756",
-        cidade: "Xique-Xique",
-        estado: "BA"
-    }
-
-    
     const [copiado, setCopiado] = useState(false);
 
     const copiarCodigo = () => {
@@ -67,6 +60,14 @@ export default function Pagamento () {
         setTimeout(() => setCopiado(false), 2000); // volta ao normal depois de 2s
     };
 
+    const data_formatada = new Date(compra.data).toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+        });
 
     return(
         <>
@@ -96,10 +97,10 @@ export default function Pagamento () {
                         </div>
                         <div className="right_pagamento">
                             <p style={{fontSize:"20px", color:"green", fontWeight:"bold"}}>Compra Feita</p>
-                            <p className="data">{compra.data}</p>
+                            <p className="data">{data_formatada}</p>
                             <p>Enviado para: {cliente?.nome}</p>
                             <p>Endereço:</p>
-                            <p>{endereco.rua}, Nº {endereco.numero}, {endereco.cidade} - {endereco.estado} </p>
+                            <p>{compra?.endereco?.rua}, Nº {compra?.endereco?.numero}, {compra?.endereco?.cidade} - {compra?.endereco?.estado} </p>
 
                         </div>
                     </div>

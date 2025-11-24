@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import './Filtros.css'
 
 const categorias = [
-  "Brinquedos","Cosméticos","Esporte","Roupas","Eletrônicos",
+  "Brinquedos","Cosméticos","Esportes","Roupas","Eletrônicos",
   "Papelaria","Bolsas","Calçados","Cozinha","Móveis",
   "Ferramentas","Limpeza","Livros",
 ];
