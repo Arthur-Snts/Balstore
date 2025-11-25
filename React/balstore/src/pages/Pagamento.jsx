@@ -82,7 +82,7 @@ export default function Pagamento () {
                             <div className="valores">
                                 <p className="produtos_pagamento">Produtos: <i>R${compra.valor}</i></p>
                                 <p>Frete: <i>R${compra.frete}</i></p>
-                                <p>Total: <i>R${compra.valor + compra.frete}</i></p>
+                                <p>Total: <i>R${(compra.valor + compra.frete).toFixed(2)}</i></p>
                             </div>
                             <div className="confirmacao">
                                 <p>Confirmação do pedido após o pagamento</p>

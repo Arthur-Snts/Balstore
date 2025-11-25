@@ -11,11 +11,14 @@ export default function ProdutoCard({produto, favoritoInicial, onclickFavoritar}
 
   var avaliacao_total = 0
   var contador_avaliacoes = 0
-  produto.comentarios.map((comentario)=>{
-      avaliacao_total= avaliacao_total + comentario.avaliacao
-      contador_avaliacoes = contador_avaliacoes + 1
-  })
+  if (produto.comentarios){
+        produto.comentarios.map((comentario)=>{
+          avaliacao_total= avaliacao_total + comentario.avaliacao
+          contador_avaliacoes = contador_avaliacoes + 1
+      })
 
+  }
+  
   var avaliacao_media = avaliacao_total/contador_avaliacoes
 
   return (

@@ -1,22 +1,52 @@
 import "./ProdutosLojista.css";
 import ProdutoHorizontal from "./ProdutoHorizontal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "../Auxiliares/Modal";
 import EditarProduto from "./EditarProduto";
+import { useAlert } from "../Auxiliares/AlertContext";
+import { deleteproduto, getcategorias, getprodutos_loja, putproduto } from "../../statements";
 
-export default function ProdutosLojista({ produtos }) {
-  const [listaProdutos, setListaProdutos] = useState(produtos);
+export default function ProdutosLojista({ loja_id }) {
+  const [listaProdutos, setListaProdutos] = useState([]);
   const [isOpenExcluir, setIsOpenExcluir] = useState(false);
   const [modo, setModo] = useState("lista"); 
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+  const {showAlert} = useAlert()
+  const [categorias, setCategorias] = useState([])
+
+
+  async function carregarProdutos() {
+    if (loja_id){
+        const resultado_produtos = await getprodutos_loja(loja_id);
+        if (resultado_produtos.success){
+            setListaProdutos(resultado_produtos.produtos);
+        } else {
+          showAlert(`Erro ao Carregar lista de Produtos:${resultado_produtos.status} `, "erro")
+        }
+
+        const resultado_categorias = await getcategorias()
+        setCategorias(resultado_categorias.categorias)
+    }
+  }
+
+
+   useEffect(() => {
+          carregarProdutos();
+      }, []);
 
   const abrirModalExcluir = (produto) => {
     setProdutoSelecionado(produto);
     setIsOpenExcluir(true);
   };
 
-  const excluirProduto = () => {
-    setListaProdutos(listaProdutos.filter((p) => p !== produtoSelecionado));
+  async function excluirProduto ()  {
+    const resultado_produto = await deleteproduto(produtoSelecionado.id);
+      if (resultado_produto.success){
+          showAlert("Produto Excluido com Sucesso", "success")
+          carregarProdutos()
+      } else {
+        showAlert("Erro ao Excluir Produto", "erro")
+      }
     setProdutoSelecionado(null);
     setIsOpenExcluir(false);
   };
@@ -31,12 +61,18 @@ export default function ProdutosLojista({ produtos }) {
     setModo("lista");
   };
 
-  const salvarEdicao = (produtoEditado) => {
-    const novaLista = listaProdutos.map((p) =>
-      p.id === produtoEditado.id ? produtoEditado : p
-    );
-    setListaProdutos(novaLista);
-    cancelarEdicao();
+  
+
+  async function salvarEdicao (pro_id, produtoEditado, imagemNova) {
+    const resultado_produto = await putproduto(pro_id, produtoEditado, imagemNova);
+      if (resultado_produto.success){
+          showAlert("Produto Editado com Sucesso", "success")
+          setModo("lista")
+          carregarProdutos()
+      } else {
+        showAlert("Erro ao Editar Produto", "erro")
+        setModo("lista")
+      }
   };
 
   return (
@@ -99,22 +135,9 @@ export default function ProdutosLojista({ produtos }) {
           </div>
 
           <EditarProduto
-            categorias={[
-              { id: 1, nome: "Eletrônicos" },
-              { id: 2, nome: "Roupas" },
-            ]}
-            props={{
-              filename: produtoSelecionado.imagem || "",
-              nome: produtoSelecionado.nome || "",
-              categoria:
-                produtoSelecionado.categoria || { id: "", nome: "" },
-              descricao: produtoSelecionado.descricao || "",
-              preco: produtoSelecionado.preco || "",
-              estoque: produtoSelecionado.estoque || "",
-              desconto: produtoSelecionado.desconto || "",
-            }}
+            categorias={categorias}
+            produto={produtoSelecionado}
             onSave={salvarEdicao}
-            onCancel={cancelarEdicao}
           />
         </div>
       )}

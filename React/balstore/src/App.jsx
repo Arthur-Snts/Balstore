@@ -12,7 +12,7 @@ import EditarLoja from "./pages/EditarLoja";
 import Pagamento from "./pages/Pagamento";
 import Pedidos from "./pages/Pedidos";
 import Compras from "./pages/Compras";
-import MinhaLoja from "./pages/MinhaLoja";
+import MinhaLoja from "./pages/MinhaLoja"
 import Carrinho from "./pages/Carrinho";
 import ListaAmigos from "./pages/ListaAmigos";
 import FavoritosAmigo from "./pages/FavoritosAmigo";
@@ -41,14 +41,14 @@ function App() {
             <Route path="/Cadastro" element={<Cadastro />}/> {/*Ta feita */}
             <Route path="/Sobre" element={<Sobrenos/>}/>   {/*Não Precisa */}
 
-            <Route path="/Loja" element={<MinhaLoja/>}/>
-            <Route path="/Loja/Editar" element={<EditarLoja/>}/>
-            <Route path="/Loja/Produtos" element={<Produtos />}/>
+            <Route path="/Loja" element={<MinhaLoja/>}/> {/*Ta feita */}
+            <Route path="/Loja/Editar" element={<EditarLoja/>}/> {/*Ta feita */}
+            <Route path="/Loja/Produtos" element={<Produtos />}/> {/*Ta feita */}
             <Route path="/Loja/Pedidos" element={<Pedidos/>}/>
 
 
             <Route path="/Pesquisa" element={<Pesquisa />}/> {/*Ta feita */}
-            <Route path="/Produto/:id" element={<ProdutoInd/>}/>
+            <Route path="/Produto/:id" element={<ProdutoInd/>}/> {/*Ta feita */}
             <Route path="/Carrinho" element={<Carrinho/>}/> {/*Ta feita */}
             <Route path="/Pagamento" element={<Pagamento/>}/> {/*Ta feita */}
 

@@ -1,7 +1,7 @@
-from models import  Produto, Categoria
+from models import  Produto, Categoria, Favorito, Carrinho, Comentario
 from config import engine
 from sqlmodel import Session, select
-from fastapi import HTTPException, Depends, APIRouter, UploadFile
+from fastapi import HTTPException, Depends, APIRouter, UploadFile, Form
 from typing import Annotated
 from datetime import datetime
 import os
@@ -48,7 +48,7 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
         query = query.where(Produto.loja_id == loj_id)
         produtos = session.exec(query).all()
         if not produtos:
-           raise HTTPException(404, "id da loja inexistente")
+           raise HTTPException(404, "Loja sem Produtos")
     if pro_id:
         query = query.where(Produto.id == pro_id)
         produtos = session.exec(query).all()
@@ -91,14 +91,14 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
 # ------------------------------------------------------------------------------
 # CADASTRO
 @router.post("/")
-async def cadastra_produto(nome: str , preco: float, estoque: int, categoria_id: int, loja_id: int, promocao: int, imagem: UploadFile, session: SessionDep):
+async def cadastra_produto(session: SessionDep, pro_preco:float=Form(None),pro_nome:str=Form(None), pro_categoria:str=Form(None), pro_estoque:int=Form(None), pro_imagem:UploadFile =Form(None), pro_promocao:int = Form(None), pro_loja_id:int = Form(None)):
    
         UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "uploads")
         os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
         produto_existente = session.exec(
-            select(Produto).where(Produto.nome == nome, Produto.loja_id == loja_id)
+            select(Produto).where(Produto.nome == pro_nome, Produto.loja_id == pro_loja_id)
         ).first()
 
 
@@ -108,24 +108,24 @@ async def cadastra_produto(nome: str , preco: float, estoque: int, categoria_id:
 
        
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        filename = f"{timestamp}_{imagem.filename}"
+        filename = f"{timestamp}_{pro_imagem.filename}"
         file_path = os.path.join(UPLOAD_DIR, filename)
 
 
         with open(file_path, "wb") as buffer:
-            buffer.write(await imagem.read())
+            buffer.write(await pro_imagem.read())
 
 
         file_url = f"/uploads/{filename}"
 
 
         novo_produto = Produto(
-            nome=nome,
-            preco=preco,
-            estoque=estoque,
-            categoria_id=categoria_id,
-            loja_id=loja_id,
-            promocao=promocao,
+            nome=pro_nome,
+            preco=pro_preco,
+            estoque=pro_estoque,
+            categoria_id=pro_categoria,
+            loja_id=pro_loja_id,
+            promocao=pro_promocao,
             imagem_path=file_url
         )
 
@@ -153,18 +153,49 @@ def deleta_produto(pro_id:int, session: SessionDep):
 
     if not produto:
         raise HTTPException(404, "Produto não encontrado")
+    
+     # ================================
+    #  DELETE DEPENDÊNCIAS MANUALMENTE
+    # ================================
+    # Carrinho
+    carrinhos = session.exec(
+        select(Carrinho).where(Carrinho.produto_id == pro_id)
+    ).all()
+    for c in carrinhos:
+        session.delete(c)
+
+    # Favoritos
+    favoritos = session.exec(
+        select(Favorito).where(Favorito.produto_id == pro_id)
+    ).all()
+    for f in favoritos:
+        session.delete(f)
+
+    # Comentários (exemplo)
+    comentarios = session.exec(
+        select(Comentario).where(Comentario.produto_id == pro_id)
+    ).all()
+    for cm in comentarios:
+        session.delete(cm)
+
+    session.commit()
    
-    produto.imagem_path = produto.imagem_path.split("FastAPI/")[-1]
-    os.remove(produto.imagem_path)
+    UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "uploads")
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+    # Caminho absoluto do arquivo antigo
+    old_image_path = os.path.join(
+        UPLOAD_DIR,
+        produto.imagem_path.replace("/uploads/", "")
+    )
+
+    # Deleta se existir
+    if os.path.exists(old_image_path):
+        os.remove(old_image_path)
 
 
     session.delete(produto)
     session.commit()
-
-
-   
-
-
 
 
     return {"mensagem": "Produto deletado com sucesso"}
@@ -173,10 +204,7 @@ def deleta_produto(pro_id:int, session: SessionDep):
 # ------------------------------------------------------------------------------
 # UPDATE
 @router.put("/{pro_id}")
-async def atualiza_produto(session: SessionDep,pro_id:int,pro_preco:float=None,pro_nome:str=None, pro_categoria:str=None, pro_estoque:int=None, pro_imagem:UploadFile =None, pro_promocao:int = None, pro_compra:int = None):
-
-
-
+async def atualiza_produto(session: SessionDep,pro_id:int,pro_preco:float=Form(None),pro_nome:str=Form(None), pro_categoria:str=Form(None), pro_estoque:int=Form(None), pro_imagem:UploadFile =Form(None), pro_promocao:int = Form(None), pro_compra:int = None):
 
     produto = session.get(Produto, pro_id)
 
@@ -190,7 +218,7 @@ async def atualiza_produto(session: SessionDep,pro_id:int,pro_preco:float=None,p
         produto.nome = pro_nome
     if pro_categoria:
         categoria = session.exec(
-                select(Categoria).where(Categoria.nome == pro_categoria)
+                select(Categoria).where(Categoria.id == pro_categoria)
             ).first()
         produto.categoria_id = categoria.id
     if pro_estoque:
@@ -202,21 +230,30 @@ async def atualiza_produto(session: SessionDep,pro_id:int,pro_preco:float=None,p
     if pro_compra:
         produto.com_id = pro_compra
     if pro_imagem:
-        produto.imagem_path = produto.imagem_path.split("FastAPI/")[-1]
-        os.remove(produto.imagem_path)
+        # Diretório de uploads
         UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "uploads")
         os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+        # Caminho absoluto do arquivo antigo
+        old_image_path = os.path.join(
+            UPLOAD_DIR,
+            produto.imagem_path.replace("/uploads/", "")
+        )
+
+        # Deleta se existir
+        if os.path.exists(old_image_path):
+            os.remove(old_image_path)
+
+        # Salvar nova imagem
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         filename = f"{timestamp}_{pro_imagem.filename}"
         file_path = os.path.join(UPLOAD_DIR, filename)
+
         with open(file_path, "wb") as buffer:
             buffer.write(await pro_imagem.read())
 
-
-        file_url = f"/uploads/{filename}"
-
-
-        produto.imagem_path = file_url
+        # Caminho que vai para o front
+        produto.imagem_path = f"/uploads/{filename}"
 
 
 

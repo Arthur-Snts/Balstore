@@ -684,3 +684,140 @@ export async function postComentario(conteudo, avaliacao, cli_id, pro_id) {
         const data = await res.json();
         return { success: true, comentario: data.comentario };
 }
+
+// ======================================================================================
+// GET Loja
+// ======================================================================================
+export async function getloja(loj_id) {
+    const res = await fetch(`http://localhost:8000/lojas/?loj_id=${loj_id}`)
+
+            if (!res.ok) {
+                try {
+                    const data = await res.json();
+                    return { success: false, status: data.detail };
+                } catch (e) {
+                    return { success: false, status: 'error' };
+                }
+            }
+
+            const data = await res.json();
+            return { success: true, loja: data };
+}
+
+
+// ======================================================================================
+// GET PRODUTOS por Loja
+// ======================================================================================
+export async function getprodutos_loja(loj_id) {
+    const res = await fetch(`http://localhost:8000/produtos/?loj_id=${loj_id}`);
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, produtos: data };}
+
+// ======================================================================================
+// PUT Produto
+// ======================================================================================
+export async function putproduto(pro_id,produtoEditado, pro_imagem) {
+    const formData = new FormData();
+
+    // Campos normais
+    formData.append("pro_nome", produtoEditado.nome);
+    formData.append("pro_categoria", produtoEditado.categoria);
+    formData.append("pro_preco", produtoEditado.preco);
+    formData.append("pro_estoque", produtoEditado.estoque);
+    formData.append("pro_promocao", produtoEditado.promocao);
+
+    // Anexa imagem se existir
+    if (pro_imagem) {
+        formData.append("pro_imagem", pro_imagem);
+    }
+
+    const res = await fetch(`http://localhost:8000/produtos/${pro_id}`, {
+        method: "PUT",
+        body: formData,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        return { success: false, status: data.detail };
+    }
+
+    return { success: true, produto: data.produto };
+}
+
+// ======================================================================================
+// DELETE Produto
+// ======================================================================================
+export async function deleteproduto(pro_id) {
+    const res = await fetch(`http://localhost:8000/produtos/${pro_id}`, {
+        method: "DELETE",
+    });
+
+    if (!res.ok) {
+        const data = await res.json();
+        return { success: false, status: data.detail };
+    }
+
+    return { success: true };
+}
+
+// ======================================================================================
+// POST Produto
+// ======================================================================================
+export async function postproduto(produto_novo, pro_imagem, loja_id) {
+    const formData = new FormData();
+
+    // Campos normais
+    formData.append("pro_nome", produto_novo.nome);
+    formData.append("pro_categoria", produto_novo.categoria);
+    formData.append("pro_preco", produto_novo.preco);
+    formData.append("pro_estoque", produto_novo.estoque);
+    formData.append("pro_promocao", produto_novo.promocao);
+    formData.append("pro_loja_id", loja_id);
+
+    // Anexa imagem se existir
+    if (pro_imagem) {
+        formData.append("pro_imagem", pro_imagem);
+    }
+
+    const res = await fetch(`http://localhost:8000/produtos/`, {
+        method: "POST",
+        body: formData,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        return { success: false, status: data.detail };
+    }
+
+    return { success: true, produto: data.produto };
+}
+
+// ======================================================================================
+// PUT LOJA
+// ======================================================================================
+export async function putLoja(loj_id, dados) {
+    try {
+        const response = await fetch(`http://localhost:8000/lojas/${loj_id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        });
+
+        const result = await response.json();
+        return result;
+
+    } catch (error) {
+        console.error("Erro ao atualizar loja:", error);
+        return null;
+    }
+}

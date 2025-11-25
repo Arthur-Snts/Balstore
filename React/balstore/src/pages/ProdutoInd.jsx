@@ -3,10 +3,12 @@ import Footer from "../components/Header_and_Footer/Footer"
 import Loading from "./Loading"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import {verificar_token_cliente, verificar_token_loja} from "../statements"
+import {getproduto, verificar_token_cliente, verificar_token_loja, getprodutos, postcarrinho, postfavorito, deletefavorito, postCompra} from "../statements"
 import { useParams } from 'react-router-dom';
+import { useAlert } from "../components/Auxiliares/AlertContext"
 import { EstrelasAvaliacao, Favoritos } from '../components/Auxiliares/Icones'
 import produtos from "./produtos_teste"
+import ProdutoCard from "../components/Produtos/ProdutoCard"
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
@@ -20,13 +22,19 @@ export default function ProdutoInd () {
     const navigate = useNavigate();
     const [cliente, setCliente] = useState(null)
     const [loja, setLoja] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const { id } = useParams();
 
     const [status, setStatus] = useState("")
+    const [produto, setProduto] = useState(null)
+    const [produtos, setProdutos] = useState([])
+    const [endereco, setEndereco] = useState(null)
+    const { showAlert } = useAlert()
+    
 
     useEffect(() => {
 
-        setLoading(true)
+        
         async function carregarUsuario() {
             let token = localStorage.getItem("token");
             let token_loja = localStorage.getItem("token_loja")
@@ -43,25 +51,54 @@ export default function ProdutoInd () {
                 else {
                     setStatus("guest")
                 }
+            
+            
+             setLoading(false)
         }
+
+        
         carregarUsuario();
-        setLoading(false)
+       
     }, []);
 
-    const { id } = useParams();
+    useEffect(()=>{
+        async function carregarproduto() {
+            if (cliente) {
+                
+                const resultado_produto = await getproduto(id)
+                
+                if (resultado_produto?.success){
+                    setProduto(resultado_produto.produto)
+                } else {
+                    showAlert("Falha ao Carregar Produto", "erro")
+                }
+            }
+            const resultado_produtos = await getprodutos()
+                
+                if (resultado_produtos?.success){
+                    setProdutos(resultado_produtos.produtos)
+                }
+        }
+        carregarproduto()
+    }, [cliente, id])
 
-    const produtoSelecionado = produtos.filter((produto)=>(produto.id==id))
-    const produto = produtoSelecionado[0]
-
-    const produtosFiltrados = produtos.filter(
-        (produto_aux) => produto_aux.categoria === produto.categoria
-    );
+    
 
     const [count, setCount] = useState(1)
 
     useEffect(() => {
         document.title = "Produto " + produto?.nome;
-    }, []);
+    }, [produto]);
+
+    const [produtosFiltrados, setProdutosFiltrados] = useState([])
+
+    useEffect(() => {
+        if (produtosFiltrados && produto) {
+            setProdutosFiltrados(
+                produtos.filter(p => p.categoria.nome === produto.categoria.nome)
+                );
+        }
+    }, [produtos, produto]);
 
     const settings = {
             dots: false,
@@ -98,26 +135,152 @@ export default function ProdutoInd () {
             );
         }
 
+
+        async function handlefavoritar (id) {
+                if (status == "guest"){
+                    showAlert("Você precisa estar conectado como Cliente para favoritar um produto", "info");
+                    navigate("/Login");
+                    return;
+                }
+        
+                if (!cliente || !cliente.favoritos) {
+                    showAlert("Erro: dados do cliente não carregados", "error");
+                    return;
+                }
+        
+                const favoritoExistente = cliente.favoritos.find(f => f.produto_id === id);
+        
+                if (favoritoExistente) {
+                    const resultado_delete = await deletefavorito(favoritoExistente.id);
+                    if (resultado_delete?.success) {
+                    
+                    setCliente(prev => ({
+                        ...prev,
+                        favoritos: prev.favoritos.filter(f => f.id !== favoritoExistente.id)
+                    }));
+                    }return;
+                }
+                
+                const resultado_favoritar = await postfavorito(id, cliente.id);
+                if (resultado_favoritar?.success){
+                    
+                    setCliente(prev => ({
+                    ...prev,
+                    favoritos: [
+                        ...prev.favoritos,
+                        {
+                            id: resultado_favoritar.favorito.id,
+                            produto_id: id,
+                            cliente_id: cliente.id
+                        }
+                    ]
+                }));
+                }
+            }
+
+    async function handlecarrinho(id) {
+            const qnt = count || 1;  // 🔥 pega quantidade individual
     
+            const carrinhoExistente = cliente.carrinhos.find(f => f.produto_id === id);
+            if (carrinhoExistente){
+                showAlert(`Produto já disponível no seu carrinho`, "info");
+                return;
+            }
+    
+            const resultado = await postcarrinho(id, cliente.id, null, qnt);
+    
+            if (resultado?.success){
+                showAlert(`Produto adicionado ao seu carrinho`, "info");
+                setCliente(prev => ({
+                    ...prev,
+                    carrinhos: [...prev.carrinhos, resultado.carrinho]
+                }));
+            } else {
+                showAlert(`${resultado?.status}`, "info");
+            }
+        }
+
+    async function handlecomprar() {
+            if (!endereco){
+                showAlert(`Selecione um Endereço Primeiro`, "info");
+                return;
+            }
+                var list_produtos = []
+                
+                    
+                if (count > produto.estoque){
+                    showAlert(`O Produto não está disponível na quantidade desejada`, "info");
+                }
+
+                list_produtos.push(produto.id)
+
+                const valor_total = count*produto.preco
+                
+    
+                // Gerar código de pagamento(terceiro paramento) e calcular frete (quarto parametro)
+                
+                const resultado_compra = await postCompra(cliente.id, valor_total, "asfbasfoasfsavgb asfpsapjf", 10, list_produtos, endereco)
+                    if (resultado_compra?.success){
+                        showAlert(`Compra Feita com Sucesso`, "success");
+                        navigate("/Pagamento", {
+                            state: {
+                                compra: resultado_compra.compra
+                            }
+                        })
+                    } else {
+                        showAlert(`Compra não Feita, Falhou`, "erro");
+                    }
+            }
+        
+            const handleLoja = () => {
+                navigate("/Loja", {
+                        state: {
+                            loja: produto.loja.id
+                        }
+                    })
+            }
+
+        const [avaliacao_total, setAvaliacao_total] = useState(0)
+
+        useEffect(() => {
+            if (!produto || !produto.comentarios) return;
+
+            if (produto.comentarios.length === 0) {
+                setAvaliacao_total(0);
+                return;
+            }
+
+            const soma = produto.comentarios.reduce(
+                (total, c) => total + Number(c.avaliacao), 
+                0
+            );
+
+            setAvaliacao_total(soma / produto.comentarios.length);
+        }, [produto]);
+
+    if (!produto) return <Loading />;
 
     return(
         <>
-        {loading == true ? <Loading/> : <>
+        
             <Header status={status}></Header>
 
                 <div className="produto-mostrar">
-                    <img src={produto.imagem_path} alt={produto.nome} />
+                    <img src={`http://localhost:8000${produto.imagem_path}`} alt={produto.nome} />
                     <div className="produto-informacao">
                         <div className="titulo-produto">
                             <h3>{produto.nome}</h3>
-                            <EstrelasAvaliacao rating = {produto.avaliacao || 0} />
+                            <EstrelasAvaliacao rating = {avaliacao_total} />
                             <p>{produto.estoque} Vendidos</p>
+                            <p onClick={handleLoja}>{produto.loja.nome}</p>
                         </div>
                         <div className="frete">
                             <p>Calcular Frete: {produto.frete}</p>
-                            <select name="endereco">
-                                <option value="null">Selecionar Endereço</option>
-                                <option value="">Selecionar Endereço 1</option>
+                            <select name="endereco" onChange={(e)=>setEndereco(e.target.value)}>
+                                <option value="">Selecionar Endereço</option>
+                                {cliente?.enderecos.map((endereco)=>(
+                                    <option value={endereco.id}>{endereco.rua}, {endereco.numero} - {endereco.cidade} / {endereco.estado}</option>
+                                ))}
                             </select>
                         </div>
                         <div className="valores-produto">
@@ -135,8 +298,8 @@ export default function ProdutoInd () {
                         </div>
 
                         <div className="produto-buttons">
-                            <button className="button_amarelo">Adicionar ao Carrinho</button>
-                            <button className="button_azul">Comprar</button>
+                            <button className="button_amarelo" onClick={()=>(handlecarrinho(produto.id))}>Adicionar ao Carrinho</button>
+                            <button className="button_azul" onClick={handlecomprar}>Comprar</button>
                         </div>
                     </div>
                     
@@ -150,7 +313,7 @@ export default function ProdutoInd () {
                 
                 Fazer um map em comentarios do produto
             <Footer></Footer>
-        </>}</>
+        </>
     )
     
 }
