@@ -31,8 +31,14 @@ export default function Login (){
                             <a onClick={()=> setLogin("Cliente")} className={login === "Cliente"? "active": "link-form"}>Cliente</a> 
                             <a onClick={()=> setLogin("Lojista")} className={login === "Lojista"? "active": "link-form"}>Loja</a>
                         </div>
-                        <input type="email" placeholder="Email..." className="input-email"/>
-                        <input type="password" placeholder="Senha..." className="input-senha" />
+                        <div className="input-container">
+                            <input type="email" id="email" placeholder="Email..." className="input-field"/>
+                            <label for="email" className="input-label">Label</label>
+                        </div>
+                        <div className="input-container">
+                            <input type="password" id="senha" placeholder="Senha..." className="input-field"/>
+                            <label for="senha" className="input-label">Label</label>
+                        </div>
                     </div>
                     <button className="button-entrar">Entrar</button>
                 </div>

@@ -82,3 +82,54 @@
     text-decoration: none;
     font-size: 21px;
 }
+
+.input-container {
+    /* Define o contexto para o posicionamento absoluto do label */
+    position: relative;
+    padding-top: 20px; /* Cria espaço para o label flutuante */
+    width: 300px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px 10px 5px 10px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Oculta o placeholder real para que não apareça */
+.input-field::placeholder {
+    color: transparent;
+}
+
+.input-label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #6c757d;
+    transition: all 0.3s ease;
+    pointer-events: none; /* Garante que o clique passe para o input */
+    background-color: white; /* Para cobrir a borda superior, se necessário */
+    padding: 0 5px;
+}
+
+/* ➡️ Efeito de Rótulo Flutuante (A Magia) ⬅️ */
+
+/* 1. Quando o input está focado (clicado/selecionado) */
+.input-field:focus + .input-label,
+/* 2. OU quando o input NÃO está mostrando o placeholder (ou seja, tem texto) */
+.input-field:not(:placeholder-shown) + .input-label {
+    top: 0; /* Move para o topo */
+    font-size: 12px; /* Diminui a fonte */
+    color: #4b0082; /* Mude a cor, como o roxo da imagem */
+    transform: translateY(-50%); /* Ajusta o posicionamento vertical no topo */
+}
+
+/* Estilo do input quando focado */
+.input-field:focus {
+    border-color: #4b0082; /* Cor da borda em foco */
+}
