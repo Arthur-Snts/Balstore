@@ -43,9 +43,9 @@ export default function PedidosPendentes({produtos}){
                 <input type="text"  placeholder="Pesquisar Pedido da sua Loja"/>
             </div>
 
-            <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+            <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} >
                 <h3>{produtoSelecionado?.nome}</h3>
-                <p style={{textAlign:"center"}}>Uma compra desse produto foi realizada com as informações abaixo, coloque o número do pacote dos correios</p>
+                <p className="subtitulo">Uma compra desse produto foi realizada com as informações abaixo, coloque o número do pacote dos correios</p>
                 <div className="hr"></div>
                 <div className="dados">
                     <div className="cliente">
