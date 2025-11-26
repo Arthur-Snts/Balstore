@@ -7,22 +7,30 @@ import { LuMailPlus } from "react-icons/lu";
 import { IoIosNotifications } from "react-icons/io";
 import Loading from "./Loading"
 import { useNavigate } from "react-router-dom"
-import {verificar_token_cliente, verificar_token_loja} from "../statements"
+import { useAlert } from "../components/Auxiliares/AlertContext";
+import user_icon from '../assets/user-icon-default.png'
+import { getamigos, getclientes, postamigo, verificar_token_cliente, putamigo, deleteamigo } from "../statements"
+import { FaUserXmark } from "react-icons/fa6";
 
 import "./ListaAmigos.css"
 
 export default function ListaAmigos () {
 
+    const { showAlert } = useAlert();
+
     const navigate = useNavigate();
     const [cliente, setCliente] = useState(null)
     const [loja, setLoja] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     const [status, setStatus] = useState("")
 
-    useEffect(() => {
+    const [amigos, setAmigos] = useState([])
+    const [solicitacoesRecebidas, setSolicitacoesRecebidas] = useState([])
+    const [solicitacoesEnviadas, setSolicitacoesEnviadas] = useState([])
+    const [amigosAceitos, setAmigosAceitos] = useState([])
 
-        setLoading(true)
+    useEffect(() => {
         async function carregarUsuario() {
             let token = localStorage.getItem("token");
             if (token){
@@ -32,14 +40,51 @@ export default function ListaAmigos () {
                 setStatus("client")
             }
                 else{
-                    navigate("/Login", {state: {
-            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente para acessar essa página` }
-        }})
+                    showAlert(`Você precisa estar conectado como Cliente para acessar essa página` , "info");
+                    navigate("/Login")
                 }
+        
+
+            setLoading(false)
         }
         carregarUsuario();
-        setLoading(false)
+        
     }, []);
+
+    // carregar e organizar amizades (recebidas/enviadas/aceitas)
+    async function carregarAmigos() {
+        setLoading(true);
+        if (!cliente) {
+            setLoading(false);
+            return;
+        }
+
+        const resultado = await getamigos(cliente.id);
+        if (!resultado.success) {
+            setSolicitacoesRecebidas([]);
+            setSolicitacoesEnviadas([]);
+            setAmigosAceitos([]);
+            setLoading(false);
+            return;
+        }
+
+        const todos = resultado.amigos || [];
+        const pendentes = todos.filter(a => a.solicitacao === "Pendente");
+
+        const recebidas = pendentes.filter(s => s.amigo === cliente.id);
+        const enviadas = pendentes.filter(s => s.amigo_de === cliente.id);
+
+        const aceitos = todos.filter(a => a.solicitacao === "Aceito");
+
+        setSolicitacoesRecebidas(recebidas);
+        setSolicitacoesEnviadas(enviadas);
+        setAmigosAceitos(aceitos);
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        if (cliente) carregarAmigos();
+    }, [cliente]);
 
     useEffect(() => {
         document.title = "Lista de Amigos";
@@ -50,50 +95,260 @@ export default function ListaAmigos () {
         const [isOpenExcluir, setIsOpenExcluir] = useState(false);
         const [isOpenSolitations, setIsOpenSolitations] = useState(false);
         const [AmizadeSelecionada, setAmizadeSelecionada] = useState(null);
+        const [texto, setTexto] = useState("")
+        const [procurados, setProcurados] = useState([])
+        const [erro, setErro] = useState("")
         
-    
 
-        const abrirModalExcluir = (amizade) => {
-            setAmizadeSelecionada(amizade);
-            setIsOpenExcluir(true);
-        };
+        useEffect(() => {
+            const delay = setTimeout(async () => {
 
+                        if (texto.trim() === "") {
+                            setProcurados([]);
+                            return;
+                        }
+
+                setErro("");
+
+                if (!cliente) {
+                    setProcurados([]);
+                    return;
+                }
+
+                const resultado = await getclientes(texto);
+
+                if (!resultado.success) {
+                    setProcurados([]);
+                    setErro("Nenhum Perfil com esse nome");
+                    return;
+                }
+
+                let lista = [];
+
+                // Se for uma lista de clientes
+                if (Array.isArray(resultado.clientes)) {
+                    lista = resultado.clientes;
+                } 
+                // Se vier um único cliente
+                else if (resultado.clientes?.id) {
+                    lista = [resultado.clientes];
+                }
+
+                // Remover o próprio usuário
+                lista = lista.filter(c => c.id !== cliente.id);
+
+                // Remover clientes já com solicitação pendente (recebidas/enviadas)
+                const idsPendentesOutros = [
+                    ...solicitacoesRecebidas.map(s => s.cliente_de?.id), // quem enviou para mim
+                    ...solicitacoesEnviadas.map(s => s.cliente_amigo?.id) // quem eu enviei
+                ].filter(Boolean);
+
+                lista = lista.filter(c => !idsPendentesOutros.includes(c.id));
+
+                // Remover clientes já aceitos
+                const idsAceitosOutros = amigosAceitos.map(s => (s.cliente_de?.id === cliente.id ? s.cliente_amigo?.id : s.cliente_de?.id)).filter(Boolean);
+                lista = lista.filter(c => !idsAceitosOutros.includes(c.id));
+
+                setProcurados(lista);
+
+            }, 300);
+
+            return () => clearTimeout(delay);
+        }, [texto, solicitacoesRecebidas, solicitacoesEnviadas, amigosAceitos, cliente]);
+
+
+
+        async function handleAdicionarAmigo(id) {
+            if (!cliente) return;
+
+            const resultado = await postamigo(id, cliente.id);
+
+            if (resultado.success) {
+
+                // Atualiza pendentes enviados localmente
+                const novo = resultado.amigo
+                setSolicitacoesEnviadas(prev => [...prev, novo]);
+
+                // Remove da lista de busca
+                setProcurados(prev => prev.filter(p => p.id !== id));
+
+                setTexto("");
+                setIsOpen(false);
+                showAlert("Solicitação enviada!", "success");
+
+            } else {
+                showAlert("Erro ao enviar solicitação", "error");
+            }
+        }
+
+        async function aceitarSolicitacao(sol_id) {
+            if (!cliente) return;
+
+            // encontrar a solicitação recebida pelo id
+            const sol = solicitacoesRecebidas.find(s => s.id === sol_id);
+            if (!sol) return;
+            const amigoId = sol.cliente_de?.id;
+            const res = await putamigo(cliente.id, "Aceito", amigoId);
+
+            if (res.success) {
+                // fechar modal de solicitações e recarregar lista
+                setIsOpenSolitations(false);
+                await carregarAmigos();
+                showAlert("Solicitação aceita", "success");
+            } else {
+                showAlert("Erro ao aceitar solicitação", "error");
+            }
+        }
+
+        async function negarSolicitacao(sol_id) {
+            if (!cliente) return;
+
+            const sol = solicitacoesRecebidas.find(s => s.id === sol_id);
+            if (!sol) return;
+            const amigoId = sol.cliente_de?.id;
+            // negar = remover a solicitação existente para permitir novo envio
+            const res = await deleteamigo(cliente.id, amigoId);
+
+            if (res.success) {
+                    // fechar modal e recarregar
+                    setIsOpenSolitations(false);
+                    await carregarAmigos();
+                    showAlert("Solicitação negada", "success");
+            } else {
+                showAlert("Erro ao negar solicitação", "error");
+            }
+        }
+
+        async function removerAmizade(amigoRelId) {
+            if (!cliente) return;
+
+            // achar relação por id
+            const rel = amigosAceitos.find(a => a.id === amigoRelId);
+            if (!rel) return;
+
+            // identificar id do outro usuário na relação
+            const friendId = (rel.cliente_de?.id === cliente.id) ? rel.cliente_amigo?.id : rel.cliente_de?.id;
+            if (!friendId) return;
+
+            const res = await deleteamigo(cliente.id, friendId);
+
+            if (res.success) {
+                    // fechar modal de exclusão e recarregar
+                    setIsOpenExcluir(false);
+                    setAmizadeSelecionada(null);
+                    await carregarAmigos();
+                    showAlert("Amizade removida", "success");
+            } else {
+                showAlert("Erro ao remover amizade", "error");
+            }
+            setIsOpenExcluir(false);
+        }
+
+        if (loading) {
+            return <Loading />;
+            }
     
 
     return(
         <>
             {/* Modal Adicionar Amigo*/}
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-                <h3>Adicionar Amigo</h3>
-                <p>Busca por nome ou email</p>
-                <input type="text" placeholder="Nome ou Email do Amigo" className="pesquisa-amigo" />
+                <div className="modal-container">
+                    <h3 className="modal-title">Adicionar Amigo</h3>
 
-                Fazer um map nas pesquisas
-                <div className="amigo-pesquisado">
-                    
+                    <label className="modal-label">Buscar por nome</label>
+                    <input 
+                        type="text" 
+                        placeholder="Nome do Amigo" 
+                        className="modal-input" 
+                        value={texto} 
+                        onChange={(e) => setTexto(e.target.value)} 
+                    />
+
+                    {erro && <span className="modal-error">Nenhum Perfil com esse nome</span>}
+
+                    <div className="amigos-container">
+                        {procurados.map(perfil => (
+                            <div className="amigo-card" key={perfil.id}>
+                                <img src={user_icon} alt="User Icon" className="amigo-img" />
+                                <p className="amigo-nome">{perfil.nome}</p>
+                                <p className="instagram">Futuro lugar de Instagram</p>
+                                <button className="btn-solicitacao" onClick={()=>(handleAdicionarAmigo(perfil.id))}>
+                                    Enviar Solicitação
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                
             </Modal>
 
             {/* Modal Solicitações */}
             <Modal isOpen={isOpenSolitations} onClose={() => setIsOpenSolitations(false)}>
-                <h3>Solicitações Pendentes</h3>
-                <p>Aceite ou Negue Solicitações enviadas para você</p>
+                <div className="modal-container">
+                    <h3 className="modal-title">Solicitações Pendentes</h3>
+                    <p className="modal-subtitle">Aceite ou negue solicitações enviadas para você</p>
 
-                Fazer um map nas solicitações
-                <div className="amigo-solitacao">
-                    
+                    <div className="solicitacoes-container">
+                        {solicitacoesRecebidas.length === 0 && (
+                            <p className="nenhuma-solicitacao">Nenhuma solicitação Pendente.</p>
+                        )}
+
+                        {solicitacoesRecebidas.map((sol) => (
+                            <div className="solicitacao-card" key={sol.id}>
+                                <img src={user_icon} alt="User Icon" className="solicitacao-img" />
+
+                                <div className="solicitacao-info">
+                                    <p className="solicitacao-nome">{sol.cliente_de.nome}</p>
+                                    <p className="instagram">Futuro Lugar do Instagram</p>
+                                </div>
+
+                                <div className="solicitacao-buttons">
+                                    <button 
+                                        className="btn-aceitar"
+                                        onClick={() => aceitarSolicitacao(sol.id)}
+                                    >
+                                        Aceitar
+                                    </button>
+
+                                    <button 
+                                        className="btn-negar"
+                                        onClick={() => negarSolicitacao(sol.id)}
+                                    >
+                                        Negar
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </Modal>
 
             {/* Modal Excluir */}
             <Modal isOpen={isOpenExcluir} onClose={() => setIsOpenExcluir(false)}>
-                <h3>Remover amizade com Fulaninho da XJ?</h3>
-                
-                
-                <div className="buttons-modal">
-                    <button className="confirm-button" onClick={() => setIsOpenExcluir(false)}>Cancelar</button>
-                    <button className="cancel-button" >Confirmar</button>
+                <div className="modal-container">
+                    <h3 className="modal-title">
+                        Remover amizade com <span className="destaque-nome">{AmizadeSelecionada?.cliente_de?.nome || AmizadeSelecionada?.cliente_amigo?.nome || AmizadeSelecionada?.nome}</span>?
+                    </h3>
+
+                    <p className="modal-subtitle">
+                        Essa ação não poderá ser desfeita.
+                    </p>
+
+                    <div className="buttons-confirmacao">
+                        <button 
+                            className="btn-cancelar"
+                            onClick={() => setIsOpenExcluir(false)}
+                        >
+                            Cancelar
+                        </button>
+
+                        <button 
+                            className="btn-confirmar"
+                            onClick={() => removerAmizade(AmizadeSelecionada.id)}
+                        >
+                            Confirmar
+                        </button>
+                    </div>
                 </div>
             </Modal>
 
@@ -107,13 +362,33 @@ export default function ListaAmigos () {
                     <div className="busca">
                         <div className='search-product'>
                             <i className="fa fa-search"></i>
-                            <input type="text"  placeholder="Pesquisar Pedido da sua Loja"/>
+                            <input type="text"  placeholder="Pesquisar Amigo em sua Lista de Amigos"/>
                         </div>
                         <LuMailPlus onClick={()=>(setIsOpen(true))}/>
                         <IoIosNotifications  onClick={()=>setIsOpenSolitations(true)}/>
                     </div>
-                    <div className="amigos">
-                        Fazer um map em amigos
+                    <div className="amigos-lista">
+                        {amigosAceitos.map((amigo) => {
+                            const outro = (amigo.cliente_de?.id === cliente?.id) ? (amigo.cliente_amigo || {}) : (amigo.cliente_de || {});
+                            const outroId = outro?.id;
+                            return (
+                                <div 
+                                    className="amigo-card2" 
+                                    key={amigo.id}
+                                    onClick={() => { if (outroId) navigate(`/Perfil/Amizades/${outroId}/Favoritos`); }}
+                                    style={{ cursor: outroId ? 'pointer' : 'default' }}
+                                >
+                                    <img src={user_icon} alt="User Icon" className="amigo-img2" />
+
+                                    <div className="amigo-info2">
+                                        <p className="amigo-nome2">{outro.nome}</p>
+                                        <p className="ver-desejos">Ver a Lista de Desejos</p>
+                                    </div>
+
+                                    <FaUserXmark onClick={(e)=>{ e.stopPropagation(); setIsOpenExcluir(true); setAmizadeSelecionada(amigo)}}/>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
                 

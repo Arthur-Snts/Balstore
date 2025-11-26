@@ -26,9 +26,10 @@ export const EstrelasAvaliacao = ({ rating }) => {
   );
 };
 
-export function Favoritos({ favorito, setFavorito}){
+export function Favoritos({ favorito, setFavorito, onclick}){
   function toggleFavorito() {
     setFavorito(!favorito);
+    if (onclick) onclick();
   }
   
   return (

@@ -2,20 +2,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 250px;
-    height: 900px;
+    gap: 200px;
+    height: 800px;
 }
 .foto-cadastro img{
-    width: 600px;
+    width: 500px;
     border-radius: 40px;
 }
 
 .foto-cadastro{
-  padding-left: 180px;
+  padding-left: 200px;
   border-left: 3px solid var(--azul-principal);
 }
 
-.form {
+.form-cadastro {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -23,31 +23,29 @@
     height: 700px;
 }
 
-.formulario{
+.formulario-cadastro{
     display: flex;
     flex-direction: column;
     width: 400px;
-    gap: 30px;
-
-
+    gap: 40px;
+    justify-content: center;
 }
-.form h1{
+.form-cadastro h1{
     color: var(--azul-principal);
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
 }
 
-.formulario input {
-  padding: 10px;
+.formulario-cadastro input {
   border: none;
-  border-bottom: 2px solid var(--azul-principal);
+  border-bottom: 2px solid var(--azul-principal) !important;
   outline: none;
   transition: border-color 0.3s;
   font-size: 21px;
 }
 
-.formulario input:focus {
-  border-color: var(--azul-principal);
+.formulario-cadastro input:focus {
+  border-color: var(--azul-escuro) !important;
 }
 
 .button-entrar {

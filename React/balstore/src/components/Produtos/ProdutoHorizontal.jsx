@@ -8,16 +8,15 @@ export default function ProdutoHorizontal({props, children}) {
         <>
             <div className="produto">
                 <div className="left_produto">
-                    <img src={props.imagem_path} alt={props.nome} className="img_produto"/>
+                    <img src={`http://localhost:8000${props.imagem_path}`} alt={props.nome} className="img_produto"/>
                 </div>
                 <div className="conteudo_produto">
                     <div className="texto">
-                        
                         <div className="center_produto">
-                            {props.nome && <p>{props.nome}</p>}
+                            {props.nome && <p className="nome-produto-horizontal">{props.nome}</p>}
                             {props.estoque && <p className="estoque">Estoque: {props.estoque} exemplares</p>}
-                            {props.qnt && <p style={{marginBottom:0}}>Quantidades: {props.qnt}</p>}
-                            {props.cliente && <p style={{marginBottom:"40px"}}>Cliente: {props.cliente}</p>}
+                            {props.qnt && <p style={{marginBottom:0}} className="quantidade">Quantidades: {props.qnt}</p>}
+                            {props.cliente?.nome && <p style={{marginBottom:"40px"}}>Cliente: {props.cliente.nome}</p>}
                             {props.exemplares && <p>{props.exemplares}</p>}
                             {props.frete && <p>{props.frete}</p>}
                             {props.pedido_realizado && <p>Pedido Realizado em: {props.pedido_realizado}</p>}

@@ -1,4 +1,4 @@
-from models import  Loja
+from models import  Loja, Produto
 from config import engine
 from sqlmodel import Session, select
 from fastapi import HTTPException, Depends, APIRouter, Header
@@ -160,15 +160,14 @@ def refresh_token_endpoint(request: RefreshRequest):
 def tracking_status(session: SessionDep,user=Depends(verificar_token)):
     user_id = user["sub"]
 
-    loja = session.exec(select(Loja).where(Loja.id ==user_id)).first()
+    loja = busca_loja(session, loj_id=user_id)
     if not loja:
         raise HTTPException(404, "loja não encontrado")
 
     # Remove a senha antes de retornar
-    loja_dict = loja.model_dump()
-    loja_dict.pop("senha", None)
+    loja.pop("senha", None)
 
-    return {"status": "autorizado", "user": loja_dict}
+    return {"status": "autorizado", "user": loja}
 
 
 # ------------------------------------------------------------------------------
@@ -177,7 +176,7 @@ def tracking_status(session: SessionDep,user=Depends(verificar_token)):
 def busca_loja(session: SessionDep,loj_email: str = None, loj_nome:str=None, loj_cnpj:str = None, loj_id:int = None):
 
 
-    query = select(Loja).options(selectinload(Loja.produtos), selectinload(Loja.notificacoes))
+    query = select(Loja).options(selectinload(Loja.produtos).selectinload(Produto.compras),selectinload(Loja.produtos).selectinload(Produto.comentarios), selectinload(Loja.notificacoes))
 
     if loj_email:
         query = query.where(Loja.email == loj_email)
@@ -190,15 +189,40 @@ def busca_loja(session: SessionDep,loj_email: str = None, loj_nome:str=None, loj
 
     lojas = session.exec(query).all()
 
+    def serialize_produto(p: Produto):
+        # campos simples
+        prod = p.model_dump(include={
+            "id", "nome", "estoque", "imagem_path", "preco", "promocao"
+        })
+
+        # comentarios (pegar campos úteis, sem incluir produto dentro do comentário)
+        comentarios = []
+        for c in (p.comentarios or []):
+            comentarios.append(c.model_dump(include={"id", "conteudo", "avaliacao", "cliente_id"}))
+        prod["comentarios"] = comentarios
+
+        # compras (pegar campos da compra, EXCLUINDO 'produtos' para evitar loop)
+        compras = []
+        for cp in (p.compras or []):
+            compras.append(cp.model_dump(include={"id", "valor", "cliente_id", "data", "cod_pagamento", "frete", "end_id", "situacao"}))
+        prod["compras"] = compras
+
+        return prod
+
+    
+
     resultado = []
     for c in lojas:
         resultado.append({
             **c.model_dump(),
-            "produtos": [p.model_dump() for p in c.produtos] if c.produtos else [],
+            "produtos": [serialize_produto(p) for p in (c.produtos or [])],
             "notificacoes": [n.model_dump() for n in c.notificacoes] if c.notificacoes else [],
         })
 
-    return resultado
+    if len(resultado) == 1:
+        return resultado[0]
+    else:
+        return resultado
 
 # ------------------------------------------------------------------------------
 # CADASTRO
@@ -251,23 +275,47 @@ def deleta_loja(loj_id: int, session: SessionDep):
 
 # ------------------------------------------------------------------------------
 # UPDATE
-@router.put("/{loj_id}")
-def atualiza_loja(session: SessionDep,loj_id:int,loj_nome:str=None, loj_email:str=None, loj_senha:str=None):
 
-    loja = session.get(Loja, loj_id)
+from pydantic import BaseModel
+
+class LojaUpdate(BaseModel):
+    loj_nome: str | None = None
+    loj_email: str | None = None
+    loj_senha: str | None = None
+
+    senha_atual: str | None = None
+    senha_nova: str | None = None
+    senha_confirmacao: str | None = None
+
+@router.put("/{loj_id}")
+def atualiza_loja(session: SessionDep, loj_id: int, dados: LojaUpdate):
+    loja = session.exec(select(Loja).where(Loja.id == loj_id)).first()
     
     if not loja:
-        raise HTTPException(404, "Loja não encontrada pelo ID, Verifique a informação.")
+        raise HTTPException(404, "Loja não encontrada.")
 
-    if loj_nome:
-        loja.nome = loj_nome
-    if loj_email:
-        loja.email = loj_email
-    if loj_senha:
-        loja.senha = generate_password_hash(loj_senha, method="pbkdf2:sha256")
+    # Atualizar nome e email
+    if dados.loj_nome:
+        loja.nome = dados.loj_nome
 
-    session.add(loja)
+    if dados.loj_email:
+        loja.email = dados.loj_email
+
+    # --- TROCA DE SENHA SEGURA ---
+    if dados.senha_nova or dados.senha_confirmacao or dados.senha_atual:
+        
+        if not (dados.senha_atual and dados.senha_nova and dados.senha_confirmacao):
+            raise HTTPException(400, "Preencha senha atual, nova e confirmação.")
+
+        if not check_password_hash(loja.senha, dados.senha_atual):
+            raise HTTPException(403, "Senha atual incorreta.")
+
+        if dados.senha_nova != dados.senha_confirmacao:
+            raise HTTPException(400, "Nova senha e confirmação não coincidem.")
+
+        loja.senha = generate_password_hash(dados.senha_nova, method="pbkdf2:sha256")
+
     session.commit()
     session.refresh(loja)
 
-    return {"mensagem": "Perfil editado com sucesso", "loja": loja}
+    return {"mensagem": "Perfil atualizado com sucesso", "loja": loja}

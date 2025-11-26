@@ -1,10 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "../Auxiliares/Modal"
 import "./Endereco.css"
 import "../Cores.css"
 
+import { deleteendereco, postendereco, putendereco, verificar_token_cliente } from "../../statements"
+import { useAlert } from "../Auxiliares/AlertContext";
+import Loading from "../../pages/Loading"
+import { useNavigate } from "react-router-dom"
 
-export default function Endereco({enderecos}){
+
+export default function Endereco(){
+
+
+    const navigate = useNavigate();
+    const [cliente, setCliente] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const { showAlert } = useAlert();
+
+    useEffect(() => {
+            async function carregarUsuario() {
+                let token = localStorage.getItem("token");
+                if (token){
+                    const user_devolvido = await verificar_token_cliente(navigate);
+                    
+                    setCliente(user_devolvido);
+                }
+                    else{
+                        showAlert(`Você precisa estar conectado como Cliente para acessar essa página` , "info");
+                        navigate("/Login") 
+                    }
+                setLoading(false)
+            }
+            carregarUsuario();
+            
+            
+        }, []);
     
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenExcluir, setIsOpenExcluir] = useState(false);
@@ -20,27 +50,105 @@ export default function Endereco({enderecos}){
         setEnderecoSelecionado(endereco);
         setIsOpenExcluir(true);
     };
+
+    const [rua, setRua] = useState("")
+    const [bairro, setBairro] = useState("")
+    const [numero, setNumero] = useState("")
+    const [uf, setUF] = useState("")
+    const [cidade, setCidade] = useState("")
+    const [CEP, setCEP] = useState("")
+
+    async function handleAdicionar (e) {
+        e.preventDefault();
+        const enderecoEnviarCorrigido = {
+            rua: rua,
+            bairro: bairro,
+            numero: numero,
+            estado: uf,
+            cidade: cidade,
+            CEP: CEP,
+            cli_id: cliente.id
+        };
+        const resultado = await postendereco(enderecoEnviarCorrigido);
+
+        if (resultado.success) {
+            showAlert("Endereço criado com sucesso!", "success");
+            setCliente(prev => ({
+                ...prev,
+                enderecos: [
+                    ...prev.enderecos,
+                    resultado.endereco
+                ]
+            }));
+        } else {
+            showAlert(resultado.status, "erro");
+        }
+        setIsOpen(false)
+      }
+
+      async function handleEditar (e) {
+        e.preventDefault();
+        
+        const resultado = await putendereco(enderecoSelecionado);
+
+        if (resultado.success) {
+            showAlert("Endereço editado com sucesso!", "success");
+            setCliente(prev => ({
+                ...prev,
+                enderecos: [
+                    // remove o antigo
+                    ...prev.enderecos.filter(f => f.id !== enderecoSelecionado.id),
+
+                    // adiciona o novo
+                    enderecoSelecionado
+                ]
+            }));
+        } else {
+            showAlert(resultado.status, "erro");
+        }
+        setIsOpenEdit(false)
+      }
+
+      async function handleDelete (e) {
+        e.preventDefault();
+        
+        const resultado = await deleteendereco(enderecoSelecionado.id);
+
+        if (resultado.success) {
+            showAlert("Endereço Excluido com sucesso!", "success");
+            setCliente(prev => ({
+                ...prev,
+                enderecos: [
+                    // remove o antigo
+                    ...prev.enderecos.filter(f => f.id !== enderecoSelecionado.id),
+                ]
+            }));
+        } else {
+            showAlert(resultado.status, "erro");
+        }
+        setIsOpenExcluir(false)
+      }
     
     return(
-
+        <>{loading? <Loading/>: 
         <div className="divona">
 
             {/* Modal Adicionar */}
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
                 <h3>Adicionar Endereço</h3>
-                <input type="text" name="rua" placeholder="Rua" className="rua" />
+                <input type="text" name="rua" placeholder="Rua" className="rua" value={rua} onChange={(e)=>setRua(e.target.value)}/>
                 <div className="linha">
-                    <input type="text" name="bairro" placeholder="Bairro"  />
-                    <input type="text" name="numero" placeholder="Nº" />
+                    <input type="text" name="bairro" placeholder="Bairro"  value={bairro} onChange={(e)=>setBairro(e.target.value)}/>
+                    <input type="text" name="numero" placeholder="Nº" value={numero} onChange={(e)=>setNumero(e.target.value)}/>
                 </div>
                 <div className="linha">
-                    <input type="text" name="estado" placeholder="UF" style={{width:"60px"}} />
-                    <input type="text" name="cidade" placeholder="Cidade" />
-                    <input type="text" name="CEP" placeholder="CEP" />
+                    <input type="text" name="estado" placeholder="UF" style={{width:"60px"}} value={uf} onChange={(e)=>setUF(e.target.value)}/>
+                    <input type="text" name="cidade" placeholder="Cidade" value={cidade} onChange={(e)=>setCidade(e.target.value)}/>
+                    <input type="text" name="CEP" placeholder="CEP" value={CEP} onChange={(e)=>setCEP(e.target.value)}/>
                 </div>
                 <div className="buttons-modal">
                     <button className="confirm-button" onClick={() => setIsOpen(false)}>Cancelar</button>
-                    <button className="cancel-button" >Confirmar</button>
+                    <button className="cancel-button" onClick={handleAdicionar}>Confirmar</button>
                 </div> 
             </Modal>
 
@@ -54,6 +162,7 @@ export default function Endereco({enderecos}){
                     placeholder="Rua"
                     className="rua"
                     defaultValue={enderecoSelecionado?.rua}
+                    onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, rua: e.target.value}))}
                 />
 
                 <div className="linha">
@@ -62,12 +171,14 @@ export default function Endereco({enderecos}){
                         name="bairro"
                         placeholder="Bairro"
                         defaultValue={enderecoSelecionado?.bairro}
+                        onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, bairro: e.target.value}))}
                     />
                     <input
                         type="text"
                         name="numero"
                         placeholder="Nº"
                         defaultValue={enderecoSelecionado?.numero}
+                        onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, numero: e.target.value}))}
                     />
                 </div>
 
@@ -77,25 +188,28 @@ export default function Endereco({enderecos}){
                         name="estado"
                         placeholder="UF"
                         style={{width:"60px"}}
-                        defaultValue={enderecoSelecionado?.uf}
+                        defaultValue={enderecoSelecionado?.estado}
+                        onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, estado: e.target.value}))}
                     />
                     <input
                         type="text"
                         name="cidade"
                         placeholder="Cidade"
                         defaultValue={enderecoSelecionado?.cidade}
+                        onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, estado: e.target.value}))}
                     />
                     <input
                         type="text"
                         name="CEP"
                         placeholder="CEP"
-                        defaultValue={enderecoSelecionado?.cep}
+                        defaultValue={enderecoSelecionado?.CEP}
+                        onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, CEP: e.target.value}))}
                     />
                 </div>
 
                 <div className="buttons-modal">
                     <button className="confirm-button" onClick={() => setIsOpenEdit(false)}>Cancelar</button>
-                    <button className="cancel-button">Salvar</button>
+                    <button className="cancel-button" onClick={handleEditar}>Salvar</button>
                 </div>
             </Modal>
 
@@ -106,24 +220,24 @@ export default function Endereco({enderecos}){
                 {enderecoSelecionado && (
                     <p>
                         <strong>{enderecoSelecionado.rua}, {enderecoSelecionado.numero}</strong><br/>
-                        {enderecoSelecionado.bairro} – {enderecoSelecionado.cidade}/{enderecoSelecionado.uf} - {enderecoSelecionado.cep}
+                        {enderecoSelecionado.bairro} – {enderecoSelecionado.cidade}/{enderecoSelecionado.estado} - {enderecoSelecionado.CEP}
                     </p>
                 )}
                 </p>
                 <div className="buttons-modal">
                     <button className="confirm-button" onClick={() => setIsOpenExcluir(false)}>Cancelar</button>
-                    <button className="cancel-button" >Confirmar</button>
+                    <button className="cancel-button" onClick={handleDelete}>Confirmar</button>
                 </div>
             </Modal>
 
             <button onClick={() => setIsOpen(true)} className="btn-add"> Adicionar Endereço <i className="fa fa-plus"></i></button>
             <div className="enderecos-lista">
-                {enderecos.map((endereco, index)=> (
+                {cliente?.enderecos.map((endereco, index)=> (
                     <div key={index} className="endereco-card">
-                        <p><strong>Rua:</strong> {endereco.rua}, <strong>Nº:</strong> {endereco.numero}</p>
-                        <p><strong>Bairro:</strong> {endereco.bairro}</p>
-                        <p><strong>Cidade:</strong> {endereco.cidade} - <strong>UF:</strong> {endereco.uf}</p>
-                        <p><strong>CEP:</strong> {endereco.cep}</p>
+                        <p><strong>Rua:</strong> {endereco?.rua}, <strong>Nº:</strong> {endereco?.numero}</p>
+                        <p><strong>Bairro:</strong> {endereco?.bairro}</p>
+                        <p><strong>Cidade:</strong> {endereco?.cidade} - <strong>UF:</strong> {endereco?.estado}</p>
+                        <p><strong>CEP:</strong> {endereco?.CEP}</p>
                         <div className="endereco-card-buttons">
                             <a onClick={() => abrirModalEditar(endereco)} className="edit-button"><i className="fa fa-edit"></i></a>
                             <a onClick={() => abrirModalExcluir(endereco)} className="delete-button"><i className="fa fa-trash"></i></a>
@@ -132,6 +246,6 @@ export default function Endereco({enderecos}){
                     </div>
                 ))}
             </div>
-        </div>
+        </div>}</>
     )
 }

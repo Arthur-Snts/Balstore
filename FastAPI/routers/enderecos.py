@@ -21,28 +21,49 @@ router = APIRouter(prefix="/enderecos", tags=["enderecos"])
 # ------------------------------------------------------------------------------
 # GET
 @router.get("/")
-def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None):
+def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None, end_id:int = None):
+
+    query = select(Endereco).options(selectinload(Endereco.notificacoes))
 
     if cli_id:
         query = query.where(Endereco.cli_id == cli_id)
-        
-    if loj_id:
-        query = query.where(Endereco.loj_id == loj_id)
+        enderecos = session.exec(
+            query
+        ).all()
 
         if not enderecos:
             raise HTTPException(400, "Cliente sem Enderecos")
         
     if loj_id:
+        query = query.where(Endereco.loj_id == loj_id)
         enderecos = session.exec(
-            select(Endereco).where(Endereco.loj_id == loj_id)
+            query
         ).all()
 
         if not enderecos:
             raise HTTPException(400, "Loja sem Enderecos")
         
-    if not cli_id and not loj_id:
-        raise HTTPException(400, "Nenhum paramentro passado")
+    if end_id:
+        query = query.where(Endereco.id == end_id)
+        enderecos = session.exec(
+            query
+        ).all()
 
+        if not enderecos:
+            raise HTTPException(400, "Loja sem Enderecos")
+        
+    if not cli_id and not loj_id and not end_id:
+        raise HTTPException(400, "Nenhum paramentro passado")
+    
+    resultado = []
+    for c in enderecos:
+        
+        resultado.append({
+        **c.model_dump(),
+        "notificacoes": [n.model_dump() for n in c.notificacoes] if c.notificacoes else []})
+        
+    if end_id:
+        return resultado[0]
     return resultado
 
 # ------------------------------------------------------------------------------
@@ -74,8 +95,19 @@ def cadastra_enderecos(session: SessionDep, endereco:Endereco):
 
 # ------------------------------------------------------------------------------
 # PUT
+from pydantic import BaseModel
+from typing import Optional
+class EnderecoUpdate(BaseModel):
+    rua: Optional[str] = None
+    bairro: Optional[str] = None
+    numero: Optional[str] = None
+    cidade: Optional[str] = None
+    estado: Optional[str] = None
+    CEP: Optional[str] = None
+
+
 @router.put("/{end_id}")
-def atualiza_endereco(session: SessionDep,end_id:int, rua: str =None, numero: str = None, bairro: str = None, cidade: str = None, estado:str = None, CEP:str = None):
+def atualiza_endereco(session: SessionDep,end_id:int,endereco:EnderecoUpdate):
     
     endereco_atualizar = session.exec(
         select(Endereco).where(Endereco.id == end_id)
@@ -84,18 +116,18 @@ def atualiza_endereco(session: SessionDep,end_id:int, rua: str =None, numero: st
     if not endereco_atualizar:
         raise HTTPException(404, "Endereço não encontrado")
     
-    if rua:
-        endereco_atualizar.rua = rua
-    if numero:
-        endereco_atualizar.numero = numero 
-    if bairro:
-        endereco_atualizar.bairro = bairro 
-    if cidade:
-        endereco_atualizar.cidade = cidade 
-    if estado:
-        endereco_atualizar.estado = estado 
-    if CEP:
-        endereco_atualizar.CEP = CEP 
+    if endereco.rua:
+        endereco_atualizar.rua = endereco.rua
+    if endereco.numero:
+        endereco_atualizar.numero = endereco.numero 
+    if endereco.bairro:
+        endereco_atualizar.bairro = endereco.bairro 
+    if endereco.cidade:
+        endereco_atualizar.cidade = endereco.cidade 
+    if endereco.estado:
+        endereco_atualizar.estado = endereco.estado 
+    if endereco.CEP:
+        endereco_atualizar.CEP = endereco.CEP 
 
     session.add(endereco_atualizar)
     session.commit()

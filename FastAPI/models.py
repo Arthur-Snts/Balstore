@@ -11,6 +11,12 @@ class Categoria(SQLModel, table=True):
     produtos: list["Produto"] = Relationship(back_populates="categoria")
 
 
+class Compra_Produto(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    com_id: int = Field(foreign_key="compra.id")
+    pro_id: int = Field(foreign_key="produto.id")
+
+
 class Loja(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nome: str = Field(index=False)
@@ -41,7 +47,10 @@ class Produto(SQLModel, table=True):
     favoritos: list["Favorito"] = Relationship(back_populates="produto")
     carrinhos: list["Carrinho"] = Relationship(back_populates="produto")
     notificacoes: list["Notificacao"] = Relationship(back_populates="produto")
-    compras: list["Compra_Produto"] = Relationship(back_populates="produto")
+    compras: list["Compra"] = Relationship(
+        back_populates="produtos",
+        link_model=Compra_Produto
+    )
     
 
 
@@ -81,6 +90,8 @@ class Endereco (SQLModel, table=True):
     cli_id: Optional[int] = Field(foreign_key="cliente.id")
     loj_id: Optional[int] = Field(foreign_key="loja.id")
 
+    compras: list["Compra"] = Relationship(back_populates="endereco")
+
     notificacoes: list["Notificacao"] = Relationship(back_populates="endereco")
 
 
@@ -97,7 +108,7 @@ class Carrinho(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     cliente_id: int = Field(foreign_key="cliente.id")
     produto_id: int = Field(foreign_key="produto.id")
-    qnt_produto: int = Field(default=1, index=False)
+    qnt_produto: Optional[int] = Field(default=1, index=False)
 
     presente_para: Optional[int] = Field(default=None, foreign_key="cliente.id")
 
@@ -134,26 +145,25 @@ class Comentario(SQLModel, table=True):
     cliente: "Cliente" = Relationship(back_populates="comentarios")
     produto: "Produto" = Relationship(back_populates="comentarios")
 
-class Compra_Produto(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    com_id: int = Field(foreign_key="compra.id")
-    pro_id: int = Field(foreign_key="produto.id")
 
-    produto: "Produto" = Relationship(back_populates="compras")
-    compra: "Compra" = Relationship(back_populates="produtos")
 
 class Compra(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     valor:float = Field(index=False)
     cliente_id: int = Field(foreign_key="cliente.id")
-    data: datetime = Field(default_factory=datetime.utcnow,index=False)
-    situacao: str = Field(default="Aguardando Pagamento", index=False)
+    data: Optional[datetime] = Field(default_factory=datetime.utcnow,index=False)
+    situacao: Optional[str] = Field(default="Aguardando Pagamento", index=False)
     cod_rastreio: Optional[str] = Field(index=False)
     cod_pagamento: str = Field(index=False)
     frete: float = Field(index=False)
+    end_id: int = Field(foreign_key="endereco.id")
 
     cliente: "Cliente" = Relationship(back_populates="compras")
-    produtos: list["Compra_Produto"] = Relationship(back_populates="compra")
+    endereco: "Endereco" = Relationship(back_populates="compras")
+    produtos: list["Produto"] = Relationship(
+        back_populates="compras",
+        link_model=Compra_Produto
+    )
 
 
 class Notificacao(SQLModel, table=True):

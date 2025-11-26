@@ -2,18 +2,19 @@ import Header from "../components/Header_and_Footer/Header";
 import Footer from "../components/Header_and_Footer/Footer";
 import Filtros from "../components/Produtos/Filtros";
 import { Estrelas, LightBulb } from "../components/Auxiliares/Icones";
-import produtos_todos from "./produtos_teste";
 import ProdutoCard from "../components/Produtos/ProdutoCard";
 import "./Pesquisa.css";
-
 import Loading from "./Loading"
 import { useEffect, useState } from "react"
+import { useAlert } from "../components/Auxiliares/AlertContext";
 import { useNavigate } from "react-router-dom"
-import {verificar_token_cliente, verificar_token_loja} from "../statements"
+import {verificar_token_cliente, getprodutos, postfavorito, deletefavorito} from "../statements"
 import { useSearchParams } from "react-router-dom";
 
 export default function Pesquisa() {
     const [searchParams, setSearchParams] = useSearchParams();
+    const [produtos, setProdutos] = useState([]);
+    const { showAlert } = useAlert();
 
     const busca_produto = searchParams.get("q") || "";
     const precoMinFromURL = searchParams.get("min") || "";
@@ -22,19 +23,25 @@ export default function Pesquisa() {
     const ordenacaoFromURL = searchParams.get("ord") || null;
 
     useEffect(() => {
+        const categoriasFromURL = searchParams.get("cat");
+        setFiltros(prev => ({
+            ...prev,
+            categorias: categoriasFromURL ? categoriasFromURL.split(",") : []
+        }));
+    }, [searchParams]);
+
+    useEffect(() => {
         document.title = "Busca por " + busca_produto;
-    }, []);
+    }, [busca_produto]);
 
     const navigate = useNavigate();
     const [cliente, setCliente] = useState(null)
-    const [loja, setLoja] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     const [status, setStatus] = useState("")
 
     useEffect(() => {
 
-        setLoading(true)
         async function carregarUsuario() {
             let token = localStorage.getItem("token");
             let token_loja = localStorage.getItem("token_loja")
@@ -45,16 +52,20 @@ export default function Pesquisa() {
                 setStatus("client")
             }
                 else if (token_loja){
-                    navigate("/Login", {state: {
-            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente ou desconectado para acessar essa página` }
-        }})
+                    showAlert(`Você precisa estar conectado como Cliente ou desconectado para acessar essa página` , "info");
+                    navigate("/Login")
                 }
                 else {
                     setStatus("guest")
                 }
+            const resultado_produtos = await getprodutos();
+                if (resultado_produtos?.success === true) {
+                    setProdutos(resultado_produtos.produtos)
+                }
+            setLoading(false)
         }
         carregarUsuario();
-        setLoading(false)
+        
     }, []);
 
     const [ativo, setAtivo] = useState(false);
@@ -78,14 +89,21 @@ export default function Pesquisa() {
         if (filtros.precoMax) params.max = filtros.precoMax;
         if (filtroAvaliacao) params.av = filtroAvaliacao;
         if (ordenacaoPreco) params.ord = ordenacaoPreco;
+        if (filtros.categorias.length > 0) params.cat = filtros.categorias.join(","); 
+
+        setSearchParams(params);
 
         setSearchParams(params);  // muda a URL SEM recarregar
     }, [filtros, filtroAvaliacao, ordenacaoPreco]);
 
-    const produtosFiltrados = produtos_todos.filter((produto) => {
+    const produtosFiltrados = produtos.filter((produto) => {
+        const filtroBuscaOK =
+            !busca_produto ||
+            produto.nome.toLowerCase().includes(busca_produto.toLowerCase());
+
         const filtroCategoriaOK =
             filtros.categorias.length === 0 ||
-            filtros.categorias.includes(produto.categoria);
+            filtros.categorias.includes(produto.categoria.nome);
 
         const filtroPrecoOK =
             (!filtros.precoMin || produto.preco >= filtros.precoMin) &&
@@ -94,7 +112,10 @@ export default function Pesquisa() {
         const filtroAvaliacaoOK =
             filtroAvaliacao === null || produto.avaliacao >= filtroAvaliacao;
 
-        return filtroCategoriaOK && filtroPrecoOK && filtroAvaliacaoOK;
+        const filtroPromocaoOK =
+            !ativo || produto.promocao > 0;
+
+        return filtroBuscaOK && filtroCategoriaOK && filtroPrecoOK && filtroAvaliacaoOK && filtroPromocaoOK;
     });
 
     const produtosOrdenados = [...produtosFiltrados].sort((a, b) => {
@@ -113,6 +134,45 @@ export default function Pesquisa() {
         setPaginaAtual(0);
     }, [filtroAvaliacao, ordenacaoPreco, filtros]);
 
+    async function handlefavoritar (id) {
+    
+            if (!cliente || !cliente.favoritos) {
+                showAlert("Erro: dados do cliente não carregados", "error");
+                return;
+            }
+    
+            const favoritoExistente = cliente.favoritos.find(f => f.produto_id === id);
+    
+            if (favoritoExistente) {
+                const resultado_delete = await deletefavorito(favoritoExistente.id);
+                if (resultado_delete?.success) {
+                
+                setCliente(prev => ({
+                    ...prev,
+                    favoritos: prev.favoritos.filter(f => f.id !== favoritoExistente.id)
+                }));
+                }return;
+            }
+            
+            const resultado_favoritar = await postfavorito(id, cliente.id);
+            if (resultado_favoritar?.success){
+                
+                setCliente(prev => ({
+                ...prev,
+                favoritos: [
+                    ...prev.favoritos,
+                    {
+                        id: resultado_favoritar.favorito.id,
+                        produto_id: id,
+                        cliente_id: cliente.id
+                    }
+                ]
+            }));
+            }
+            
+            
+        }
+
     return (
         <>
         {loading == true ? <Loading/> :<>
@@ -120,7 +180,7 @@ export default function Pesquisa() {
 
             <div className="pesquisa-content">
                 <aside className="filter-side-bar">
-                    <Filtros onChangeFiltros={setFiltros} />
+                    <Filtros onChangeFiltros={setFiltros} filtrosAtuais={filtros}/>
                 </aside>
 
                 <section className="section-produtos-buscados">
@@ -176,7 +236,7 @@ export default function Pesquisa() {
                     {produtosFinal.length > 0 ? (
                         <div className="corpo-produtos-buscados">
                             {produtosFinal.map((produto) => (
-                                <ProdutoCard key={produto.id} produto={produto} favorito={false} />
+                                <ProdutoCard key={produto.id} produto={produto} favoritoInicial={status !== "guest" && cliente?.favoritos?.some(f => f.produto_id === produto.id)} onclickFavoritar={handlefavoritar} />
                             ))}
                         </div>
                     ) : (

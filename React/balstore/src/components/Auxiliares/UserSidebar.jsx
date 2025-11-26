@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import user_icon from '../../assets/user-icon-default.png'
 import './UserSidebar.css'
 import { Link } from 'react-router-dom'
@@ -15,6 +16,22 @@ export default function UserSidebar ({props, active}) {
         localStorage.removeItem("refresh_token");
         navigate("/")
     }
+    const [count, setCount] = useState(0)
+     useEffect(() => {
+
+            props?.amigos_enviados.map((amigo)=>{
+                if (amigo.solicitacao == "Aceita"){
+                    setCount(count+1)
+                }
+            })
+
+            props?.amigos_recebidos.map((amigo)=>{
+                if (amigo.solicitacao == "Aceita"){
+                    setCount(count+1)
+                }
+            })
+        }, [props]);
+    
 
     return (
         <>
@@ -24,7 +41,7 @@ export default function UserSidebar ({props, active}) {
                     <img src={user_icon} alt="icon-user-default"/>
                         <div className='user-text'>
                             <p className="user-name">{props?.nome}</p>
-                            <p className="qtd-amigos">Amigos: {props?.amigos?.length()}</p>
+                            <p className="qtd-amigos">Amigos: {count}</p>
                         </div>
                         
                 </div>

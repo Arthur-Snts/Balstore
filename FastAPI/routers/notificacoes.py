@@ -51,8 +51,10 @@ def pega_notificacao(session: SessionDep, loj_id:int, not_id:int = None):
 
         })
 
-
-    return resultado
+    if len(resultado) == 1:
+        return resultado[0]
+    else:
+        return resultado
 
 
 # ------------------------------------------------------------------------------

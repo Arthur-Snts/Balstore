@@ -100,21 +100,35 @@ export default function Login (){
                 <div className="foto">
                     {login === "cliente" ? <img src={login_cliente}/> : <img src={login_lojista}/>}
                 </div>
-                <div className="form">
+                <div className="form-login">
                     <h1>Login</h1>
-                    <div className="formulario">
+                    <div className="formulario-login">
                         <div className="links-login">
                             <a onClick={()=> setLogin("cliente")} className={login === "cliente"? "active": "link-form"}>Cliente</a> 
                             <a onClick={()=> setLogin("lojista")} className={login === "lojista"? "active": "link-form"}>Loja</a>
                         </div>
-                        <div className="input-container">
-                            <input type="email" id="email" placeholder="" className="input-field"/>
+                        {login == "cliente" ? 
+                         <> #True
+                         <div className="input-container">
+                            <input type="email" id="email" placeholder="" className="input-field" onChange={(e) => setCliEmail(e.target.value)} value={cli_email}/>
                             <label for="email" className="input-label">Email</label>
                         </div>
-                        <div className="input-container">
-                            <input type="password" id="senha" placeholder="" className="input-field"/>
+                         <div className="input-container">
+                           <input type="password" id="senha" placeholder="" className="input-field" onChange={(e) => setCliSenha(e.target.value)} value={cli_senha}/> 
                             <label for="senha" className="input-label">Senha</label>
                         </div>
+                             </>
+                            : #Divisão
+                        <> #False
+                            <div className="input-container">
+                               <input type="email" id="email" placeholder="" className="input-field" onChange={(e) => setLojEmail(e.target.value)} value={loj_email}/> 
+                                <label for="email" className="input-label">Email</label>
+                            </div>
+                             <div className="input-container">
+                                <input type="password" id="senha" placeholder="" className="input-field" onChange={(e) => setLojSenha(e.target.value)} value={loj_senha}/>
+                                <label for="senha" className="input-label">Senha</label>
+                             </div>
+                        </>}
                     </div>
                     <button className="button-entrar" onClick={login == "cliente"? handleLogincliente : handleLoginloja}>Entrar</button>
                 </div>

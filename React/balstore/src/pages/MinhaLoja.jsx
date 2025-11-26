@@ -6,54 +6,106 @@ import produtos_todos from "./produtos_teste"
 import ProdutoCard from "../components/Produtos/ProdutoCard"
 import "./MinhaLoja.css"
 import Loading from "./Loading"
-import { useNavigate } from "react-router-dom"
-import {verificar_token_cliente, verificar_token_loja} from "../statements"
+import { useAlert } from "../components/Auxiliares/AlertContext"
+import { useNavigate, useLocation } from "react-router-dom"
+import {getloja, verificar_token_cliente} from "../statements"
 
 export default function MinhaLoja() {
 
     const navigate = useNavigate();
-    const [cliente, setCliente] = useState(null)
+    const { state } = useLocation();
+    const [loja_id, setLoja_id] = useState(state?.loja)
     const [loja, setLoja] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [cliente, setCliente] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const {showAlert} = useAlert()
 
     const [status, setStatus] = useState("")
 
     useEffect(() => {
 
-        setLoading(true)
+        
         async function carregarUsuario() {
             let token = localStorage.getItem("token");
             let token_loja = localStorage.getItem("token_loja")
             
                 if (token_loja){
-                    navigate("/Login", {state: {
-            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente ou desconectado para acessar essa página` }
-        }})
+                    showAlert(`Você precisa estar conectado como Cliente ou desconectado para acessar essa página` , "info");
+                    navigate("/Login")
                 }
-                else {
+                else if (token) {
+                    setStatus("client")
+                    const user_devolvido = await verificar_token_cliente(navigate);
+                
+                    setCliente(user_devolvido);
+                    
+                } else {
                     setStatus("guest")
                 }
+
+                
+
+            setLoading(false)
         }
         carregarUsuario();
-        setLoading(false)
+        
     }, []);
 
     useEffect(() => {
-        document.title = "Loja " + loj.nome;
-    }, []);
+        async function carregarLoja() {
+            setLoading(true)
 
-    var avaliacoes = 0
+            const resultado_loja = await getloja(loja_id)
+            
+            if (resultado_loja.success){
+                setLoja(resultado_loja.loja)
+                document.title = "Loja " + resultado_loja.loja.nome;
+            } else {
+                showAlert("Falha ao Carregar Loja", "erro")
+            }
 
-    produtos_todos.map((produto) => (
+            setLoading(false)
+        }
+        carregarLoja();
+    }, [loja_id]);
+
+    const [avaliacao_media, setAvaliacao_media] = useState(null)
+    const [compras_totais, setCompras_totais] = useState(null)
+
+    useEffect(() => {
+        if (!loja) return;
+
+        var avaliacoes = 0
+
+        loja.produtos.map((produto) => (
+            produto.comentarios.map((comentario)=> (
+                avaliacoes = avaliacoes + Number(comentario.avaliacao)
+            ))
+            
+        ))
+
+        setAvaliacao_media(avaliacoes/loja.produtos.length)
+
+        var compras = 0
+
+        loja.produtos.map((produto) => (
+            produto.compras.map((compra)=> (
+                compras = compras +1
+            ))
+            
+        ))
+
+        setCompras_totais(compras)
         
-        avaliacoes = avaliacoes + Number(produto.avaliacao)
-    ))
+    }, [loja]);
 
-    var avaliacao_media = avaliacoes/produtos_todos.length
-
+    if (loading) {
+        return <Loading></Loading>
+    }
 
     return(
         <>
+            
             <Header status={status} user_name={loja?.nome}/>
                 <div className="titulo">
                     <div className="nome">
@@ -61,13 +113,13 @@ export default function MinhaLoja() {
                         <p>{loja?.email}</p>
                     </div>
                     <div className="informacoes">
-                        <p>{produtos_todos.length} Produtos Diferentes</p>
+                        <p>{loja.produtos.length} Produtos Diferentes</p>
                         <p><EstrelasAvaliacao rating={avaliacao_media}></EstrelasAvaliacao> </p>
-                        <p>{produtos_todos.vendidos} Produtos Vendidos</p>
+                        <p>{compras_totais} Produtos Vendidos: </p>
                     </div>
                 </div>
                 <div className="produtos_loja">
-                    {produtos_todos.map((produto, index) => (
+                    {loja.produtos.map((produto, index) => (
                                 <ProdutoCard produto={produto}/>
                                  
                             ))}

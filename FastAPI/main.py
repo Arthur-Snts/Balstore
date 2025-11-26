@@ -21,6 +21,7 @@ from routers.favoritos import router as favoritos
 from routers.lojas import router as lojas
 from routers.notificacoes import router as notificacoes
 from routers.produtos import router as produtos
+from fastapi.staticfiles import StaticFiles
 
 
 
@@ -36,6 +37,8 @@ app.include_router(favoritos)
 app.include_router(lojas)
 app.include_router(notificacoes)
 app.include_router(produtos)
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 
 

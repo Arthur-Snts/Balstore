@@ -4,16 +4,18 @@ import { useState, useEffect } from "react";
 import Sidebar from "../components/Auxiliares/UserSidebar"
 import EditarCliente from "../components/Cliente/EditarCliente"
 import Endereços from "../components/Cliente/Endereco"
-
+import { useAlert } from "../components/Auxiliares/AlertContext";
 import Loading from "./Loading"
 import { useNavigate } from "react-router-dom"
-import {verificar_token_cliente, verificar_token_loja} from "../statements"
+import {verificar_token_cliente} from "../statements"
 import "./ConfigCliente.css"
 
 export default function ConfigContaCliente(){
     useEffect(() => {
-        document.title = "Configuração de conta";
+        document.title = "Configuração de Conta";
     }, []);
+
+    const { showAlert } = useAlert();
 
     const navigate = useNavigate();
     const [cliente, setCliente] = useState(null)
@@ -32,9 +34,8 @@ export default function ConfigContaCliente(){
                 setStatus("client")
             }
                 else{
-                    navigate("/Login", {state: {
-            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente para acessar essa página` }
-        }})
+                    showAlert(`Você precisa estar conectado como Cliente para acessar essa página` , "info");
+                    navigate("/Login") 
                 }
         }
         carregarUsuario();
@@ -44,6 +45,8 @@ export default function ConfigContaCliente(){
     
 
     const [state, setState] = useState("Profile")
+
+    
 
     return(
         <> {loading == true ? <Loading/> :
@@ -59,7 +62,7 @@ export default function ConfigContaCliente(){
                         <a onClick={()=> setState("Address")} className={state === "Address"? "selected": "unselected"}>Endereços</a>
                     </div>
                     <div className="image-and-content">
-                        {state === "Profile" ? <EditarCliente props={cliente}/> : <Endereços enderecos={cliente?.enderecos}/>}
+                        {state === "Profile" ? <EditarCliente/> : <Endereços/>}
                     </div>         
                 </section>
             </div>
