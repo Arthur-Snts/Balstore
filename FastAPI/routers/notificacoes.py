@@ -3,6 +3,8 @@ from config import engine
 from sqlmodel import Session, select
 from fastapi import HTTPException, Depends, APIRouter
 from typing import Annotated
+from sqlalchemy.orm import selectinload
+
 
 def get_session():
     with Session(engine) as session:
@@ -21,21 +23,39 @@ router = APIRouter(prefix="/notificacoes", tags=["notificacoes"])
 # GET
 @router.get("/{loj_id}")
 def pega_notificacao(session: SessionDep, loj_id:int, not_id:int = None):
+     
+    query = select(Notificacao).options(selectinload(Notificacao.cliente),
+                                    selectinload(Notificacao.produto),
+                                    selectinload(Notificacao.endereco),
+                                    selectinload(Notificacao.loja))
 
-    notificacoes = session.exec(
-        select(Notificacao).where(Notificacao.loj_id == loj_id)
-    ).all()
+    query = query.where(Notificacao.loj_id == loj_id)
+    
+    if not_id:
+        query = query.where(Notificacao.id == not_id)    
+
+    notificacoes = session.exec(query).all()
 
     if not notificacoes:
         raise HTTPException(400, "Loja sem Notificação")
-    
-    if not_id:
-        notificacao = session.exec(select(Notificacao).where(Notificacao.id == not_id)).first()
-        if not notificacao:
-            raise HTTPException(400, "Notificação não encontrada")
-        return notificacao
 
-    return notificacoes
+    resultado = []
+    for c in notificacoes:
+        resultado.append({
+            **c.model_dump(),
+            "produto": c.produto.model_dump() if c.produto else None,
+            "cliente": c.cliente.model_dump() if c.cliente else None,
+            "endereco": c.endereco.model_dump() if c.endereco else None,
+            "loja": c.loja.model_dump() if c.loja else None
+
+
+        })
+
+    if len(resultado) == 1:
+        return resultado[0]
+    else:
+        return resultado
+
 
 # ------------------------------------------------------------------------------
 # POST

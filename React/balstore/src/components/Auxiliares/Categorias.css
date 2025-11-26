@@ -20,12 +20,15 @@
     flex-direction: column;
     align-items: center;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .categoria:hover{
     transform: scale(1.1);
 }
 
-.titulo-categoria{
+.categorias .categoria .titulo-categoria{
     margin-bottom: 0;
+    text-decoration: none !important;
+    color: var(--azul-principal);
 }

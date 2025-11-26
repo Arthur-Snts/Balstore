@@ -26,3 +26,297 @@
     align-items: center;
     width: 70%;
 }
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+.modal-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+.modal-label {
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.modal-input {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: 0.2s;
+}
+
+.modal-input:focus {
+    border-color: var(--azul-principal);
+    box-shadow: 0 0 0 2px rgba(74, 115, 243, 0.25);
+    outline: none;
+}
+
+.modal-error {
+    color: #e63946;
+    font-size: 0.9rem;
+}
+
+.amigos-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.amigo-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    transition: 0.2s;
+}
+
+.amigo-card:hover {
+    background: #eef1ff;
+}
+
+.amigo-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    object-fit: cover;
+}
+
+.amigo-nome {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.btn-solicitacao {
+    background: var(--azul-principal);
+    border: none;
+    padding: 8px 12px;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.btn-solicitacao:hover {
+    background: var(--azul-escuro);
+}
+
+.amigos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.amigo-card2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    transition: 0.25s ease;
+    border: 1px solid #eaeaea;
+}
+
+.amigo-card2:hover {
+    background: #eef1ff;
+    transform: translateY(-2px);
+}
+
+.amigo-img2 {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    object-fit: cover;
+}
+
+.amigo-info2 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.amigo-nome2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.amigo-username2 {
+    margin-top: -2px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.btn-ver-perfil {
+    background: #4a73f3;
+    border: none;
+    padding: 8px 14px;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+.btn-ver-perfil:hover {
+    background: #3658c4;
+}
+
+
+.modal-subtitle {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.solicitacoes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.nenhuma-solicitacao {
+    color: #777;
+    font-size: 0.95rem;
+    padding: 10px 0;
+}
+
+.solicitacao-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #eaeaea;
+    transition: 0.25s ease;
+}
+
+.solicitacao-card:hover {
+    background: #eef1ff;
+    transform: translateY(-2px);
+}
+
+.solicitacao-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    object-fit: cover;
+}
+
+.solicitacao-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.solicitacao-nome {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.solicitacao-username {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.solicitacao-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-aceitar {
+    background: #4caf50;
+    border: none;
+    padding: 8px 14px;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-aceitar:hover {
+    background: #3d9142;
+}
+
+.btn-negar {
+    background: #e63946;
+    border: none;
+    padding: 8px 14px;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-negar:hover {
+    background: #c72d37;
+}
+
+
+.destaque-nome {
+    color: #4a73f3;
+    font-weight: 600;
+}
+
+.buttons-confirmacao {
+    margin-top: 25px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-cancelar {
+    padding: 10px 18px;
+    background: #e0e0e0;
+    border: none;
+    color: #333;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancelar:hover {
+    background: #cfcfcf;
+}
+
+.btn-confirmar {
+    padding: 10px 18px;
+    background: #e63946;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-confirmar:hover {
+    background: #c72d37;
+}

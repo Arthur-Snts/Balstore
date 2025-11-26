@@ -3,6 +3,7 @@ from config import engine
 from sqlmodel import Session, select
 from fastapi import HTTPException, Depends, APIRouter
 from typing import Annotated
+from sqlalchemy.orm import selectinload
 
 
 def get_session():
@@ -23,19 +24,27 @@ router = APIRouter(prefix="/comentarios", tags=["comentarios"])
 @router.get("/{pro_id}")
 def pega_comentarios(session: SessionDep, pro_id:int, cli_id:int = None):
 
-    comentarios = session.exec(
-        select(Comentario).where(Comentario.produto_id == pro_id)
-    ).all()
+    query = select(Comentario).options(selectinload(Comentario.produto),
+                                    selectinload(Comentario.cliente))
 
-    if not comentarios:
+    
+    query = query.where(Comentario.produto_id == pro_id)
+    if cli_id:
+        query = query.where(Comentario.cliente_id == cli_id)
+    comentario = session.exec(query).all()
+    if not comentario:
         raise HTTPException(400, "Produto sem Comentários")
     
-    if cli_id:
-        comentarios = session.exec(
-            select(Comentario).where(Comentario.produto_id == pro_id, Comentario.cliente_id == cli_id)
-        ).first()
 
-    return comentarios
+    resultado = []
+    for c in comentario:
+        resultado.append({
+            **c.model_dump(),
+            "produto": c.produto.model_dump() if c.produto else None,
+            "cliente": c.cliente.model_dump() if c.cliente else None
+        })
+
+    return resultado
 
 # ------------------------------------------------------------------------------
 # POST

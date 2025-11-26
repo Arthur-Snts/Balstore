@@ -1,37 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './Filtros.css'
 
 const categorias = [
-  "Brinquedos",
-  "Cosméticos",
-  "Esporte",
-  "Roupas",
-  "Eletrônicos",
-  "Papelaria",
-  "Bolsas",
-  "Calçados",
-  "Cozinha",
-  "Móveis",
-  "Ferramentas",
-  "Limpeza",
-  "Livros",
+  "Brinquedos","Cosméticos","Esportes","Roupas","Eletrônicos",
+  "Papelaria","Bolsas","Calçados","Cozinha","Móveis",
+  "Ferramentas","Limpeza","Livros",
 ];
 
-function FiltrosDeProduto({ onChangeFiltros }) {
-  const [categoriasSelecionadas, setCategoriasSelecionadas] = useState([]);
-  const [precoMin, setPrecoMin] = useState("");
-  const [precoMax, setPrecoMax] = useState("");
+function FiltrosDeProduto({ onChangeFiltros, filtrosAtuais }) {
+  const [categoriasSelecionadas, setCategoriasSelecionadas] = useState(filtrosAtuais?.categorias || []);
+  const [precoMin, setPrecoMin] = useState(filtrosAtuais?.precoMin || "");
+  const [precoMax, setPrecoMax] = useState(filtrosAtuais?.precoMax || "");
+
+  // Sincroniza mudanças vindas do pai
+  useEffect(() => {
+    setCategoriasSelecionadas(filtrosAtuais?.categorias || []);
+    setPrecoMin(filtrosAtuais?.precoMin || "");
+    setPrecoMax(filtrosAtuais?.precoMax || "");
+  }, [filtrosAtuais]);
 
   const handleCategoriaChange = (e) => {
     const categoria = e.target.value;
-
     const novasCategorias = e.target.checked
       ? [...categoriasSelecionadas, categoria]
       : categoriasSelecionadas.filter((c) => c !== categoria);
 
     setCategoriasSelecionadas(novasCategorias);
 
-    // Atualiza os filtros no componente pai
     onChangeFiltros({
       categorias: novasCategorias,
       precoMin,
@@ -54,7 +49,6 @@ function FiltrosDeProduto({ onChangeFiltros }) {
         <h2 className="titulo-filtros">FILTROS</h2>
       </div>
 
-      {/* CORREÇÃO: forms -> form */}
       <form>
         <div className="secao-filtro">
           <h3 className="subtitulo-filtro">Por Categoria</h3>
@@ -65,6 +59,7 @@ function FiltrosDeProduto({ onChangeFiltros }) {
                   type="checkbox"
                   name="categoria"
                   value={categoria}
+                  checked={categoriasSelecionadas.includes(categoria)}
                   onChange={handleCategoriaChange}
                 />
                 {categoria}

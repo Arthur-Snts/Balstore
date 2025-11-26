@@ -1,48 +1,135 @@
-import "./EditarProduto.css"
-import "../Cores.css"
-import { useState } from "react";
+import "./EditarProduto.css";
+import "../Cores.css";
+import { useState, useEffect } from "react";
 
-export default function AdicionarProduto({categorias, props}){
+export default function EditarProduto({ categorias, produto, onSave }) {
 
-    const [fileName, setFileName] = useState(props.filename);
+    // Somente texto e números
+    const [produtoEditado, setProdutoEditado] = useState({
+        nome: "",
+        categoria: "",
+        preco: "",
+        estoque: "",
+        promocao: "",
+    });
 
+    // Imagem fica separada
+    const [imagemNova, setImagemNova] = useState(null);
+    const [fileName, setFileName] = useState("");
+
+    // Carrega dados iniciais
+    useEffect(() => {
+        if (produto) {
+            setProdutoEditado({
+                nome: produto.nome,
+                categoria: produto.categoria.id,
+                preco: produto.preco,
+                estoque: produto.estoque,
+                promocao: produto.promocao,
+            });
+        }
+    }, [produto]);
+
+    // Atualiza campos normais
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setProdutoEditado((prev) => ({ ...prev, [name]: value }));
+    };
+
+    // Atualiza imagem separada
     const handleFileChange = (e) => {
         if (e.target.files.length > 0) {
-        setFileName(e.target.files[0].name);
+            const file = e.target.files[0];
+            setImagemNova(file);
+            setFileName(file.name);
         }
     };
 
-    return(
+    const handleSave = () => {
+        onSave(
+            produto.id,
+            produtoEditado,
+            imagemNova
+        );
+    };
+
+    return (
         <div className="adicionando">
+            
             <div className="inserir_imagem">
                 <label className="custom-file-upload">
                     <input 
-                    type="file" 
-                    name="imagem_produto" 
-                    onChange={handleFileChange} 
+                        type="file"
+                        name="imagem"
+                        onChange={handleFileChange}
                     />
                     Escolher imagem
                 </label>
+
                 Arquivo Selecionado:
                 {fileName && <span className="file-name"> {fileName}</span>}
+
+                <p>Imagem Antiga:</p>
+                <img src={`http://localhost:8000${produto.imagem_path}`} alt="" />
             </div>
+
             <div className="form">
-                <input type="text" name="name" placeholder="Nome do Produto" className="nome-prod" value={props.nome}/>
-                <select name="categoria" className="categoria-prod">
-                    <option value={props.categoria.id}>{props.categoria}</option>
-                    {categorias.map((categoria)=>(
-                        <option value={categoria.id}>{categoria.nome}</option>
+                <input 
+                    type="text" 
+                    name="nome" 
+                    placeholder="Nome do Produto"
+                    className="nome-prod"
+                    value={produtoEditado.nome}
+                    onChange={handleChange}
+                />
+
+                <select
+                    name="categoria"
+                    className="categoria-prod"
+                    value={produtoEditado.categoria}
+                    onChange={handleChange}
+                >
+                    {categorias.map((categoria) => (
+                        <option key={categoria.id} value={categoria.id}>
+                            {categoria.nome}
+                        </option>
                     ))}
                 </select>
-                <label >
-                    <p>Descrição:</p>
-                    <textarea name="descricao"placeholder="Descrição do Produto">{props.descricao}</textarea>
-                </label>
-                <input type="text" name="preco" placeholder="Preço" className="preco-prod" value={props.preco}/>
-                <input type="text" name="estoque" placeholder="Estoque" className="estoque-prod" value={props.estoque}/>
-                <input type="text" name="desconto" placeholder="Desconto" className="desconto-prod" value={props.desconto}/>
-                <button className="cadastro-button">Editar</button>
+
+                <input 
+                    type="text"
+                    name="preco"
+                    placeholder="Preço"
+                    className="preco-prod"
+                    value={produtoEditado.preco}
+                    onChange={handleChange}
+                />
+
+                <input 
+                    type="text"
+                    name="estoque"
+                    placeholder="Estoque"
+                    className="estoque-prod"
+                    value={produtoEditado.estoque}
+                    onChange={handleChange}
+                />
+
+                <input 
+                    type="text"
+                    name="promocao"
+                    placeholder="Desconto"
+                    className="desconto-prod"
+                    value={produtoEditado.promocao}
+                    onChange={handleChange}
+                />
+
+                <button 
+                    className="cadastro-button"
+                    onClick={handleSave}
+                >
+                    Editar
+                </button>
             </div>
         </div>
-    )
+    );
 }
