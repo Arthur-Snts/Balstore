@@ -1,6 +1,9 @@
 import Header from "../components/Header_and_Footer/Header"
 import Footer from "../components/Header_and_Footer/Footer"
+import Loading from "./Loading"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import {verificar_token_cliente, verificar_token_loja} from "../statements"
 import { useParams } from 'react-router-dom';
 import CarrosselProdutos from "../components/Auxiliares/CarrosselProdutos";
 import { EstrelasAvaliacao, Favoritos } from '../components/Auxiliares/Icones'
@@ -10,7 +13,37 @@ import "./ProdutoInd.css"
 
 export default function ProdutoInd () {
 
-    const status = "client"
+    const navigate = useNavigate();
+    const [cliente, setCliente] = useState(null)
+    const [loja, setLoja] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    const [status, setStatus] = useState("")
+
+    useEffect(() => {
+
+        setLoading(true)
+        async function carregarUsuario() {
+            let token = localStorage.getItem("token");
+            let token_loja = localStorage.getItem("token_loja")
+            if (token){
+                const user_devolvido = await verificar_token_cliente(navigate);
+                
+                setCliente(user_devolvido);
+                setStatus("client")
+            }
+                else if (token_loja){
+                    navigate("/Login", {state: {
+            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente ou desconectado para acessar essa página` }
+        }})
+                }
+                else {
+                    setStatus("guest")
+                }
+        }
+        carregarUsuario();
+        setLoading(false)
+    }, []);
 
     const { id } = useParams();
 
@@ -31,6 +64,7 @@ export default function ProdutoInd () {
 
     return(
         <>
+        {loading == true ? <Loading/> : <>
             <Header status={status}></Header>
 
                 <div className="produto-mostrar">
@@ -73,7 +107,7 @@ export default function ProdutoInd () {
                 
                 Fazer um map em comentarios do produto
             <Footer></Footer>
-        </>
+        </>}</>
     )
     
 }

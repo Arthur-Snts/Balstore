@@ -4,6 +4,8 @@ from sqlmodel import Session, select
 from fastapi import HTTPException, Depends, APIRouter
 from typing import Annotated
 from datetime import datetime
+from sqlalchemy.orm import selectinload
+
 
 def get_session():
     with Session(engine) as session:
@@ -23,36 +25,39 @@ router = APIRouter(prefix="/compras", tags=["compras"])
 @router.get("/{cli_id}")
 def pega_compra(session: SessionDep, cli_id:int, data_pos:datetime= None, data_antes:datetime = None, com_id:int = None):
 
-    compras = session.exec(
-        select(Compra).where(Compra.cliente_id == cli_id)
-    ).all()
+    query = select(Compra).options(selectinload(Compra.cliente),
+                                    selectinload(Compra.produtos))
 
-    if not compras:
-        raise HTTPException(400, "Cliente sem histórico de Compras")
+    
+    query = query.where(Compra.cliente_id == cli_id)
     
     if data_antes:
-        compras = session.exec(select(Compra).where(Compra.data <= data_antes)).all()
-        if not compras:
+        query = query.where(Compra.data <= data_antes).all()
+        if not query:
             raise HTTPException(400, "Cliente sem histórico de Compras anterior a esse período")
     
     if data_antes and data_pos:
-        compras = session.exec(select(Compra).where(Compra.data >= data_pos, Compra.data <= data_antes)).all()
-        if not compras:
+        query = query.where(Compra.data >= data_pos, Compra.data <= data_antes).all()
+        if not query:
             raise HTTPException(400, "Cliente sem histórico de Compras nesse período")
     
     if com_id:
-        compra = session.exec(select(Compra).where(Compra.id == com_id)).first()
-        if not compra:
+        query = query.where(Compra.id == com_id).first()
+        if not query:
             raise HTTPException(400, "Compra não encontrada")
-        return compra
-    
-    produtos = []
 
-    for compra_produto in compras.produtos:
-        produto = session.exec(select(Produto).where(Produto.id == compra_produto.pro_id))
-        produtos.append(produto)
+    compra = session.exec(query).all()
 
-    return compras, produtos
+    resultado=[]
+    for c in compra:
+        resultado.append({
+            **c.model_dump(),
+            "cliente": c.cliente.model_dump() if c.cliente else None,
+            "produtos": [a.model_dump() for a in c.produtos] if c.produtos else []
+        })
+
+    return resultado
+
 
 # ------------------------------------------------------------------------------
 # POST
@@ -66,19 +71,21 @@ def cadastra_compra(session: SessionDep, cli_id:int, compra_cadastra:Compra, pro
 
     if compra_existente:
         raise HTTPException(400, "Compra já cadastrada nesse Cliente")
+    
+
+    for produto in produtos:
+        pro_id = session.exec(select(Produto).where(Produto.id == produto)).first()
+        if not pro_id:
+            raise HTTPException(400, "Um dos Produtos não existe")
+        
 
     session.add(compra_cadastra)
     session.commit()
     session.refresh(compra_cadastra)
 
-
     for produto in produtos:
-        pro_id = session.exec(select(Produto).where(Produto.id == produto)).first()
-        compra_produto = Compra_Produto(pro_id=pro_id.id, com_id=compra_cadastra.id)
+        compra_produto:Compra_Produto = Compra_Produto(pro_id=pro_id.id, com_id=compra_cadastra.id)
         session.add(compra_produto)
-        session.refresh(compra_produto)
-
-    session.commit()
 
     return {"mensagem": "Compra cadastrada com sucesso", "Compra": compra_cadastra}
 

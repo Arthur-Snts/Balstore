@@ -26,7 +26,7 @@
 .formulario{
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: 600px;
     gap: 30px;
 }
 .form h1{
@@ -35,18 +35,7 @@
     font-weight: bold;
 }
 
-.formulario input {
-  padding: 10px;
-  border: none;
-  border-bottom: 2px solid var(--azul-principal);
-  outline: none;
-  transition: border-color 0.3s;
-  font-size: 21px;
-}
 
-.formulario input:focus {
-  border-color: var(--azul-principal);
-}
 
 .button-entrar {
   padding: 10px;
@@ -84,52 +73,53 @@
 }
 
 .input-container {
-    /* Define o contexto para o posicionamento absoluto do label */
+    display: flex;
+    justify-content: center;
     position: relative;
-    padding-top: 20px; /* Cria espaço para o label flutuante */
-    width: 300px;
+    margin-bottom: 25px; 
 }
+
+
 
 .input-field {
     width: 100%;
-    padding: 10px 10px 5px 10px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
+    padding: 10px 10px 10px 10px; /* Padding interno */
+    border: 2px solid #ccc; /* Borda padrão */
+    border-radius: 8px; /* Borda mais arredondada como na imagem */
     font-size: 16px;
     outline: none;
     transition: all 0.3s ease;
-}
-
-/* Oculta o placeholder real para que não apareça */
-.input-field::placeholder {
-    color: transparent;
+    background-color: transparent !important;  /* Garante que o fundo não atrapalhe o label */ 
+    /* Remove o placeholder real para que o label atue como placeholder */
+    color: var(--cor-do-texto-input); /* Se tiver uma cor padrão para o texto */
 }
 
 .input-label {
     position: absolute;
-    top: 50%;
-    left: 10px;
+    top: 50%; /* Posição inicial no meio do input */
+    left: 3%; /* Um pouco para dentro da borda */
     transform: translateY(-50%);
-    color: #6c757d;
+    color: #6c757d; /* Cor do label quando está "placeholder" */
     transition: all 0.3s ease;
-    pointer-events: none; /* Garante que o clique passe para o input */
-    background-color: white; /* Para cobrir a borda superior, se necessário */
-    padding: 0 5px;
+    pointer-events: none; /* Não interfere com o clique no input */
+    background-color: white; /* **CRÍTICO:** Para "cortar" a borda */
+    padding: 0 5px; /* Padding horizontal para o corte visual */
+    font-size: 16px; /* Tamanho da fonte inicial */
 }
 
 /* ➡️ Efeito de Rótulo Flutuante (A Magia) ⬅️ */
 
-/* 1. Quando o input está focado (clicado/selecionado) */
 .input-field:focus + .input-label,
-/* 2. OU quando o input NÃO está mostrando o placeholder (ou seja, tem texto) */
 .input-field:not(:placeholder-shown) + .input-label {
     top: 0; /* Move para o topo */
+    left: %; /* Ajusta a posição horizontal para o "corte" */
     font-size: 12px; /* Diminui a fonte */
-    color: #4b0082; /* Mude a cor, como o roxo da imagem */
-    transform: translateY(-50%); /* Ajusta o posicionamento vertical no topo */
+    color: var(--azul-principal); /* Muda a cor para o foco */
+    transform: translateY(-50%); /* Ajusta verticalmente para ficar centralizado com o corte */
+    z-index: 1; /* Garante que o label fique sobre a borda */
 }
 
 /* Estilo do input quando focado */
 .input-field:focus {
-    border-color: #4b0082; /* Cor da borda em foco */
+    border-color: var(--azul-principal); /* Sua cor principal */
 }

@@ -4,16 +4,42 @@ import UserSidebar from "../components/Auxiliares/UserSidebar"
 import { useEffect, useState } from "react"
 import produtos_todos from "./produtos_teste"
 import ProdutoHorizontal from "../components/Produtos/ProdutoHorizontal"
+import Loading from "./Loading"
+import { useNavigate } from "react-router-dom"
+import {verificar_token_cliente, verificar_token_loja} from "../statements"
 import "./Compras.css"
 
 export default function Compras () {
 
-    const status = "client"
+    const navigate = useNavigate();
+    const [cliente, setCliente] = useState(null)
+    const [loja, setLoja] = useState(null)
+    const [loading, setLoading] = useState(false)
 
-    const user = {
-        "nome_user": "Joaquina",
-        "nmr_amigos": 13
-    }
+    const [status, setStatus] = useState("")
+
+    useEffect(() => {
+
+        setLoading(true)
+        async function carregarUsuario() {
+            let token = localStorage.getItem("token");
+            let token_loja = localStorage.getItem("token_loja")
+            if (token){
+                const user_devolvido = await verificar_token_cliente(navigate);
+                
+                setCliente(user_devolvido);
+                setStatus("client")
+            }
+                else{
+                    navigate("/Login", {state: {
+            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente para acessar essa página` }
+        }})
+                }
+                
+        }
+        carregarUsuario();
+        setLoading(false)
+    }, []);
 
     useEffect(() => {
         document.title = "Minhas Compras";
@@ -21,10 +47,12 @@ export default function Compras () {
 
     return(
         <>
-            <Header status={status} active={"Perfil"}/>
+            {loading == true ? <Loading/> :
+            <>
+            <Header status={status} active={"Perfil"} user_name={loja?.nome}/>
             <div className="compras_geral">
                 <aside className="user-side-config">
-                    <UserSidebar props={user} active={"Compras"}/>
+                    <UserSidebar props={cliente} active={"Minhas Compras"}/>
                 </aside>
                 <div className="right-compras">
                     <div className='search-product'>
@@ -48,7 +76,7 @@ export default function Compras () {
                     </div>
                 </div>
             </div>
-            <Footer />
+            <Footer /></>}
 
         </>
     )

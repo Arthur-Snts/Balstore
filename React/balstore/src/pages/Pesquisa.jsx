@@ -6,13 +6,16 @@ import produtos_todos from "./produtos_teste";
 import ProdutoCard from "../components/Produtos/ProdutoCard";
 import "./Pesquisa.css";
 
-import { useState, useEffect } from "react";
+import Loading from "./Loading"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import {verificar_token_cliente, verificar_token_loja} from "../statements"
 import { useSearchParams } from "react-router-dom";
 
 export default function Pesquisa() {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const busca_produto = searchParams.get("q") || "Busca";
+    const busca_produto = searchParams.get("q") || "";
     const precoMinFromURL = searchParams.get("min") || "";
     const precoMaxFromURL = searchParams.get("max") || "";
     const avaliacaoFromURL = searchParams.get("av") || null;
@@ -22,7 +25,37 @@ export default function Pesquisa() {
         document.title = "Busca por " + busca_produto;
     }, []);
 
-    const status = "guest";
+    const navigate = useNavigate();
+    const [cliente, setCliente] = useState(null)
+    const [loja, setLoja] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    const [status, setStatus] = useState("")
+
+    useEffect(() => {
+
+        setLoading(true)
+        async function carregarUsuario() {
+            let token = localStorage.getItem("token");
+            let token_loja = localStorage.getItem("token_loja")
+            if (token){
+                const user_devolvido = await verificar_token_cliente(navigate);
+                
+                setCliente(user_devolvido);
+                setStatus("client")
+            }
+                else if (token_loja){
+                    navigate("/Login", {state: {
+            alert: { tipo: "aviso", mensagem: `Você precisa estar conectado como Cliente ou desconectado para acessar essa página` }
+        }})
+                }
+                else {
+                    setStatus("guest")
+                }
+        }
+        carregarUsuario();
+        setLoading(false)
+    }, []);
 
     const [ativo, setAtivo] = useState(false);
     const [filtroAvaliacao, setFiltroAvaliacao] = useState(null);
@@ -82,6 +115,7 @@ export default function Pesquisa() {
 
     return (
         <>
+        {loading == true ? <Loading/> :<>
             <Header status={status} />
 
             <div className="pesquisa-content">
@@ -92,7 +126,7 @@ export default function Pesquisa() {
                 <section className="section-produtos-buscados">
                     <div className="result-pesquisa-line">
                         <div><LightBulb /></div>
-                        <p>Resultado para a pesquisa '{busca_produto}'</p>
+                        <p>Resultado para a pesquisa "{busca_produto}"</p>
                     </div>
 
                     <div className="classificar-por">
@@ -176,6 +210,6 @@ export default function Pesquisa() {
             </div>
 
             <Footer />
-        </>
+        </>}</>
     );
 }
