@@ -22,34 +22,26 @@ router = APIRouter(prefix="/compras", tags=["compras"])
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # ------------------------------------------------------------------------------
 # GET
-@router.get("/{cli_id}")
-def pega_compra(session: SessionDep, cli_id:int, data_pos:datetime= None, data_antes:datetime = None, com_id:int = None):
+@router.get("/")
+def pega_compra(session: SessionDep, cli_id:int=None, data_pos:datetime= None, data_antes:datetime = None, com_id:int = None):
 
     query = select(Compra).options(selectinload(Compra.cliente),
                                     selectinload(Compra.produtos))
 
-    
-    query = query.where(Compra.cliente_id == cli_id)
+    if cli_id:
+        query = query.where(Compra.cliente_id == cli_id)
     
     if data_antes:
-        query = query.where(Compra.data <= data_antes).all()
-        if not query:
-            raise HTTPException(400, "Cliente sem histórico de Compras anterior a esse período")
-    
+        query = query.where(Compra.data <= data_antes)
+        
     if data_antes and data_pos:
         query = query.where(Compra.data >= data_pos, Compra.data <= data_antes).all()
-        if not query:
-            raise HTTPException(400, "Cliente sem histórico de Compras nesse período")
         
     if data_pos:
         query = query.where(Compra.data >= data_pos).all()
-        if not query:
-            raise HTTPException(400, "Cliente sem histórico de Compras após a esse período")
     
     if com_id:
-        query = query.where(Compra.id == com_id).first()
-        if not query:
-            raise HTTPException(400, "Compra não encontrada")
+        query = query.where(Compra.id == com_id)
 
     compra = session.exec(query).all()
 
@@ -112,9 +104,16 @@ def cadastra_compra(session: SessionDep, cli_id:int, compra_cadastra:Compra, pro
 
 # ------------------------------------------------------------------------------
 # PUT
+from pydantic import BaseModel
+
+class CompraUpdate(BaseModel):
+    cod_rastreio: str | None = None
+    cod_pagamento: str | None = None
+    situacao: str | None = None
+    frete: float | None = None
 
 @router.put("/{com_id}")
-def atualiza_compra(session: SessionDep,com_id:int, cod_rastreio: str =None, cod_pagamento: str =None, situacao: str = None, frete: float = None):
+def atualiza_compra(session: SessionDep,com_id:int, dados: CompraUpdate):
     
     compra_atualizar = session.exec(
         select(Compra).where(Compra.id == com_id)
@@ -123,10 +122,10 @@ def atualiza_compra(session: SessionDep,com_id:int, cod_rastreio: str =None, cod
     if not compra_atualizar:
         raise HTTPException(404, "Compra não encontrada")
     
-    if cod_rastreio:
-        compra_atualizar.cod_rastreio = cod_rastreio
-    if situacao:
-        compra_atualizar.situacao = situacao 
+    if dados.cod_rastreio:
+        compra_atualizar.cod_rastreio = dados.cod_rastreio
+    if dados.situacao:
+        compra_atualizar.situacao = dados.situacao 
 
     session.add(compra_atualizar)
     session.commit()

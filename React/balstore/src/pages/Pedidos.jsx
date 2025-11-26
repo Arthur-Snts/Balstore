@@ -8,35 +8,44 @@ import produtos_todos from "./produtos_teste"
 import Loading from "./Loading"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import {verificar_token_cliente, verificar_token_loja} from "../statements"
+import {verificar_token_loja} from "../statements"
+import { useAlert } from "../components/Auxiliares/AlertContext";
 
 export default function Pedidos () {
 
     const navigate = useNavigate();
-    const [cliente, setCliente] = useState(null)
     const [loja, setLoja] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     const [status, setStatus] = useState("")
 
-    useEffect(() => {
+    const [produtos_pendentes, setProdutos_Pendentes] = useState([])
+    const [produtos_enviados, setProdutos_Enviados] = useState([])
+    const { showAlert } = useAlert();
+    
 
-        setLoading(true)
+    useEffect(() => {
         async function carregarUsuario() {
             let token_loja = localStorage.getItem("token_loja")
             if (token_loja){
                     const loja_devolvida = await verificar_token_loja(navigate);
-                
-                    setLoja(loja_devolvida);
-                    setStatus("lojist")
+                    
+                    
+                        setLoja(loja_devolvida);
+                        setStatus("lojist")
+                    
                 }
                 else {
-                    showAlert(`Você precisa estar conectado como Loja para acessar essa página` , "info");
+                    showAlert && showAlert(`Você precisa estar conectado como Loja para acessar essa página` , "info");
                     navigate("/Login")
                 }
+
+            
+
+            setLoading(false)
         }
         carregarUsuario();
-        setLoading(false)
+        
     }, []);
 
     const [atual, setAtual] = useState("Pendentes")
@@ -44,6 +53,33 @@ export default function Pedidos () {
     useEffect(() => {
         document.title = "Pedidos";
     }, []);
+
+    useEffect(() => {
+        if (!loja || !loja.produtos) return;
+        async function carregarcompras() {
+            var lista = []
+            ;(loja.produtos || []).forEach((produto) => {
+                (produto.compras || []).forEach((compra) => {
+                    if (compra.situacao == "Aguardando Pagamento") {
+                        lista.push(compra)
+                    }
+                })
+            })
+            setProdutos_Pendentes(lista)
+
+
+            var lista2 = []
+            ;(loja.produtos || []).forEach((produto) => {
+                (produto.compras || []).forEach((compra) => {
+                    if (compra.situacao == "Produto Enviado") {
+                        lista2.push(compra)
+                    }
+                })
+            })
+            setProdutos_Enviados(lista2)
+        }
+        carregarcompras()
+    }, [loja]);
 
     return(
         <>
@@ -54,7 +90,7 @@ export default function Pedidos () {
                     <button onClick={()=>setAtual("Pendentes")} className={atual =="Pendentes"? "active_pedidos" : ""}>Pendentes</button>
                     <button onClick={()=>setAtual("Enviados")} className={atual =="Enviados"? "active_pedidos" : ""}>Enviados</button>
                 </div>
-                {atual == "Pendentes"? <PedidosPendentes produtos={produtos_todos}/> : <PedidosEnviados produtos={produtos_todos}/>}
+                {atual == "Pendentes"? <PedidosPendentes compras={produtos_pendentes}/> : <PedidosEnviados compras={produtos_enviados}/>}
             <Footer />
 
         </>}</>

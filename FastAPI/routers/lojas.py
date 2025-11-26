@@ -160,15 +160,14 @@ def refresh_token_endpoint(request: RefreshRequest):
 def tracking_status(session: SessionDep,user=Depends(verificar_token)):
     user_id = user["sub"]
 
-    loja = session.exec(select(Loja).where(Loja.id ==user_id)).first()
+    loja = busca_loja(session, loj_id=user_id)
     if not loja:
         raise HTTPException(404, "loja não encontrado")
 
     # Remove a senha antes de retornar
-    loja_dict = loja.model_dump()
-    loja_dict.pop("senha", None)
+    loja.pop("senha", None)
 
-    return {"status": "autorizado", "user": loja_dict}
+    return {"status": "autorizado", "user": loja}
 
 
 # ------------------------------------------------------------------------------
@@ -205,7 +204,7 @@ def busca_loja(session: SessionDep,loj_email: str = None, loj_nome:str=None, loj
         # compras (pegar campos da compra, EXCLUINDO 'produtos' para evitar loop)
         compras = []
         for cp in (p.compras or []):
-            compras.append(cp.model_dump(include={"id", "valor", "cliente_id", "data", "cod_pagamento", "frete", "end_id"}))
+            compras.append(cp.model_dump(include={"id", "valor", "cliente_id", "data", "cod_pagamento", "frete", "end_id", "situacao"}))
         prod["compras"] = compras
 
         return prod

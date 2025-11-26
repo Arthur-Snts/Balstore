@@ -18,8 +18,13 @@ export default function ProdutoCard({produto, favoritoInicial, onclickFavoritar}
       })
 
   }
+  if (contador_avaliacoes == 0){
+    var avaliacao_media = 0
+  } else {
+    var avaliacao_media = avaliacao_total/contador_avaliacoes
+  }
   
-  var avaliacao_media = avaliacao_total/contador_avaliacoes
+  
 
   return (
     <>

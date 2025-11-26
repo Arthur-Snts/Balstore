@@ -133,7 +133,7 @@ export async function verificar_token_loja(navigate) {
             headers: { "Authorization": `Bearer ${token}` }
         });
         if (res.status === 401) {
-            const renov = await renovarAccessToken();
+            const renov = await renovarAccessTokenLojista();
 
             if (!renov.success) {
                 if (renov.reason === "no_refresh") {
@@ -645,7 +645,7 @@ export async function postCompra(cli_id, valor_compra, cod_pagamento, frete, lis
 
 export async function getCompras(cli_id) {
 
-        const res = await fetch(`http://localhost:8000/compras/${cli_id}`)
+        const res = await fetch(`http://localhost:8000/compras/?cli_id=${cli_id}`)
 
         if (!res.ok) {
         const data = await res.json();
@@ -818,6 +818,62 @@ export async function putLoja(loj_id, dados) {
 
     } catch (error) {
         console.error("Erro ao atualizar loja:", error);
+        return null;
+    }
+}
+
+// ======================================================================================
+// GET compra por id
+// ======================================================================================
+
+export async function getCompra(com_id) {
+
+        const res = await fetch(`http://localhost:8000/compras/?com_id=${com_id}`)
+
+        if (!res.ok) {
+        const data = await res.json();
+        return { success: false, status: data.detail };
+        }
+
+        const data = await res.json();
+        return { success: true, p: data };
+}
+
+// ======================================================================================
+// GET ENDEREÇO por id
+// ======================================================================================
+export async function getendereco_id(end_id) {
+    const res = await fetch(`http://localhost:8000/enderecos/?end_id=${end_id}`)
+
+            if (!res.ok) {
+                const data = await res.json();
+                return { success: false, status: data.detail };
+            }
+
+            const data = await res.json();
+            return { success: true, endereco: data };
+}
+
+// ======================================================================================
+// PUT COMPRA
+// ======================================================================================
+
+
+export async function putCompra(com_id, dados) {
+    try {
+        const response = await fetch(`http://localhost:8000/compras/${com_id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        });
+
+        const result = await response.json();
+        return result;
+
+    } catch (error) {
+        console.error("Erro ao atualizar compra:", error);
         return null;
     }
 }
