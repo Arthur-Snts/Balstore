@@ -178,18 +178,39 @@ export default function Cadastro (){
                             <a onClick={()=> setCadastro("Cliente")} className={cadastro === "Cliente"? "active": "link-form"}>Cliente</a> 
                             <a onClick={()=> setCadastro("Lojista")} className={cadastro === "Lojista"? "active": "link-form"}>Loja</a>
                         </div>
-                        <input type="text" placeholder="Nome..." className="input-cadastro-nome" onChange={(e)=>setNome(e.target.value)} value={nome} required/>
-                        <input type="email" placeholder="Email..." className="input-cadastro-email" onChange={(e)=>setEmail(e.target.value)} value={email} required/>
-                        {cadastro === "Cliente" && <input type="text" placeholder="CPF..." className="input-cadastro-CPF" value={cpf} onChange={(e)=> setCPF(e.target.value)} required/>}
-                        {cadastro === "Lojista" && <input type="text" placeholder="CNPJ..." className="input-cadastro-CNPJ" value={cnpj} onChange={(e)=> setCNPJ(e.target.value)} required/>}
-                        <input id="senha" type="password" placeholder="Senha..." className="input-cadastro-senha" onChange={(e)=>setSenha(e.target.value)} value={senha} required/>
-                        <input type="password" placeholder="Confirmar Senha..." className="input-cadastro-senha" onChange={(e)=>setConfirmarSenha(e.target.value)} value={confirmarsenha} required 
-                        onInput={(e) => {
-                            const senhaValue = document.getElementById("senha").value;
-                            e.target.setCustomValidity(
-                            e.target.value !== senhaValue ? "As senhas não combinam" : ""
-                                    );
-                                }}/>
+                        <div className="input-container">
+                            <input type="text" placeholder=" " id="nome" className="input-field" onChange={(e)=>setNome(e.target.value)} value={nome} required/>
+                            <label for="nome" className="input-label">Nome</label>
+                        </div>
+                        <div className="input-container">
+                            <input type="email" placeholder="" id="email" className="input-field" onChange={(e)=>setEmail(e.target.value)} value={email} required/>
+                            <label for="email" className="input-label">Email</label>
+                        </div>
+                        
+                        {cadastro === "Cliente" && 
+                        <div className="input-container">
+                            <input type="text" placeholder="" id="cpf" className="input-field" value={cpf} onChange={(e)=> setCPF(e.target.value)} required/>
+                            <label for="cpf" className="input-label">CPF</label>
+                        </div>}
+                        {cadastro === "Lojista" && 
+                        <div className="input-container">
+                            <input type="text" placeholder="" id="cnpj" className="input-field" value={cnpj} onChange={(e)=> setCNPJ(e.target.value)} required/>
+                            <label for="cnpj" className="input-label">CNPJ</label>
+                        </div>}
+                        <div className="input-container">
+                            <input id="senha" type="password" placeholder="" className="input-field" onChange={(e)=>setSenha(e.target.value)} value={senha} required/>
+                            <label for="senha" className="input-label">Senha</label>
+                        </div>
+                        <div className="input-container">
+                            <input type="password" placeholder="" id="senhaC" className="input-field" onChange={(e)=>setConfirmarSenha(e.target.value)} value={confirmarsenha} required 
+                            onInput={(e) => {
+                                const senhaValue = document.getElementById("senha").value;
+                                e.target.setCustomValidity(
+                                e.target.value !== senhaValue ? "As senhas não combinam" : ""
+                                        );
+                                    }}/>
+                            <label for="senhaC" className="input-label">Confirmar Senha</label>
+                        </div>
                     </div>
                     <button className="button-entrar" onClick={handleSubmmit} type="submit">Cadastrar</button>
                 </form>
