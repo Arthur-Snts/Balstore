@@ -4,7 +4,6 @@ import b2 from "../../assets/Banners/b2.png"
 import b3 from "../../assets/Banners/b3.png"
 import b4 from "../../assets/Banners/b4.png"
 import b5 from "../../assets/Banners/b5.png"
-import "./Carrossel.css"
 
 const Carousel = () => {
   

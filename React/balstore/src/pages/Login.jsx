@@ -100,15 +100,15 @@ export default function Login (){
                 <div className="foto">
                     {login === "cliente" ? <img src={login_cliente}/> : <img src={login_lojista}/>}
                 </div>
-                <div className="form">
+                <div className="form-login">
                     <h1>Login</h1>
-                    <div className="formulario">
+                    <div className="formulario-login">
                         <div className="links-login">
                             <a onClick={()=> setLogin("cliente")} className={login === "cliente"? "active": "link-form"}>Cliente</a> 
                             <a onClick={()=> setLogin("lojista")} className={login === "lojista"? "active": "link-form"}>Loja</a>
                         </div>
-                        {login == "cliente" ? <><input type="email" placeholder="Email..." className="input-email" onChange={(e) => setCliEmail(e.target.value)} value={cli_email}/> <input type="password" placeholder="Senha..." className="input-senha" onChange={(e) => setCliSenha(e.target.value)} value={cli_senha}/></> :
-                        <><input type="email" placeholder="Email..." className="input-email" onChange={(e) => setLojEmail(e.target.value)} value={loj_email}/> <input type="password" placeholder="Senha..." className="input-senha" onChange={(e) => setLojSenha(e.target.value)} value={loj_senha}/></>}
+                        {login == "cliente" ? <><input type="email" placeholder="Email..." className="input-login-email" onChange={(e) => setCliEmail(e.target.value)} value={cli_email}/> <input type="password" placeholder="Senha..." className="input-senha" onChange={(e) => setCliSenha(e.target.value)} value={cli_senha}/></> :
+                        <><input type="email" placeholder="Email..." className="input-login-email" onChange={(e) => setLojEmail(e.target.value)} value={loj_email}/> <input type="password" placeholder="Senha..." className="input-senha" onChange={(e) => setLojSenha(e.target.value)} value={loj_senha}/></>}
                     </div>
                     <button className="button-entrar" onClick={login == "cliente"? handleLogincliente : handleLoginloja}>Entrar</button>
                 </div>

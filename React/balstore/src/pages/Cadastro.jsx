@@ -171,19 +171,19 @@ export default function Cadastro (){
             <>
             <Header status={status} active={"Sign up"}></Header>
             <div className="cadastro-div">
-                <form className="form">
+                <div className="form-cadastro">
                     <h1>Cadastro</h1>
-                    <div className="formulario">
+                    <div className="formulario-cadastro">
                         <div className="links-cadastro">
                             <a onClick={()=> setCadastro("Cliente")} className={cadastro === "Cliente"? "active": "link-form"}>Cliente</a> 
                             <a onClick={()=> setCadastro("Lojista")} className={cadastro === "Lojista"? "active": "link-form"}>Loja</a>
                         </div>
-                        <input type="text" placeholder="Nome..." className="input-nome" onChange={(e)=>setNome(e.target.value)} value={nome} required/>
-                        <input type="email" placeholder="Email..." className="input-email" onChange={(e)=>setEmail(e.target.value)} value={email} required/>
-                        {cadastro === "Cliente" && <input type="text" placeholder="CPF..." className="input-CPF" value={cpf} onChange={(e)=> setCPF(e.target.value)} required/>}
-                        {cadastro === "Lojista" && <input type="text" placeholder="CNPJ..." className="input-CNPJ" value={cnpj} onChange={(e)=> setCNPJ(e.target.value)} required/>}
-                        <input id="senha" type="password" placeholder="Senha..." className="input-senha" onChange={(e)=>setSenha(e.target.value)} value={senha} required/>
-                        <input type="password" placeholder="Confirmar Senha..." className="input-senha" onChange={(e)=>setConfirmarSenha(e.target.value)} value={confirmarsenha} required 
+                        <input type="text" placeholder="Nome..." className="input-cadastro-nome" onChange={(e)=>setNome(e.target.value)} value={nome} required/>
+                        <input type="email" placeholder="Email..." className="input-cadastro-email" onChange={(e)=>setEmail(e.target.value)} value={email} required/>
+                        {cadastro === "Cliente" && <input type="text" placeholder="CPF..." className="input-cadastro-CPF" value={cpf} onChange={(e)=> setCPF(e.target.value)} required/>}
+                        {cadastro === "Lojista" && <input type="text" placeholder="CNPJ..." className="input-cadastro-CNPJ" value={cnpj} onChange={(e)=> setCNPJ(e.target.value)} required/>}
+                        <input id="senha" type="password" placeholder="Senha..." className="input-cadastro-senha" onChange={(e)=>setSenha(e.target.value)} value={senha} required/>
+                        <input type="password" placeholder="Confirmar Senha..." className="input-cadastro-senha" onChange={(e)=>setConfirmarSenha(e.target.value)} value={confirmarsenha} required 
                         onInput={(e) => {
                             const senhaValue = document.getElementById("senha").value;
                             e.target.setCustomValidity(
