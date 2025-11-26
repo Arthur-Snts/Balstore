@@ -50,11 +50,11 @@ export default function PedidosPendentes({produtos}){
                 <div className="dados">
                     <div className="cliente">
                         <h6>Cliente:</h6>
-                        <p>{produtoSelecionado?.cliente}</p>
+                        <p>{produtoSelecionado?.cliente}aaaaaaaaaa</p>
                     </div>
                     <div className="endereco">
                         <h6>Endereco:</h6>
-                        <p>{produtoSelecionado?.endereco}</p>
+                        <p>{produtoSelecionado?.endereco}bbbbbbbb</p>
                     </div>
                 </div>
                 <div className="hr"></div>

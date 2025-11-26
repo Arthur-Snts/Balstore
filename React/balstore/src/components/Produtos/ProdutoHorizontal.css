@@ -24,7 +24,7 @@
     flex-direction: column;
     width: 75%;
     height: 250px;
-    gap:90px
+    gap:50px
 }
 
 .produto .conteudo_produto .texto {
@@ -42,6 +42,7 @@
 
 .nome-produto-horizontal {
     max-width: 550px;
+    width: 80%;
     font-size: 20px;
     overflow: hidden;
     text-overflow: ellipsis;

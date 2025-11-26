@@ -12,7 +12,6 @@ export default function ProdutoHorizontal({props, children}) {
                 </div>
                 <div className="conteudo_produto">
                     <div className="texto">
-                        
                         <div className="center_produto">
                             {props.nome && <p className="nome-produto-horizontal">{props.nome}</p>}
                             {props.estoque && <p className="estoque">Estoque: {props.estoque} exemplares</p>}
