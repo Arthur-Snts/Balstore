@@ -22,6 +22,7 @@ from routers.lojas import router as lojas
 from routers.notificacoes import router as notificacoes
 from routers.produtos import router as produtos
 from services.payment import router as payment
+from services.document import router as document
 from fastapi.staticfiles import StaticFiles
 
 
@@ -39,6 +40,7 @@ app.include_router(lojas)
 app.include_router(notificacoes)
 app.include_router(produtos)
 app.include_router(payment)
+app.include_router(document)
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
