@@ -213,7 +213,7 @@ export default function Cadastro (){
                         </div>
                     </div>
                     <button className="button-entrar" onClick={handleSubmmit} type="submit">Cadastrar</button>
-                </form>
+                </div>
 
                 <div className="foto-cadastro">
                     {cadastro === "Cliente" ? <img src={login_cliente}/> : <img src={login_lojista}/>}
