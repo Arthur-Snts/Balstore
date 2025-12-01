@@ -23,7 +23,7 @@ router = APIRouter(prefix="/enderecos", tags=["enderecos"])
 @router.get("/")
 def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None, end_id:int = None):
 
-    query = select(Endereco).options(selectinload(Endereco.notificacoes))
+    query = select(Endereco).options()
 
     if cli_id:
         query = query.where(Endereco.cli_id == cli_id)
@@ -59,8 +59,7 @@ def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None, end_id
     for c in enderecos:
         
         resultado.append({
-        **c.model_dump(),
-        "notificacoes": [n.model_dump() for n in c.notificacoes] if c.notificacoes else []})
+        **c.model_dump()})
         
     if end_id:
         return resultado[0]

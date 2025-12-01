@@ -26,7 +26,6 @@ class Loja(SQLModel, table=True):
     descricao: Optional[str] = Field(default=None, index=False)
 
     produtos: list["Produto"] = Relationship(back_populates="loja")
-    notificacoes: list["Notificacao"] = Relationship(back_populates="loja")
 
 
 class Produto(SQLModel, table=True):
@@ -46,7 +45,6 @@ class Produto(SQLModel, table=True):
     comentarios: list["Comentario"] = Relationship(back_populates="produto")
     favoritos: list["Favorito"] = Relationship(back_populates="produto")
     carrinhos: list["Carrinho"] = Relationship(back_populates="produto")
-    notificacoes: list["Notificacao"] = Relationship(back_populates="produto")
     compras: list["Compra"] = Relationship(
         back_populates="produtos",
         link_model=Compra_Produto
@@ -76,7 +74,6 @@ class Cliente(SQLModel, table=True):
     enderecos: list["Endereco"] = Relationship(back_populates="cliente")
     presentes: list["Carrinho"] = Relationship(back_populates="cliente_presenteado",sa_relationship_kwargs={"foreign_keys": "[Carrinho.presente_para]"})
     compras: list["Compra"] = Relationship(back_populates="cliente")
-    notificacoes: list["Notificacao"] = Relationship(back_populates="cliente")
 
 class Endereco (SQLModel, table=True):
     id:Optional[int] = Field(default=None, primary_key=True)
@@ -88,11 +85,8 @@ class Endereco (SQLModel, table=True):
     CEP: str = Field(index=False)
     cliente: "Cliente" = Relationship(back_populates="enderecos")
     cli_id: Optional[int] = Field(foreign_key="cliente.id")
-    loj_id: Optional[int] = Field(foreign_key="loja.id")
 
     compras: list["Compra"] = Relationship(back_populates="endereco")
-
-    notificacoes: list["Notificacao"] = Relationship(back_populates="endereco")
 
 
 class Favorito(SQLModel, table=True):
@@ -164,19 +158,3 @@ class Compra(SQLModel, table=True):
         back_populates="compras",
         link_model=Compra_Produto
     )
-
-
-class Notificacao(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    end_id: Optional[int] = Field(foreign_key="endereco.id")
-    loj_id: int = Field(foreign_key="loja.id")
-    conteudo: Optional[str] = Field(sa_column=Column(String(500)))
-    status: str = Field(index=False)
-    cliente_id: int = Field(foreign_key="cliente.id")
-    produto_id: int = Field(foreign_key="produto.id")
-    
-
-    cliente: "Cliente" = Relationship(back_populates="notificacoes")
-    produto: "Produto" = Relationship(back_populates="notificacoes")
-    endereco: "Endereco" = Relationship(back_populates="notificacoes")
-    loja: "Loja" = Relationship(back_populates="notificacoes")

@@ -3,13 +3,23 @@ from models import SQLModel
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from seeds import run_seeds
 
-urlmysql = "mysql+pymysql://root:@localhost/balstore_db"
+urlsqlite = "sqlite:///balstore_db.sqlite3"
 
-engine = create_engine(urlmysql)
+engine = create_engine(
+    urlsqlite,
+    connect_args={"check_same_thread": False}
+)
+
+# Ativa FK
+from sqlalchemy import text
+with engine.connect() as conn:
+    conn.execute(text("PRAGMA foreign_keys=ON"))
 
 def get_create_db():
     SQLModel.metadata.create_all(engine)
+    run_seeds(engine)
 
 @asynccontextmanager 
 async def lifespan(app:FastAPI): 

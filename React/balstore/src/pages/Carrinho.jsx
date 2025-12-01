@@ -5,7 +5,7 @@ import { useRef, useEffect, useState } from "react"
 import Loading from "./Loading"
 import { useNavigate } from "react-router-dom"
 import { useAlert } from "../components/Auxiliares/AlertContext"
-import {deletecarrinho, getcarrinho, getprodutos, putcarrinho, verificar_token_cliente, postcarrinho, postCompra} from "../statements"
+import {deletecarrinho, getcarrinho, getprodutos, putcarrinho, verificar_token_cliente, postcarrinho, postCompra, putproduto} from "../statements"
 import Presente from "../assets/Presente.png"
 import { MdDelete } from "react-icons/md";
 import "./Carrinho.css"
@@ -195,6 +195,8 @@ export default function Carrinho () {
                 if (carrinho.qnt_produto > carrinho.produto.estoque){
                     showAlert(`Um dos seus Produtos no seu Carrinho não está disponível na quantidade desejada`, "info");
                 }
+
+                putproduto(carrinho.produto_id, {"estoque": carrinho.produto.estoque-carrinho.qnt_produto})
 
                 list_produtos.push(carrinho.produto.id)
                 
