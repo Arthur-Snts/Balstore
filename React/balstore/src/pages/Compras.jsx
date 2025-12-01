@@ -136,7 +136,7 @@ export default function Compras () {
                                 <div key={index}>
                                     <ProdutoHorizontal props={produto}>
                                         <div className="buttons-children">
-                                            {compra.situacao == "Pagamento Pendente" ? 
+                                            {compra.situacao == "Aguardando Pagamento" ? 
                                             <button onClick={()=> (copiarCodigo(compra.id, compra.cod_pagamento))}>{copiados[compra.id] ? "Copiado!" : "Copiar o Código de Pagamento"}</button>:
                                             <button  onClick={()=> abrirModal(produto)}>Avaliar Produto</button>}
 

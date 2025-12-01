@@ -102,21 +102,21 @@ export default function ProdutoInd () {
     }, [produtos, produto]);
 
     const settings = {
-            dots: false,
-            infinite: true,
-            speed: 500,
-            nextArrow: <NextArrow />,
-            prevArrow: <PrevArrow />,
-            centerMode: produtosFiltrados.length > 6,
-            slidesToShow: produtosFiltrados.length >= 6 ? 6 : produtosFiltrados.length,
-            slidesToScroll: 3,
-            centerPadding: "40px", 
-            responsive: [
-            { breakpoint: 1650, settings: { slidesToShow: 5 } },
-            { breakpoint: 1300, settings: { slidesToShow: 2 } },
-            { breakpoint: 480, settings: { slidesToShow: 1 } },
-            ],
-        };
+        dots: false,
+        infinite: true,
+        speed: 500,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
+        centerMode: true,
+        slidesToShow: 6,
+        slidesToScroll: 3,
+        centerPadding: "40px", 
+        responsive: [
+        { breakpoint: 1650, settings: { slidesToShow: 5 } },
+        { breakpoint: 1300, settings: { slidesToShow: 2 } },
+        { breakpoint: 480, settings: { slidesToShow: 1 } },
+        ],
+    };
     
         function NextArrow(props) {
             const { onClick } = props;

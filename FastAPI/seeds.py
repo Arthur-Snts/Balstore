@@ -2,6 +2,7 @@ import os
 from sqlmodel import Session, select
 from datetime import datetime
 from PIL import Image  # Para gerar imagens reais
+from werkzeug.security import generate_password_hash
 from models import (
     Categoria, Loja, Cliente, Endereco, Produto,
     Comentario, Favorito, Carrinho, Amigo
@@ -54,16 +55,16 @@ def run_seeds(engine):
         # 2. LOJAS
         # ==============================
         lojas_info = [
-            ("Loja Alpha", "alpha@loja.com", "12345678900011", "senha123", "Brinquedos e infantis."),
-            ("MegaTech", "contato@megatech.com", "55443322110088", "senha123", "Eletrônicos variados."),
-            ("SportLife", "vendas@sportlife.com", "99001122334455", "senha123", "Artigos esportivos.")
+            ("Loja Alpha", "alpha@gmail.com", "12345678900011", "senha123", "Brinquedos e infantis."),
+            ("MegaTech", "contato@gmail.com", "55443322110088", "senha1234", "Eletrônicos variados."),
+            ("SportLife", "vendas@gmail.com", "99001122334455", "senha12345", "Artigos esportivos.")
         ]
 
         lojas = []
         for nome, email, cnpj, senha, desc in lojas_info:
             loja = session.exec(select(Loja).where(Loja.cnpj == cnpj)).first()
             if not loja:
-                loja = Loja(nome=nome, email=email, cnpj=cnpj, senha=senha, descricao=desc)
+                loja = Loja(nome=nome, email=email, cnpj=cnpj, senha=generate_password_hash(senha), descricao=desc)
                 session.add(loja)
             lojas.append(loja)
 
@@ -73,18 +74,18 @@ def run_seeds(engine):
         # 3. CLIENTES
         # ==============================
         clientes_info = [
-            ("Ana Silva", "11111111111", "ana@email.com", "1234"),
-            ("Carlos Souza", "22222222222", "carlos@email.com", "1234"),
-            ("Mariana Lima", "33333333333", "mariana@email.com", "1234"),
-            ("Pedro Alves", "44444444444", "pedro@email.com", "1234"),
-            ("Julia Costa", "55555555555", "julia@email.com", "1234"),
+            ("Ana Silva", "70274233401", "ana@gmail.com", "1234"),
+            ("Carlos Souza", "02814114417", "carlos@gmail.com", "12345"),
+            ("Mariana Lima", "79103480020", "mariana@gmail.com", "123456"),
+            ("Pedro Alves", "44441246013", "pedro@gmail.com", "1234567"),
+            ("Julia Costa", "01769271074", "julia@gmail.com", "12345678"),
         ]
 
         clientes = []
         for nome, cpf, email, senha in clientes_info:
             cli = session.exec(select(Cliente).where(Cliente.cpf == cpf)).first()
             if not cli:
-                cli = Cliente(nome=nome, cpf=cpf, email=email, senha=senha)
+                cli = Cliente(nome=nome, cpf=cpf, email=email, senha=generate_password_hash(senha))
                 session.add(cli)
             clientes.append(cli)
 
