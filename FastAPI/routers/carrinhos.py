@@ -1,7 +1,7 @@
 from models import  Carrinho, Produto
 from config import engine
 from sqlmodel import Session, select
-from fastapi import HTTPException, Depends, APIRouter
+from fastapi import HTTPException, Depends, APIRouter, Request
 from typing import Annotated
 from sqlalchemy.orm import selectinload
 
@@ -37,21 +37,25 @@ def pega_carrinho(session: SessionDep, cli_id:int):
         resultado.append({
             **c.model_dump(),
             "produto": c.produto.model_dump() if c.produto else None,
-            "cliente": c.cliente.model_dump() if c.cliente else None
+            "cliente": c.cliente.model_dump() if c.cliente else None,
+            "cliente_presenteado": c.cliente_presenteado.model_dump() if c.cliente_presenteado else None
         })
 
     return resultado
 # ------------------------------------------------------------------------------
 # POST
 @router.post("/")
-def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep):
-
+def coloca_carrinho(carrinho_cadastra:Carrinho, session:SessionDep, request: Request):
     carrinho_existente = session.exec(
         select(Carrinho).where(Carrinho.produto_id == carrinho_cadastra.produto_id, Carrinho.cliente_id == carrinho_cadastra.cliente_id)
     ).first()
 
     if carrinho_existente:
-        raise HTTPException(400, "Produto já está em seu carrinho")
+        carrinho_existente_para_amigo = session.exec(
+            select(Carrinho).where(Carrinho.produto_id == carrinho_cadastra.produto_id, Carrinho.cliente_id == carrinho_cadastra.cliente_id, Carrinho.presente_para == carrinho_cadastra.presente_para )
+        ).first()
+        if carrinho_existente_para_amigo:
+            raise HTTPException(400, "Produto já está em seu carrinho")
 
     session.add(carrinho_cadastra)
     session.commit()

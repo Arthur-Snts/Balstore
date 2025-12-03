@@ -43,7 +43,7 @@ def pega_favoritos(session: SessionDep, cli_id:int, fav_id:int = None):
             "produto": c.produto.model_dump() if c.produto else None,
             "cliente": c.cliente.model_dump() if c.cliente else None,
             })
-
+        
     return resultado
 
 # ------------------------------------------------------------------------------

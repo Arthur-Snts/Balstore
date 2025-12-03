@@ -4,3 +4,12 @@
   box-sizing: border-box;
   box-shadow: none;
 }
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+}
+
+h1{
+  font-family: 'Literata', serif;
+  font-size: 30px;
+}

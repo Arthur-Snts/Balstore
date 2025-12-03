@@ -9,16 +9,26 @@ import { useState } from 'react';
 
 export default function Header({status, user_name, active}) {
 
-    
+    const navigate = useNavigate()
+
+    const handleLogout = () => {
+        localStorage.removeItem("token_loja");
+        localStorage.removeItem("refresh_token_loja");
+        localStorage.removeItem("token");
+        localStorage.removeItem("refresh_token");
+        navigate("/")
+    }
 
     return (
         <header className='header'>
             {status === "guest" && <Header_Guest active={active} />}
             {status === "client" && <Header_Client active={active}/>}
-            {status === "lojist" && <Header_Lojist user_name={user_name} active={active}/>}
+            {status === "lojist" && <Header_Lojist user_name={user_name} active={active} handleLogout={handleLogout}/>}
         </header>
     )
 };
+
+
 
 function Header_Client ({active}){
 
@@ -45,7 +55,7 @@ function Header_Client ({active}){
                     <li><Link to="/Sobre" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</Link></li>
                 </ul>
             </nav>
-            <img src={Carrinho} alt="BALSTORE_carrinho" className='BAL-carrinho'/>
+            <Link to="/Carrinho"><img src={Carrinho} alt="BALSTORE_carrinho" className='BAL-carrinho'/></Link>
         </>)
 }
 
@@ -61,7 +71,7 @@ function Header_Guest({active}) {
     return(
     <>
         <Link to="/">
-            <img src={Bal_Logo} alt="BALSTORE_icon" className='BAL-icon' to="/"/>
+            <img src={Bal_Logo} alt="BALSTORE_icon" className='BAL-icon'/>
         </Link>
         <form className='search' onSubmit={handleNavigate}>
             <i className="fa fa-search"></i>
@@ -75,15 +85,15 @@ function Header_Guest({active}) {
                 <li><Link to="/Sobre" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</Link></li>
             </ul>
         </nav>
-        <img src={Carrinho} alt="BALSTORE_carrinho" className='BAL-carrinho'/>
+        <Link to="/Carrinho"><img src={Carrinho} alt="BALSTORE_carrinho" className='BAL-carrinho'/></Link>
     </>)
 }
 
-function Header_Lojist ({user_name, active}) {
+function Header_Lojist ({user_name, active, handleLogout}) {
     return(
     <>
-        <Link to="/">
-            <img src={Bal_Logo} alt="BALSTORE_icon" className='BAL-icon' to="/"/>
+        <Link to="/Loja/Produtos">
+            <img src={Bal_Logo} alt="BALSTORE_icon" className='BAL-icon'/>
         </Link>
         <nav>
             <ul className='nav-list'>
@@ -91,7 +101,7 @@ function Header_Lojist ({user_name, active}) {
                 <li><Link to="/Loja/Pedidos" className={active=== "Pedidos"? 'nav-link active-nav-button': 'nav-link'}>Pedidos</Link></li>
                 <li><Link to="/Loja/Editar" className={active=== "Configurações"? 'nav-link active-nav-button': 'nav-link'}>Configurações</Link></li>
                 <li><Link to="/Sobre" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</Link></li>
-                <li><a className={active=== "Logout"? 'nav-link active-nav-button': 'nav-link'}>Logout</a></li>
+                <li><a className={active=== "Logout"? 'nav-link active-nav-button': 'nav-link'} onClick={handleLogout}>Logout</a></li>
             </ul>
         </nav>
         <div className="perfil">

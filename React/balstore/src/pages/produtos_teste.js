@@ -2,7 +2,7 @@ const produtos = [
   // Brinquedos
   {
     id: 1,
-    nome: "Carrinho de Controle Remoto",
+    nome: "Carrinho de Controle Remoto aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     preco: 129.90,
     avaliacao: 4.7,
     imagem_path: "https://picsum.photos/300/300?random=1",

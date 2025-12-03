@@ -7,13 +7,20 @@
 
 .sobrenos p {
     width: 50%;
-    font-size: 20px;
+    font-size: 18px;
     text-align: justify;
 }
 .sobrenos h1 {
+    display: flex;
+    flex-wrap: wrap;
     margin-bottom: 30px;
+    width: 45%;
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
+    text-align: center;
+}
+.sobrenos .bem-vindo{
+    text-align: center;
 }
 
 
