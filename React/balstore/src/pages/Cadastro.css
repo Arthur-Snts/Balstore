@@ -42,6 +42,7 @@
   outline: none;
   transition: border-color 0.3s;
   font-size: 21px;
+  width: 100%;
 }
 
 .formulario-cadastro input:focus {
