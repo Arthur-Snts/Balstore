@@ -2,11 +2,10 @@ import Header from "../components/Header_and_Footer/Header"
 import Footer from "../components/Header_and_Footer/Footer"
 import ProdutoHorizontal from "../components/Produtos/ProdutoHorizontal"
 import { useRef, useEffect, useState } from "react"
-import produtos from "./produtos_teste"
 import Loading from "./Loading"
 import { useNavigate } from "react-router-dom"
 import { useAlert } from "../components/Auxiliares/AlertContext"
-import {deletecarrinho, getcarrinho, getprodutos, putcarrinho, verificar_token_cliente, postcarrinho, postCompra} from "../statements"
+import {deletecarrinho, getcarrinho, getprodutos, putcarrinho, verificar_token_cliente, postcarrinho, postCompra, putproduto} from "../statements"
 import Presente from "../assets/Presente.png"
 import { MdDelete } from "react-icons/md";
 import "./Carrinho.css"
@@ -162,6 +161,23 @@ export default function Carrinho () {
         }
         }, [needFocusSelect]);
 
+    
+
+    async function gerarPix( cli_cpf, cli_nome, cli_email, valor) {
+        const res = await fetch("http://localhost:8000/pix/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+            cli_nome:cli_nome,
+            cli_email:cli_email,
+            cli_cpf:cli_cpf,
+            amount: valor })
+        });
+        const data = await res.json();
+        return data.qr_codes[0].links[0].href;
+    }
+
+
     async function handlecomprar() {
         if (produtos_carrinho.length === 0){
             showAlert(`Coloque itens no Carrinho Primeiro`, "info");
@@ -172,12 +188,15 @@ export default function Carrinho () {
             setNeedFocusSelect(true);
             return;
         }
+            setLoading(true)
             var list_produtos = []
             produtos_carrinho.map((carrinho) => {
                 
                 if (carrinho.qnt_produto > carrinho.produto.estoque){
                     showAlert(`Um dos seus Produtos no seu Carrinho não está disponível na quantidade desejada`, "info");
                 }
+
+                putproduto(carrinho.produto_id, {"estoque": carrinho.produto.estoque-carrinho.qnt_produto})
 
                 list_produtos.push(carrinho.produto.id)
                 
@@ -187,10 +206,13 @@ export default function Carrinho () {
                 );
             })
 
+            const qrcode =  await gerarPix(cliente.cpf, cliente.nome, cliente.email, valor_total)
+
             // Gerar código de pagamento(terceiro paramento) e calcular frete (quarto parametro)
             
-            const resultado_compra = await postCompra(cliente.id, valor_total, "asfbasfoasfsavgb asfpsapjf", 10, list_produtos, endereco)
+            const resultado_compra = await postCompra(cliente.id, valor_total, qrcode, 10, list_produtos, endereco)
                 if (resultado_compra?.success){
+                    setLoading(false)
                     showAlert(`Compra Feita com Sucesso`, "success");
                     navigate("/Pagamento", {
                         state: {
@@ -198,6 +220,7 @@ export default function Carrinho () {
                         }
                     })
                 } else {
+                    setLoading(false)
                     showAlert(`Compra não Feita, Falhou`, "erro");
                 }
         }

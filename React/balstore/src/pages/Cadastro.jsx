@@ -134,6 +134,19 @@ export default function Cadastro (){
             setLoading(false);
             return;
         }
+        if (cadastro == "Cliente") {
+            if (!(await validateCPF(cpf))) {
+                showAlert("CPF Inválido, Verifique-o", "erro");
+                setLoading(false);
+                return;
+            }
+        } else {
+            if (!(await validateCNPJ(cnpj))) {
+                showAlert("CNPJ Inválido, Verifique-o", "erro");
+                setLoading(false);
+                return;
+            }
+        }
 
         // Executa cadastro correto
         const resultado = cadastro === "Cliente"
@@ -155,12 +168,34 @@ export default function Cadastro (){
             }
 
         } else {
-            showAlert(`Falha no cadastro: ${resultado.detail} `, "success");
+            showAlert(`Falha no cadastro: ${resultado.status} `, "erro");
             navigate("/Cadastro")
         }
 
         setLoading(false);
     };
+
+    async function validateCPF(cpf) {
+        const res = await fetch(`http://localhost:8000/document/?cpf=${cpf}`);
+        const data = await res.json();
+
+        // Se o backend retornar erro de resposta
+        if (!res.ok) return false;
+
+        return data.valid === true;
+    }
+
+    async function validateCNPJ(cnpj) {
+        const res = await fetch(`http://localhost:8000/document/?cnpj=${cnpj}`);
+        const data = await res.json();
+
+        // Se o backend retornar erro de resposta
+        if (!res.ok) return false;
+
+        return data.valid === true;
+    }
+
+
     
 
     
@@ -213,7 +248,7 @@ export default function Cadastro (){
                         </div>
                     </div>
                     <button className="button-entrar" onClick={handleSubmmit} type="submit">Cadastrar</button>
-                </form>
+                </div>
 
                 <div className="foto-cadastro">
                     {cadastro === "Cliente" ? <img src={login_cliente}/> : <img src={login_lojista}/>}

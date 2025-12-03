@@ -108,7 +108,7 @@ export default function Login (){
                             <a onClick={()=> setLogin("lojista")} className={login === "lojista"? "active": "link-form"}>Loja</a>
                         </div>
                         {login == "cliente" ? 
-                         <> #True
+                         <>
                          <div className="input-container">
                             <input type="email" id="email" placeholder="" className="input-field" onChange={(e) => setCliEmail(e.target.value)} value={cli_email}/>
                             <label for="email" className="input-label">Email</label>
@@ -118,8 +118,8 @@ export default function Login (){
                             <label for="senha" className="input-label">Senha</label>
                         </div>
                              </>
-                            : #Divisão
-                        <> #False
+                            : 
+                        <> 
                             <div className="input-container">
                                <input type="email" id="email" placeholder="" className="input-field" onChange={(e) => setLojEmail(e.target.value)} value={loj_email}/> 
                                 <label for="email" className="input-label">Email</label>
