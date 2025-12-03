@@ -30,7 +30,7 @@ export default function ProdutoCard({produto, favoritoInicial, onclickFavoritar}
     <>
       <div className='card' >
           <div className='top-card-section'onClick={()=>navigate(`/Produto/${produto.id}`)}>
-            <img src={`http://localhost:8000${produto.imagem_path}`} alt={produto.alt}  className='produto-img'/>
+            <img src={`http://localhost:8080${produto.imagem_path}`} alt={produto.alt}  className='produto-img'/>
           </div>
           <div className='mid-card-section' onClick={()=>navigate(`/Produto/${produto.id}`)}>
             <p className='nome-texto'>{produto.nome}</p>

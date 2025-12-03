@@ -164,7 +164,7 @@ export default function Carrinho () {
     
 
     async function gerarPix( cli_cpf, cli_nome, cli_email, valor) {
-        const res = await fetch("http://localhost:8000/pix/", {
+        const res = await fetch("http://localhost:8080/pix/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

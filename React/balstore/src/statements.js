@@ -8,7 +8,7 @@ export async function renovarAccessToken() {
 
     for (let attempt = 1; attempt <= 2; attempt++) {
         try {
-            const res = await fetch("http://localhost:8000/clientes/refresh", {
+            const res = await fetch("http://localhost:8080/clientes/refresh", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -42,7 +42,7 @@ export async function verificar_token_cliente(navigate) {
     }
 
     try {
-        let res = await fetch("http://localhost:8000/clientes/tracking/status", {
+        let res = await fetch("http://localhost:8080/clientes/tracking/status", {
             headers: { "Authorization": `Bearer ${token}` }
         });
         if (res.status === 401) {
@@ -65,7 +65,7 @@ export async function verificar_token_cliente(navigate) {
                 navigate("/login");
                 return null;
             }
-            res = await fetch("http://localhost:8000/clientes/tracking/status", {
+            res = await fetch("http://localhost:8080/clientes/tracking/status", {
                 headers: { "Authorization": `Bearer ${renov.token}` }
             });
         }
@@ -95,7 +95,7 @@ export async function renovarAccessTokenLojista() {
 
     for (let attempt = 1; attempt <= 2; attempt++) {
         try {
-            const res = await fetch("http://localhost:8000/lojas/refresh", {
+            const res = await fetch("http://localhost:8080/lojas/refresh", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -129,7 +129,7 @@ export async function verificar_token_loja(navigate) {
     }
 
     try {
-        let res = await fetch("http://localhost:8000/lojas/tracking/status", {
+        let res = await fetch("http://localhost:8080/lojas/tracking/status", {
             headers: { "Authorization": `Bearer ${token}` }
         });
         if (res.status === 401) {
@@ -152,7 +152,7 @@ export async function verificar_token_loja(navigate) {
                 navigate("/login");
                 return null;
             }
-            res = await fetch("http://localhost:8000/lojas/tracking/status", {
+            res = await fetch("http://localhost:8080/lojas/tracking/status", {
                 headers: { "Authorization": `Bearer ${renov.token}` }
             });
         }
@@ -174,7 +174,7 @@ export async function verificar_token_loja(navigate) {
 // POST CLIENTE
 // ======================================================================================
 export async function postcliente(cliente) {
-    const res = await fetch("http://localhost:8000/clientes", {
+    const res = await fetch("http://localhost:8080/clientes", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -195,7 +195,7 @@ export async function postcliente(cliente) {
 // POST LOJA
 // ======================================================================================
 export async function postloja(loja) {
-    const res = await fetch("http://localhost:8000/lojas", {
+    const res = await fetch("http://localhost:8080/lojas", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -215,7 +215,7 @@ export async function postloja(loja) {
 // GET CATEGORIAS
 // ======================================================================================
 export async function getcategorias() {
-    const res = await fetch("http://localhost:8000/categorias");
+    const res = await fetch("http://localhost:8080/categorias");
 
             if (!res.ok) {
                 const data = await res.json();
@@ -229,7 +229,7 @@ export async function getcategorias() {
 // GET PRODUTOS
 // ======================================================================================
 export async function getprodutos() {
-    const res = await fetch("http://localhost:8000/produtos");
+    const res = await fetch("http://localhost:8080/produtos");
 
             if (!res.ok) {
                 const data = await res.json();
@@ -243,7 +243,7 @@ export async function getprodutos() {
 // GET PRODUTO
 // ======================================================================================
 export async function getproduto(pro_id) {
-    const res = await fetch(`http://localhost:8000/produtos?pro_id=${pro_id}`)
+    const res = await fetch(`http://localhost:8080/produtos?pro_id=${pro_id}`)
 
             if (!res.ok) {
                 const data = await res.json();
@@ -257,7 +257,7 @@ export async function getproduto(pro_id) {
 // POST FAVORITO
 // ======================================================================================
 export async function postfavorito(produto_id, cliente_id) {
-    const res = await fetch("http://localhost:8000/favoritos", {
+    const res = await fetch("http://localhost:8080/favoritos", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -277,7 +277,7 @@ export async function postfavorito(produto_id, cliente_id) {
 // DELETE FAVORITO
 // ======================================================================================
 export async function deletefavorito(fav_id) {
-    const res = await fetch(`http://localhost:8000/favoritos/${fav_id}`, {
+    const res = await fetch(`http://localhost:8080/favoritos/${fav_id}`, {
                 method: "DELETE",
                 
             });
@@ -301,7 +301,7 @@ export async function postcarrinho(produto_id, cliente_id, presente_para, qnt_pr
         body.qnt_produto = qnt_produto;
     }
     
-    const res = await fetch(`http://localhost:8000/carrinhos`, {
+    const res = await fetch(`http://localhost:8080/carrinhos`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -322,7 +322,7 @@ export async function postcarrinho(produto_id, cliente_id, presente_para, qnt_pr
 // GET Carrinho
 // ======================================================================================
 export async function getcarrinho(cli_id) {
-    const res = await fetch(`http://localhost:8000/carrinhos/${cli_id}`)
+    const res = await fetch(`http://localhost:8080/carrinhos/${cli_id}`)
 
             if (!res.ok) {
                 try {
@@ -341,7 +341,7 @@ export async function getcarrinho(cli_id) {
 // PUT Carrinho (atualiza quantidade)
 // ======================================================================================
 export async function putcarrinho(car_id, qnt_nova) {
-    const res = await fetch(`http://localhost:8000/carrinhos/${car_id}?qnt_nova=${qnt_nova}`, {
+    const res = await fetch(`http://localhost:8080/carrinhos/${car_id}?qnt_nova=${qnt_nova}`, {
         method: "PUT",
     });
 
@@ -362,7 +362,7 @@ export async function putcarrinho(car_id, qnt_nova) {
 // DELETE Carrinho
 // ======================================================================================
 export async function deletecarrinho(car_id) {
-    const res = await fetch(`http://localhost:8000/carrinhos/${car_id}`, {
+    const res = await fetch(`http://localhost:8080/carrinhos/${car_id}`, {
         method: "DELETE",
     });
 
@@ -394,7 +394,7 @@ export async function putcliente(cliente, cli_senha_nova) {
         body.cli_senha_antiga = cliente.senha;
         body.cli_senha = cli_senha_nova
     }
-    const res = await fetch(`http://localhost:8000/clientes/${cliente.id}`, {
+    const res = await fetch(`http://localhost:8080/clientes/${cliente.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -415,7 +415,7 @@ export async function putcliente(cliente, cli_senha_nova) {
 // POST ENDEREÇO
 // ======================================================================================
 export async function postendereco(endereco) {
-    const res = await fetch("http://localhost:8000/enderecos", {
+    const res = await fetch("http://localhost:8080/enderecos", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -436,7 +436,7 @@ export async function postendereco(endereco) {
 // GET ENDEREÇO
 // ======================================================================================
 export async function getendereco(cli_id) {
-    const res = await fetch(`http://localhost:8000/enderecos/?cli_id=${cli_id}`)
+    const res = await fetch(`http://localhost:8080/enderecos/?cli_id=${cli_id}`)
 
             if (!res.ok) {
                 const data = await res.json();
@@ -451,7 +451,7 @@ export async function getendereco(cli_id) {
 // PUT ENDEREÇO
 // ======================================================================================
 export async function putendereco(endereco) {
-    const res = await fetch(`http://localhost:8000/enderecos/${endereco.id}`, {
+    const res = await fetch(`http://localhost:8080/enderecos/${endereco.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -472,7 +472,7 @@ export async function putendereco(endereco) {
 // DELETE ENDEREÇO
 // ======================================================================================
 export async function deleteendereco(endereco_id) {
-    const res = await fetch(`http://localhost:8000/enderecos/${endereco_id}`, {
+    const res = await fetch(`http://localhost:8080/enderecos/${endereco_id}`, {
                 method: "DELETE",
                 
             });
@@ -486,7 +486,7 @@ export async function deleteendereco(endereco_id) {
 // GET Clientes
 // ======================================================================================
 export async function getclientes(nome) {
-    const res = await fetch(`http://localhost:8000/clientes?cli_nome=${nome}`)
+    const res = await fetch(`http://localhost:8080/clientes?cli_nome=${nome}`)
 
             if (!res.ok) {
                 const data = await res.json();
@@ -500,7 +500,7 @@ export async function getclientes(nome) {
 // GET Favoritos de um Cliente
 // ======================================================================================
 export async function getfavoritos(cli_id) {
-    const res = await fetch(`http://localhost:8000/favoritos/${cli_id}`)
+    const res = await fetch(`http://localhost:8080/favoritos/${cli_id}`)
 
             if (!res.ok) {
                 const data = await res.json();
@@ -515,7 +515,7 @@ export async function getfavoritos(cli_id) {
 // GET Cliente por ID
 // ======================================================================================
 export async function getcliente(cli_id) {
-    const res = await fetch(`http://localhost:8000/clientes?cli_id=${cli_id}`)
+    const res = await fetch(`http://localhost:8080/clientes?cli_id=${cli_id}`)
 
             if (!res.ok) {
                 const data = await res.json();
@@ -534,7 +534,7 @@ export async function getcliente(cli_id) {
 // GET Amigos
 // ======================================================================================
 export async function getamigos(cli_id) {
-    const res = await fetch(`http://localhost:8000/amigos/${cli_id}`)
+    const res = await fetch(`http://localhost:8080/amigos/${cli_id}`)
 
             if (!res.ok) {
                 const data = await res.json();
@@ -549,7 +549,7 @@ export async function getamigos(cli_id) {
 // POST Amigo
 // ======================================================================================
 export async function postamigo(amigo_id, cliente_id) {
-    const res = await fetch("http://localhost:8000/amigos", {
+    const res = await fetch("http://localhost:8080/amigos", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -576,7 +576,7 @@ export async function postamigo(amigo_id, cliente_id) {
 // PUT Amigo (atualiza status)
 // ======================================================================================
 export async function putamigo(cli_id, status_novo, amigo_id) {
-    const res = await fetch(`http://localhost:8000/amigos/${cli_id}?status_novo=${encodeURIComponent(status_novo)}&amigo_id=${amigo_id}`, {
+    const res = await fetch(`http://localhost:8080/amigos/${cli_id}?status_novo=${encodeURIComponent(status_novo)}&amigo_id=${amigo_id}`, {
         method: "PUT",
     });
 
@@ -593,7 +593,7 @@ export async function putamigo(cli_id, status_novo, amigo_id) {
 // DELETE Amigo
 // ======================================================================================
 export async function deleteamigo(cli_id, amigo_exclui) {
-    const res = await fetch(`http://localhost:8000/amigos/${cli_id}?amigo_exclui=${amigo_exclui}`, {
+    const res = await fetch(`http://localhost:8080/amigos/${cli_id}?amigo_exclui=${amigo_exclui}`, {
         method: "DELETE",
     });
 
@@ -618,7 +618,7 @@ export async function postCompra(cli_id, valor_compra, cod_pagamento, frete, lis
             cliente_id: cli_id,
             end_id: end_id
         }
-        const res = await fetch(`http://localhost:8000/compras/${cli_id}`, {
+        const res = await fetch(`http://localhost:8080/compras/${cli_id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -645,7 +645,7 @@ export async function postCompra(cli_id, valor_compra, cod_pagamento, frete, lis
 
 export async function getCompras(cli_id) {
 
-        const res = await fetch(`http://localhost:8000/compras/?cli_id=${cli_id}`)
+        const res = await fetch(`http://localhost:8080/compras/?cli_id=${cli_id}`)
 
         if (!res.ok) {
         const data = await res.json();
@@ -668,7 +668,7 @@ export async function postComentario(conteudo, avaliacao, cli_id, pro_id) {
             cliente_id:cli_id,
             produto_id: pro_id
         }
-        const res = await fetch(`http://localhost:8000/comentarios`, {
+        const res = await fetch(`http://localhost:8080/comentarios`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -689,7 +689,7 @@ export async function postComentario(conteudo, avaliacao, cli_id, pro_id) {
 // GET Loja
 // ======================================================================================
 export async function getloja(loj_id) {
-    const res = await fetch(`http://localhost:8000/lojas/?loj_id=${loj_id}`)
+    const res = await fetch(`http://localhost:8080/lojas/?loj_id=${loj_id}`)
 
             if (!res.ok) {
                 try {
@@ -709,7 +709,7 @@ export async function getloja(loj_id) {
 // GET PRODUTOS por Loja
 // ======================================================================================
 export async function getprodutos_loja(loj_id) {
-    const res = await fetch(`http://localhost:8000/produtos/?loj_id=${loj_id}`);
+    const res = await fetch(`http://localhost:8080/produtos/?loj_id=${loj_id}`);
 
             if (!res.ok) {
                 const data = await res.json();
@@ -740,7 +740,7 @@ export async function putproduto(pro_id,produtoEditado, pro_imagem) {
         formData.append("pro_imagem", pro_imagem);
     }
 
-    const res = await fetch(`http://localhost:8000/produtos/${pro_id}`, {
+    const res = await fetch(`http://localhost:8080/produtos/${pro_id}`, {
         method: "PUT",
         body: formData,
     });
@@ -758,7 +758,7 @@ export async function putproduto(pro_id,produtoEditado, pro_imagem) {
 // DELETE Produto
 // ======================================================================================
 export async function deleteproduto(pro_id) {
-    const res = await fetch(`http://localhost:8000/produtos/${pro_id}`, {
+    const res = await fetch(`http://localhost:8080/produtos/${pro_id}`, {
         method: "DELETE",
     });
 
@@ -789,7 +789,7 @@ export async function postproduto(produto_novo, pro_imagem, loja_id) {
         formData.append("pro_imagem", pro_imagem);
     }
 
-    const res = await fetch(`http://localhost:8000/produtos/`, {
+    const res = await fetch(`http://localhost:8080/produtos/`, {
         method: "POST",
         body: formData,
     });
@@ -808,7 +808,7 @@ export async function postproduto(produto_novo, pro_imagem, loja_id) {
 // ======================================================================================
 export async function putLoja(loj_id, dados) {
     try {
-        const response = await fetch(`http://localhost:8000/lojas/${loj_id}`, {
+        const response = await fetch(`http://localhost:8080/lojas/${loj_id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -831,7 +831,7 @@ export async function putLoja(loj_id, dados) {
 
 export async function getCompra(com_id) {
 
-        const res = await fetch(`http://localhost:8000/compras/?com_id=${com_id}`)
+        const res = await fetch(`http://localhost:8080/compras/?com_id=${com_id}`)
 
         if (!res.ok) {
         const data = await res.json();
@@ -846,7 +846,7 @@ export async function getCompra(com_id) {
 // GET ENDEREÇO por id
 // ======================================================================================
 export async function getendereco_id(end_id) {
-    const res = await fetch(`http://localhost:8000/enderecos/?end_id=${end_id}`)
+    const res = await fetch(`http://localhost:8080/enderecos/?end_id=${end_id}`)
 
             if (!res.ok) {
                 const data = await res.json();
@@ -864,7 +864,7 @@ export async function getendereco_id(end_id) {
 
 export async function putCompra(com_id, dados) {
     try {
-        const response = await fetch(`http://localhost:8000/compras/${com_id}`, {
+        const response = await fetch(`http://localhost:8080/compras/${com_id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
