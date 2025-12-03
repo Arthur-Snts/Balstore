@@ -63,6 +63,7 @@ export default function ProdutoInd () {
 
     useEffect(()=>{
         async function carregarproduto() {
+            
             if (cliente) {
                 
                 const resultado_produto = await getproduto(id)
@@ -101,21 +102,21 @@ export default function ProdutoInd () {
     }, [produtos, produto]);
 
     const settings = {
-            dots: false,
-            infinite: true,
-            speed: 500,
-            nextArrow: <NextArrow />,
-            prevArrow: <PrevArrow />,
-            centerMode: produtosFiltrados.length > 6,
-            slidesToShow: produtosFiltrados.length >= 6 ? 6 : produtosFiltrados.length,
-            slidesToScroll: 3,
-            centerPadding: "40px", 
-            responsive: [
-            { breakpoint: 1650, settings: { slidesToShow: 5 } },
-            { breakpoint: 1300, settings: { slidesToShow: 2 } },
-            { breakpoint: 480, settings: { slidesToShow: 1 } },
-            ],
-        };
+        dots: false,
+        infinite: true,
+        speed: 500,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
+        centerMode: true,
+        slidesToShow: 6,
+        slidesToScroll: 3,
+        centerPadding: "40px", 
+        responsive: [
+        { breakpoint: 1650, settings: { slidesToShow: 5 } },
+        { breakpoint: 1300, settings: { slidesToShow: 2 } },
+        { breakpoint: 480, settings: { slidesToShow: 1 } },
+        ],
+    };
     
         function NextArrow(props) {
             const { onClick } = props;
@@ -200,6 +201,21 @@ export default function ProdutoInd () {
             }
         }
 
+    async function gerarPix( cli_cpf, cli_nome, cli_email, valor) {
+        const res = await fetch("http://localhost:8000/pix/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+            cli_nome:cli_nome,
+            cli_email:cli_email,
+            cli_cpf:cli_cpf,
+            amount: valor })
+        });
+        const data = await res.json();
+        
+        return data.qr_codes[0].links[0].href;
+    }
+
     async function handlecomprar() {
             if (!endereco){
                 showAlert(`Selecione um Endereço Primeiro`, "info");
@@ -216,10 +232,11 @@ export default function ProdutoInd () {
 
                 const valor_total = count*produto.preco
                 
-    
+                
+                const qrcode =  await gerarPix(cliente.cpf, cliente.nome, cliente.email, valor_total)
                 // Gerar código de pagamento(terceiro paramento) e calcular frete (quarto parametro)
                 
-                const resultado_compra = await postCompra(cliente.id, valor_total, "asfbasfoasfsavgb asfpsapjf", 10, list_produtos, endereco)
+                const resultado_compra = await postCompra(cliente.id, valor_total, qrcode, 10, list_produtos, endereco)
                     if (resultado_compra?.success){
                         showAlert(`Compra Feita com Sucesso`, "success");
                         navigate("/Pagamento", {
@@ -258,7 +275,9 @@ export default function ProdutoInd () {
             setAvaliacao_total(soma / produto.comentarios.length);
         }, [produto]);
 
-    if (!produto) return <Loading />;
+    if (loading) return <Loading />;
+    if (!produto) return <Loading/>
+
 
     return(
         <>
@@ -271,7 +290,7 @@ export default function ProdutoInd () {
                         <div className="titulo-produto">
                             <h3>{produto.nome}</h3>
                             <EstrelasAvaliacao rating = {avaliacao_total} />
-                            <p>{produto.estoque} Vendidos</p>
+                            <p>{produto.estoque} Em Estoque</p>
                             <p onClick={handleLoja}>{produto.loja.nome}</p>
                         </div>
                         <div className="frete">

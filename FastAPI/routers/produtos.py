@@ -39,7 +39,6 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
                                     selectinload(Produto.comentarios),
                                     selectinload(Produto.favoritos),
                                     selectinload(Produto.carrinhos),
-                                    selectinload(Produto.notificacoes),
                                     selectinload(Produto.compras),
                                     selectinload(Produto.loja))
 
@@ -79,7 +78,6 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
             "comentarios": [come.model_dump() for come in c.comentarios] if c.comentarios else [],
             "favoritos": [f.model_dump() for f in c.favoritos] if c.favoritos else [],
             "carrinhos": [car.model_dump() for car in c.carrinhos] if c.carrinhos else [],
-            "notificacoes": [n.model_dump() for n in c.notificacoes] if c.notificacoes else [],
             "compras": [comp.model_dump() for comp in c.compras] if c.compras else [],
             "loja": c.loja.model_dump() if c.loja else None,
         })

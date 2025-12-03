@@ -131,8 +131,8 @@ export default function MainPage() {
         speed: 500,
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
-        centerMode: produtosFiltrados.length > 6,
-        slidesToShow: produtosFiltrados.length >= 6 ? 6 : produtosFiltrados.length,
+        centerMode: true,
+        slidesToShow: 6,
         slidesToScroll: 3,
         centerPadding: "40px", 
         responsive: [

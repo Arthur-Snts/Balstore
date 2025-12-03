@@ -19,9 +19,14 @@ from routers.compras import router as compras
 from routers.enderecos import router as enderecos
 from routers.favoritos import router as favoritos
 from routers.lojas import router as lojas
-from routers.notificacoes import router as notificacoes
 from routers.produtos import router as produtos
+from services.payment import router as payment
+from services.document import router as document
 from fastapi.staticfiles import StaticFiles
+
+
+
+    
 
 
 
@@ -35,8 +40,9 @@ app.include_router(compras)
 app.include_router(enderecos)
 app.include_router(favoritos)
 app.include_router(lojas)
-app.include_router(notificacoes)
 app.include_router(produtos)
+app.include_router(payment)
+app.include_router(document)
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 

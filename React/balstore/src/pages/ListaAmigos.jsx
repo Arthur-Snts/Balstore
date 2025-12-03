@@ -272,7 +272,7 @@ export default function ListaAmigos () {
                             <div className="amigo-card" key={perfil.id}>
                                 <img src={user_icon} alt="User Icon" className="amigo-img" />
                                 <p className="amigo-nome">{perfil.nome}</p>
-                                <p className="instagram">Futuro lugar de Instagram</p>
+                                
                                 <button className="btn-solicitacao" onClick={()=>(handleAdicionarAmigo(perfil.id))}>
                                     Enviar Solicitação
                                 </button>
@@ -299,7 +299,6 @@ export default function ListaAmigos () {
 
                                 <div className="solicitacao-info">
                                     <p className="solicitacao-nome">{sol.cliente_de.nome}</p>
-                                    <p className="instagram">Futuro Lugar do Instagram</p>
                                 </div>
 
                                 <div className="solicitacao-buttons">

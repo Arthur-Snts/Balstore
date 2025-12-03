@@ -69,6 +69,8 @@ export default function Pagamento () {
         second: "2-digit"
         });
 
+    
+
     return(
         <>
         {loading == true ? <Loading/> :
@@ -91,7 +93,7 @@ export default function Pagamento () {
                             </div>
                         </div>
                         <div className="central_pagamento">
-                            <img src="" alt="" />
+                            <img src={compra.cod_pagamento} alt="" />
                             <p>{compra.cod_pagamento}</p>
                             <button onClick={copiarCodigo}>{copiado ? "Copiado!" : "Copiar o Código"}</button>
                         </div>

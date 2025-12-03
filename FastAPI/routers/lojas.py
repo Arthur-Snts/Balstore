@@ -176,7 +176,7 @@ def tracking_status(session: SessionDep,user=Depends(verificar_token)):
 def busca_loja(session: SessionDep,loj_email: str = None, loj_nome:str=None, loj_cnpj:str = None, loj_id:int = None):
 
 
-    query = select(Loja).options(selectinload(Loja.produtos).selectinload(Produto.compras),selectinload(Loja.produtos).selectinload(Produto.comentarios), selectinload(Loja.notificacoes))
+    query = select(Loja).options(selectinload(Loja.produtos).selectinload(Produto.compras),selectinload(Loja.produtos).selectinload(Produto.comentarios))
 
     if loj_email:
         query = query.where(Loja.email == loj_email)
@@ -216,7 +216,6 @@ def busca_loja(session: SessionDep,loj_email: str = None, loj_nome:str=None, loj
         resultado.append({
             **c.model_dump(),
             "produtos": [serialize_produto(p) for p in (c.produtos or [])],
-            "notificacoes": [n.model_dump() for n in c.notificacoes] if c.notificacoes else [],
         })
 
     if len(resultado) == 1:
