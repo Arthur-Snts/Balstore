@@ -114,7 +114,7 @@ export default function MinhaLoja() {
                     </div>
                     <div className="informacoes">
                         <p>{loja.produtos.length} Produtos Diferentes</p>
-                        <p><EstrelasAvaliacao rating={avaliacao_media}></EstrelasAvaliacao> </p>
+                        <EstrelasAvaliacao rating={avaliacao_media}></EstrelasAvaliacao>
                         <p>{compras_totais} Produtos Vendidos: </p>
                     </div>
                 </div>

@@ -36,18 +36,6 @@
     font-weight: bold;
 }
 
-.formulario-cadastro input {
-  border: none;
-  border-bottom: 2px solid var(--azul-principal) !important;
-  outline: none;
-  transition: border-color 0.3s;
-  font-size: 21px;
-  width: 100%;
-}
-
-.formulario-cadastro input:focus {
-  border-color: var(--azul-escuro) !important;
-}
 
 .button-entrar {
   padding: 10px;

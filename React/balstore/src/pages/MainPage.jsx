@@ -29,6 +29,8 @@ export default function MainPage() {
     const [loja, setLoja] = useState(null)
     const [loading, setLoading] = useState(true)
 
+    const [categoriaAleatoria, setCategoriaAleatoria] = useState(null);
+
     const [status, setStatus] = useState("")
     const [categorias, setCategorias] = useState([]);
     const [produtos, setProdutos] = useState([]);
@@ -54,15 +56,22 @@ export default function MainPage() {
 
 
                 const resultado_categorias = await getcategorias();
+
                 if (resultado_categorias?.success === true) {
                     setCategorias(resultado_categorias.categorias);
-                    
+
+                    // já define uma vez e não muda mais
+                    setCategoriaAleatoria(
+                        resultado_categorias.categorias[
+                            Math.floor(Math.random() * resultado_categorias.categorias.length)
+                        ]
+                    );
                 }
-                
-                const resultado_produtos = await getprodutos();
-                if (resultado_produtos?.success === true) {
-                    setProdutos(resultado_produtos.produtos)
-                }
+
+                const resultado_produtos = await getprodutos(); 
+                if (resultado_produtos?.success === true) { 
+                    setProdutos(resultado_produtos.produtos) }
+
 
                 setLoading(false)
         }
@@ -109,17 +118,16 @@ export default function MainPage() {
                 }
             ]
         }));
+        
         }
         
         
     }
     
 
-    const categoria = categorias[Math.floor(Math.random() * categorias.length)];
-
-    const produtosFiltrados = produtos.filter(
-        (produto) => produto.categoria.nome === categoria.nome
-    );
+    const produtosFiltrados = categoriaAleatoria
+    ? produtos.filter(produto => produto.categoria.nome === categoriaAleatoria.nome)
+    : [];
 
     const { showAlert } = useAlert();
 
@@ -169,7 +177,7 @@ export default function MainPage() {
                 <Categorias/>
                 <div className="categoria-recomendada">
                     <div className="titulo-categoria-recomendada">
-                        <p>Categoria {categoria?.nome}</p>
+                        <p>Categoria {categoriaAleatoria?.nome}</p>
                     </div>
                     <Slider {...settings} className="carrossel-produtos">
                         {produtosFiltrados.map((produto, index)=> (

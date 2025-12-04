@@ -27,15 +27,18 @@ export const EstrelasAvaliacao = ({ rating }) => {
 };
 
 export function Favoritos({ favorito, setFavorito, onclick}){
-  function toggleFavorito() {
+  function toggleFavorito(e) {
+    e.preventDefault();
+    e.stopPropagation();
     setFavorito(!favorito);
     if (onclick) onclick();
   }
   
   return (
     <button 
+      type="button"
       className="btn-favorito" 
-      onClick={toggleFavorito}
+      onClick={(e)=>(toggleFavorito(e))}
       aria-label="Adicionar aos favoritos"
     >
       {favorito ? (

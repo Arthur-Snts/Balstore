@@ -63,17 +63,15 @@ export default function ProdutoInd () {
 
     useEffect(()=>{
         async function carregarproduto() {
+                
+            const resultado_produto = await getproduto(id)
             
-            if (cliente) {
-                
-                const resultado_produto = await getproduto(id)
-                
-                if (resultado_produto?.success){
-                    setProduto(resultado_produto.produto)
-                } else {
-                    showAlert("Falha ao Carregar Produto", "erro")
-                }
+            if (resultado_produto?.success){
+                setProduto(resultado_produto.produto)
+            } else {
+                showAlert("Falha ao Carregar Produto", "erro")
             }
+            
             const resultado_produtos = await getprodutos()
                 
                 if (resultado_produtos?.success){
@@ -181,6 +179,10 @@ export default function ProdutoInd () {
 
     async function handlecarrinho(id) {
             const qnt = count || 1;  // 🔥 pega quantidade individual
+            if (!cliente){
+                showAlert(`Conecte-se antes de colocar no carrinho`, "info");
+                return;
+            }
     
             const carrinhoExistente = cliente.carrinhos.find(f => f.produto_id === id);
             if (carrinhoExistente){
@@ -217,6 +219,10 @@ export default function ProdutoInd () {
     }
 
     async function handlecomprar() {
+            if (!cliente){
+                showAlert(`Conecte-se antes de Comprar`, "info");
+                return;
+            }
             if (!endereco){
                 showAlert(`Selecione um Endereço Primeiro`, "info");
                 return;
