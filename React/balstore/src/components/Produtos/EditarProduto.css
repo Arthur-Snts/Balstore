@@ -50,7 +50,6 @@
     color: black;
     padding-left: 10px;
     outline: none;
-    width: 300px;
 }
 
 .form input::placeholder{

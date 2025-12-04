@@ -1,0 +1,55 @@
+.alert {
+  position: fixed;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 60%;
+  z-index: 9999;
+
+  padding: 14px 18px;
+  border-left: 6px solid var(--preto);
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* TIPOS */
+.alert-sucesso {
+  background-color: var(--azul-principal);
+  color: var(--branco);
+  border-color: var(--amarelo);
+}
+
+.alert-erro {
+  background-color: var(--vermelho);
+  color: var(--branco);
+  border-color: var(--preto);
+}
+
+.alert-aviso {
+  background-color: var(--amarelo);
+  color: var(--preto);
+  border-color: var(--preto);
+}
+
+.alert-info {
+  background-color: var(--azul-escuro);
+  color: var(--branco);
+  border-color: var(--amarelo);
+}
+
+/* FADE OUT */
+.alert.fade-out {
+  animation: fadeOut 0.4s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translate(-50%, 0); }
+  to   { opacity: 0; transform: translate(-50%, -10px); }
+}

@@ -1,0 +1,80 @@
+:root {
+  --amarelo: #f6d600;
+  --branco: #ffffff;
+  --azul-principal: #0c5e94;
+  --azul-escuro: #07304b;
+  --preto: #000000;
+  --cinza-input: #dbdfe4;
+  --cinza-texto: #737373;
+  --vermelho: #ff5757;
+}
+
+/* Overlay full-screen */
+.ls-overlay {
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  background: linear-gradient(180deg, rgba(7,48,75,0.6) 0%, rgba(7,48,75,0.75) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Card branco / contrastante centralizado */
+.ls-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 30px rgba(2,6,23,0.45);
+  border: 2px solid rgba(255,255,255,0.06);
+  color: var(--branco);
+  min-width: 260px;
+  max-width: 90%;
+}
+
+/* Spinner circular */
+.ls-spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 5px solid rgba(255,255,255,0.15);
+  border-top-color: var(--amarelo);
+  border-right-color: var(--azul-principal);
+  animation: ls-rotate 0.9s linear infinite;
+  box-shadow: 0 4px 10px rgba(2,6,23,0.35) inset;
+}
+
+/* Texto */
+.ls-text {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--branco);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* Pequeno ajuste responsivo */
+@media (max-width: 420px) {
+  .ls-card {
+    gap: 12px;
+    padding: 12px 14px;
+  }
+  .ls-spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 4px;
+  }
+  .ls-text {
+    font-size: 14px;
+  }
+}
+
+/* Animations */
+@keyframes ls-rotate {
+  to { transform: rotate(360deg); }
+}
