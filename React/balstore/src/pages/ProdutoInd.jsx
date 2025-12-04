@@ -312,14 +312,19 @@ export default function ProdutoInd () {
                             <div className="contagem">
                                 <p>Quantidade:</p>
                                 <div className="contador">
-                                    <button onClick={()=>(setCount(count+1))}>+</button>
-                                    <p>{count}</p>
                                     <button onClick={()=>(setCount(count-1))} disabled={count == 1 ? true: false}>-</button>
+                                    <p>{count}</p>
+                                    <button onClick={()=>(setCount(count+1))}>+</button>
                                 </div>
                             </div>
                             
 
-                            <p className="produto-preco">R$ {produto.preco}</p>
+                            {produto.promocao > 0 
+                            ?
+                            <p className="produto-preco">R$ {(produto.preco - ((Number(produto.promocao)/100) *produto.preco)).toFixed(2)}</p>
+                            :
+                            <p className="produto-preco">R$ {produto.preco.toFixed(2)}</p>
+                            }
                         </div>
 
                         <div className="produto-buttons">
