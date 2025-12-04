@@ -78,13 +78,6 @@ def cadastra_enderecos(session: SessionDep, endereco:Endereco):
 
         if endereco_existente:
             raise HTTPException(400, "Endereços já cadastrado nesse Cliente")
-    if endereco.loj_id:
-        endereco_existente = session.exec(
-            select(Endereco).where(Endereco.loj_id == endereco.loj_id, Endereco.rua == endereco.rua, Endereco.numero == endereco.numero)
-        ).first()
-
-        if endereco_existente:
-            raise HTTPException(400, "Endereços já cadastrado nessa Loja")
 
     session.add(endereco)
     session.commit()
