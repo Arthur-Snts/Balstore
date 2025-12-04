@@ -20,13 +20,7 @@
   width: 50%;
 }
 
-.perfil-form input {
-  padding: 10px;
-  border: 1px solid var(--cinza-texto);
-  border-bottom: 2px solid var(--azul-principal);
-  outline: none;
-  transition: border-color 0.3s;
-}
+
 
 .perfil-form input:focus {
   border-color: var(--azul-principal);

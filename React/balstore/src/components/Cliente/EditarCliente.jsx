@@ -61,59 +61,89 @@ export default function EditarCliente (){
             <img src={avatar} alt="Avatar" />
           </div>
           <form className="perfil-form">
-            <input
-              type="text"
-              name="nome"
-              placeholder="Nome..."
-              value={cliente?.nome}
-              onChange={(e)=>{
-                setCliente(prev => ({
-                        ...prev,
-                        nome: e.target.value
-                    }));
-              }}
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email..."
-              value={cliente?.email}
-              onChange={(e)=>{
-                setCliente(prev => ({
-                        ...prev,
-                        email: e.target.value
-                    }));
-              }}
-            />
-            <input
-              type="password"
-              name="senha"
-              placeholder="Senha Antiga"
-              onChange={(e)=>{
-                setCliente(prev => ({
-                        ...prev,
-                        senha: e.target.value
-                    }));
-              }}
-            />
-            <input
-              type="password"
-              name="senhaNova"
-              placeholder="Senha Nova"
-              value={senhanova}
-              onChange={(e)=>{
-                setSenhaNova(e.target.value)
-              }}
-            />
-            <input
-              type="password"
-              name="confirmarSenha"
-              placeholder="Confirme a Senha Nova"
-              value={confirmsenhanova}
-              onChange={(e)=>{
-                setConfirmSenhaNova(e.target.value)
-              }}
-            />
+            <div className="input-container">
+                <input 
+                  type="text" 
+                  id="nome" 
+                  name="nome" 
+                  placeholder="" 
+                  className="input-field" 
+                  value={cliente?.nome} 
+                  onChange={(e)=>{
+                    setCliente(prev => ({
+                            ...prev, 
+                            nome: e.target.value
+                          }));
+                  }}
+                />
+                <label for="nome" className="input-label">Nome</label>
+            </div>
+
+            <div className="input-container">
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  placeholder=""
+                  className="input-field"
+                  value={cliente?.email}
+                  onChange={(e)=>{
+                    setCliente(prev => ({
+                            ...prev,
+                            email: e.target.value
+                        }));
+                  }}
+                />
+                <label for="email" className="input-label">Email</label>
+            </div>
+
+            <div className="input-container">
+                <input
+                  id="senha"
+                  type="password"
+                  name="senha"
+                  placeholder=""
+                  className="input-field"
+                  onChange={(e)=>{
+                    setCliente(prev => ({
+                            ...prev,
+                            senha: e.target.value
+                        }));
+                  }}
+                />
+                <label for="senha" className="input-label">Senha</label>
+            </div>
+            
+            <div className="input-container">
+                <input
+                  id="senhaNova"
+                  type="password"
+                  name="senhaNova"
+                  placeholder=""
+                  className="input-field"
+                  value={senhanova}
+                  onChange={(e)=>{
+                    setSenhaNova(e.target.value)
+                  }}
+                />
+                <label for="senhaNova" className="input-label">Nova senha</label>
+            </div>
+
+            <div className="input-container">
+                <input
+                  id="confirmarSenha"
+                  type="password"
+                  name="confirmarSenha"
+                  placeholder=""
+                  className="input-field"
+                  value={confirmsenhanova}
+                  onChange={(e)=>{
+                    setConfirmSenhaNova(e.target.value)
+                  }}
+                />
+                <label for="confirmarSenha" className="input-label">Confirmar nova senha</label>
+            </div>
+            
             <button type="submit" onClick={handleEditar}>Atualizar</button>
           </form>
         </div>}</>
