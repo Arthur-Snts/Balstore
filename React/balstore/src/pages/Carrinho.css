@@ -1,7 +1,7 @@
 .content-carrinho{
     display: flex;
-    background-color: gainsboro;
-    justify-content: space-around;
+    background-color: var(--cinza-input);
+    justify-content: space-evenly;
     margin-top: -30px;
     margin-bottom: -30px;
     padding: 100px;
@@ -15,7 +15,7 @@
     padding: 50px;
     max-height: fit-content;
     border-radius: 30px;
-
+    width: 60%;
 }
 
 .titulo-carrinho {

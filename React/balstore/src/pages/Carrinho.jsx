@@ -291,15 +291,16 @@ export default function Carrinho () {
                             <ProdutoHorizontal props={carrinho.produto} key={index}>
                                 <div className="contador">
 
-                                    <button onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto +1)}>+</button>
+                                    <button 
+                                        onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto -1)}
+                                        disabled={(carrinho.qnt_produto) === 1}>-</button>
 
                                     <p>{carrinho.qnt_produto}</p>
 
-                                    <button 
-                                        onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto -1)}
-                                        disabled={(carrinho.qnt_produto) === 1}
+                                    <button onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto +1)}
+                                        
                                     >
-                                        -
+                                        +
                                     </button>
                                 </div>
                                 <MdDelete  onClick={()=>(handleExcluir(carrinho.id))}/>
@@ -323,7 +324,7 @@ export default function Carrinho () {
                 </div>
                 <div className="right-carrinho">
                     <div className="total-carrinho">
-                        <h4>Subtotal(Quantidade de Produtos):</h4>
+                        <h4>Subtotal: {produtos_carrinho.length} produto(s)</h4>
                         <p>{valor_total}</p>
                         <button onClick={handlecomprar}>Comprar</button>
                     </div>
