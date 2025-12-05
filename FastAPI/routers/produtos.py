@@ -36,7 +36,7 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
 
 
     query = select(Produto).options(selectinload(Produto.categoria),
-                                    selectinload(Produto.comentarios),
+                                    selectinload(Produto.comentarios).selectinload(Comentario.cliente),
                                     selectinload(Produto.favoritos),
                                     selectinload(Produto.carrinhos),
                                     selectinload(Produto.compras),
@@ -75,7 +75,13 @@ def busca_produto(session: SessionDep,loj_id:int=None, pro_id:int=None, pro_nome
         resultado.append({
             **c.model_dump(),
             "categoria": c.categoria.model_dump() if c.categoria else None,
-            "comentarios": [come.model_dump() for come in c.comentarios] if c.comentarios else [],
+            "comentarios": [
+                {
+                    **come.model_dump(),
+                    "cliente": come.cliente.model_dump() if come.cliente else None
+                }
+                for come in c.comentarios
+            ] if c.comentarios else [],
             "favoritos": [f.model_dump() for f in c.favoritos] if c.favoritos else [],
             "carrinhos": [car.model_dump() for car in c.carrinhos] if c.carrinhos else [],
             "compras": [comp.model_dump() for comp in c.compras] if c.compras else [],

@@ -39,7 +39,7 @@ export default function ProdutoCard({produto, favoritoInicial, onclickFavoritar}
               </div>
           </div>
           <div className='bottom-card-section'>
-            <p className='preco' onClick={()=>navigate(`/Produto/${produto.id}`)}>R${produto.preco}</p>
+            <p className='preco' onClick={()=>navigate(`/Produto/${produto.id}`)}>R$ {produto.preco.toFixed(2)}</p>
             <Favoritos favorito={favorito_interno} setFavorito={onToggleFavorito} onclick = {()=> onclickFavoritar(produto.id)}/>
           </div>
       </div>

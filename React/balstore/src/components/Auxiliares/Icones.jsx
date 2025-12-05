@@ -11,12 +11,10 @@ export const EstrelasAvaliacao = ({ rating }) => {
     <div className="avaliacao-estrelas-barra-wrapper">
         <span className="nota-numerica">{ratingValue.toFixed(1)}</span>
         
-        <div className="estrelas-container-base" aria-label={`Avaliação de ${ratingValue} de 5`}>
-            <div className="estrelas-vazias">
-                ★★★★★
-            </div>
-            <div 
-                className="estrelas-preenchidas" 
+        <div className="estrelas-container-base">
+            <div className="estrelas-vazias">★★★★★</div>
+            <div
+                className="estrelas-preenchidas"
                 style={{ width: `${porcentagemPreenchimento}%` }}
             >
                 ★★★★★
@@ -30,7 +28,7 @@ export function Favoritos({ favorito, setFavorito, onclick}){
   function toggleFavorito(e) {
     e.preventDefault();
     e.stopPropagation();
-    setFavorito(!favorito);
+    if (setFavorito) setFavorito(!favorito); // apenas chama a função
     if (onclick) onclick();
   }
   
