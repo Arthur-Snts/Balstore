@@ -144,7 +144,7 @@ export default function EditarCliente (){
                 <label for="confirmarSenha" className="input-label">Confirmar nova senha</label>
             </div>
             
-            <button type="submit" onClick={handleEditar}>Atualizar</button>
+            <button className="button-form-atualizar" type="submit" onClick={handleEditar}>Atualizar</button>
           </form>
         </div>}</>
   );

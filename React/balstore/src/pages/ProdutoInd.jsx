@@ -324,10 +324,10 @@ export default function ProdutoInd () {
                             <h3>{produto.nome}</h3>
                             <EstrelasAvaliacao rating = {avaliacao_total} />
                             <p>{produto.estoque} Em Estoque</p>
-                            <p onClick={handleLoja}>{produto.loja.nome}</p>
+                            <p style= {{cursor:"pointer"}}onClick={handleLoja}>{produto.loja.nome}</p>
                         </div>
                         <div className="frete">
-                            <p>Calcular Frete: {produto.frete}</p>
+                            <p>Endereço: {produto.frete}</p>
                             <select name="endereco" onChange={(e)=>setEndereco(e.target.value)}>
                                 <option value="">Selecionar Endereço</option>
                                 {cliente?.enderecos.map((endereco)=>(
