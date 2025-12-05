@@ -70,6 +70,25 @@ export default function ListaDesejos() {
         carregarUsuario();
     }, []);
 
+    useEffect(() => {
+        async function syncFavoritos() {
+            if (!cliente?.favoritos) return;
+
+            const listaNova = [];
+
+            for (const fav of cliente.favoritos) {
+                const res = await getproduto(fav.produto_id);
+                if (res.success) {
+                    listaNova.push(res.produto);
+                }
+            }
+
+            setProdutos_favoritos(listaNova);
+        }
+
+        syncFavoritos();
+    }, [cliente?.favoritos]);
+
     async function handlefavoritar(id) {
         if (!cliente || !cliente.favoritos) {
             showAlert("Erro: dados do cliente não carregados", "error");
@@ -157,8 +176,8 @@ export default function ListaDesejos() {
                                 </div>
 
                                 <Favoritos 
-                                    favorito={status !== "guest" && cliente?.favoritos?.some(f => f.produto_id === produto.id)}
-                                    onclick={() => handlefavoritar(produto.id)}
+                                    favorito={cliente?.favoritos?.some(f => f.produto_id === produto.id)}
+                                    setFavorito={() => handlefavoritar(produto.id)}
                                 />
                             </div>
 

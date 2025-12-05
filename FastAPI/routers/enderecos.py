@@ -21,7 +21,7 @@ router = APIRouter(prefix="/enderecos", tags=["enderecos"])
 # ------------------------------------------------------------------------------
 # GET
 @router.get("/")
-def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None, end_id:int = None):
+def pega_enderecos(session: SessionDep, cli_id:int=None, end_id:int = None):
 
     query = select(Endereco).options()
 
@@ -34,15 +34,6 @@ def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None, end_id
         if not enderecos:
             raise HTTPException(400, "Cliente sem Enderecos")
         
-    if loj_id:
-        query = query.where(Endereco.loj_id == loj_id)
-        enderecos = session.exec(
-            query
-        ).all()
-
-        if not enderecos:
-            raise HTTPException(400, "Loja sem Enderecos")
-        
     if end_id:
         query = query.where(Endereco.id == end_id)
         enderecos = session.exec(
@@ -52,7 +43,7 @@ def pega_enderecos(session: SessionDep, cli_id:int=None, loj_id:int=None, end_id
         if not enderecos:
             raise HTTPException(400, "Loja sem Enderecos")
         
-    if not cli_id and not loj_id and not end_id:
+    if not cli_id and not end_id:
         raise HTTPException(400, "Nenhum paramentro passado")
     
     resultado = []
@@ -78,6 +69,7 @@ def cadastra_enderecos(session: SessionDep, endereco:Endereco):
 
         if endereco_existente:
             raise HTTPException(400, "Endereços já cadastrado nesse Cliente")
+    
 
     session.add(endereco)
     session.commit()

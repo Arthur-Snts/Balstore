@@ -3,7 +3,7 @@ import Footer from "../components/Header_and_Footer/Footer"
 import Loading from "./Loading"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import {getproduto, verificar_token_cliente, verificar_token_loja, getprodutos, postcarrinho, postfavorito, deletefavorito, postCompra} from "../statements"
+import {getproduto, verificar_token_cliente, verificar_token_loja, getprodutos, postcarrinho, postfavorito, deletefavorito, postCompra, putproduto} from "../statements"
 import { useParams } from 'react-router-dom';
 import { useAlert } from "../components/Auxiliares/AlertContext"
 import { EstrelasAvaliacao, Favoritos } from '../components/Auxiliares/Icones'
@@ -13,6 +13,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import user_icon from "../assets/user-icon-default.png"
 
 
 import "./ProdutoInd.css"
@@ -63,7 +64,7 @@ export default function ProdutoInd () {
 
     useEffect(()=>{
         async function carregarproduto() {
-
+                
             const resultado_produto = await getproduto(id)
             
             if (resultado_produto?.success){
@@ -179,6 +180,10 @@ export default function ProdutoInd () {
 
     async function handlecarrinho(id) {
             const qnt = count || 1;  // 🔥 pega quantidade individual
+            if (!cliente){
+                showAlert(`Conecte-se antes de colocar no carrinho`, "info");
+                return;
+            }
     
             const carrinhoExistente = cliente.carrinhos.find(f => f.produto_id === id);
             if (carrinhoExistente){
@@ -217,8 +222,15 @@ export default function ProdutoInd () {
     }
 
     async function handlecomprar() {
+            setLoading(true)
+            if (!cliente){
+                showAlert(`Conecte-se antes de Comprar`, "info");
+                setLoading(false)
+                return;
+            }
             if (!endereco){
                 showAlert(`Selecione um Endereço Primeiro`, "info");
+                setLoading(false)
                 return;
             }
                 var list_produtos = []
@@ -230,7 +242,28 @@ export default function ProdutoInd () {
 
                 list_produtos.push(produto.id)
 
-                const valor_total = count*produto.preco
+                const novoEstoque = produto.estoque - count;
+                const produtoEditar = {
+                    estoque: novoEstoque
+                };
+                const resultado_putproduto = await putproduto(produto.id, produtoEditar, null)
+                if (!resultado_putproduto?.success){
+                        showAlert(`Falha ao Atualizar Estoque do Produto`, "erro");
+                        return;
+                    }
+                setProduto(prev => ({
+                    ...prev,
+                    estoque: novoEstoque
+                }));
+
+                let valor_total = 0
+
+                if (produto.promocao > 0){
+                    valor_total = count*Number(produto.preco-((produto.promocao/100)*produto.preco))
+                } else {
+                    valor_total = count*produto.preco
+                }
+                
                 
                 
                 const qrcode =  await gerarPix(cliente.cpf, cliente.nome, cliente.email, valor_total)
@@ -238,6 +271,7 @@ export default function ProdutoInd () {
                 
                 const resultado_compra = await postCompra(cliente.id, valor_total, qrcode, 10, list_produtos, endereco)
                     if (resultado_compra?.success){
+                        setLoading(false)
                         showAlert(`Compra Feita com Sucesso`, "success");
                         navigate("/Pagamento", {
                             state: {
@@ -245,35 +279,36 @@ export default function ProdutoInd () {
                             }
                         })
                     } else {
+                        setLoading(false)
                         showAlert(`Compra não Feita, Falhou`, "erro");
                     }
             }
         
-            const handleLoja = () => {
-                navigate("/Loja", {
-                        state: {
-                            loja: produto.loja.id
-                        }
-                    })
-            }
+    const handleLoja = () => {
+        navigate("/Loja", {
+                state: {
+                    loja: produto.loja.id
+                }
+            })
+    }
 
-        const [avaliacao_total, setAvaliacao_total] = useState(0)
+    const [avaliacao_total, setAvaliacao_total] = useState(0)
 
-        useEffect(() => {
-            if (!produto || !produto.comentarios) return;
+    useEffect(() => {
+        if (!produto || !produto.comentarios) return;
 
-            if (produto.comentarios.length === 0) {
-                setAvaliacao_total(0);
-                return;
-            }
+        if (produto.comentarios.length === 0) {
+            setAvaliacao_total(0);
+            return;
+        }
 
-            const soma = produto.comentarios.reduce(
-                (total, c) => total + Number(c.avaliacao), 
-                0
-            );
+        const soma = produto.comentarios.reduce(
+            (total, c) => total + Number(c.avaliacao), 
+            0
+        );
 
-            setAvaliacao_total(soma / produto.comentarios.length);
-        }, [produto]);
+        setAvaliacao_total(soma / produto.comentarios.length);
+    }, [produto]);
 
     if (loading) return <Loading />;
     if (!produto) return <Loading/>
@@ -291,10 +326,10 @@ export default function ProdutoInd () {
                             <h3>{produto.nome}</h3>
                             <EstrelasAvaliacao rating = {avaliacao_total} />
                             <p>{produto.estoque} Em Estoque</p>
-                            <p onClick={handleLoja}>{produto.loja.nome}</p>
+                            <p style= {{cursor:"pointer"}}onClick={handleLoja}>{produto.loja.nome}</p>
                         </div>
                         <div className="frete">
-                            <p>Calcular Frete: {produto.frete}</p>
+                            <p>Endereço: {produto.frete}</p>
                             <select name="endereco" onChange={(e)=>setEndereco(e.target.value)}>
                                 <option value="">Selecionar Endereço</option>
                                 {cliente?.enderecos.map((endereco)=>(
@@ -312,6 +347,7 @@ export default function ProdutoInd () {
                                 </div>
                             </div>
                             
+
                             {produto.promocao > 0 
                             ?
                             <p className="produto-preco">R$ {(produto.preco - ((Number(produto.promocao)/100) *produto.preco)).toFixed(2)}</p>
@@ -334,7 +370,25 @@ export default function ProdutoInd () {
                         ))}
                     </Slider></div>
                 
-                Fazer um map em comentarios do produto
+                <div className="comentarios">
+                    <div className="header-comentarios">
+                        <p>Avaliações do Produto</p>
+                        <EstrelasAvaliacao rating = {avaliacao_total} />
+                    </div>
+                    {produto.comentarios.map((comentario)=> (
+                        <div className="comentario">
+                            <div className="usuario-comentario">
+                                <img src={user_icon} alt="User icon" />
+                                <div className="nome-comentario">
+                                    <p>{comentario.cliente.nome}</p>
+                                    <p>{comentario.cliente.email}</p>
+                                </div>
+                            </div>
+                            <EstrelasAvaliacao rating = {comentario.avaliacao} />
+                            <p>{comentario.conteudo}</p>
+                        </div>
+                    ))}
+                </div>
             <Footer></Footer>
         </>
     )

@@ -722,20 +722,29 @@ export async function getprodutos_loja(loj_id) {
 // ======================================================================================
 // PUT Produto
 // ======================================================================================
-export async function putproduto(pro_id,produtoEditado, pro_imagem) {
+export async function putproduto(pro_id, produtoEditado, pro_imagem) {
     const formData = new FormData();
 
-    // Campos normais
-    if (produtoEditado.nome){
+    if (produtoEditado.nome !== undefined) {
         formData.append("pro_nome", produtoEditado.nome);
     }
-   
-    if (produtoEditado.categoria){formData.append("pro_categoria", produtoEditado.categoria);}
-    if (produtoEditado.preco){formData.append("pro_preco", produtoEditado.preco);}
-    if (produtoEditado.estoque){formData.append("pro_estoque", produtoEditado.estoque);}
-    if (produtoEditado.estoque){formData.append("pro_promocao", produtoEditado.promocao);}
 
-    // Anexa imagem se existir
+    if (produtoEditado.categoria !== undefined) {
+        formData.append("pro_categoria", produtoEditado.categoria);
+    }
+
+    if (produtoEditado.preco !== undefined) {
+        formData.append("pro_preco", produtoEditado.preco);
+    }
+
+    if (produtoEditado.estoque !== undefined) {
+        formData.append("pro_estoque", produtoEditado.estoque);
+    }
+
+    if (produtoEditado.promocao !== undefined) {
+        formData.append("pro_promocao", produtoEditado.promocao);
+    }
+
     if (pro_imagem) {
         formData.append("pro_imagem", pro_imagem);
     }

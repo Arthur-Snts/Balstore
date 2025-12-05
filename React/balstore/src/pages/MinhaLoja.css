@@ -32,6 +32,10 @@
     font-size: 40px;
 }
 
+.informacoes .estrelas-preenchidas {
+    width: 150px;
+}
+
 .informacoes {
     display: flex;
     width: 90%;

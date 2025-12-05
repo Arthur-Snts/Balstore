@@ -20,13 +20,13 @@ export default function UserSidebar ({props, active}) {
      useEffect(() => {
 
             props?.amigos_enviados.map((amigo)=>{
-                if (amigo.solicitacao == "Aceita"){
+                if (amigo.solicitacao == "Aceito"){
                     setCount(count+1)
                 }
             })
 
             props?.amigos_recebidos.map((amigo)=>{
-                if (amigo.solicitacao == "Aceita"){
+                if (amigo.solicitacao == "Aceito"){
                     setCount(count+1)
                 }
             })
