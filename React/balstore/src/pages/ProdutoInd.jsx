@@ -205,7 +205,8 @@ export default function ProdutoInd () {
         }
 
     async function gerarPix( cli_cpf, cli_nome, cli_email, valor) {
-        const res = await fetch("http://localhost:8000/pix/", {
+        
+        const res = await fetch("http://localhost:8080/pix/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -215,6 +216,7 @@ export default function ProdutoInd () {
             amount: valor })
         });
         const data = await res.json();
+        
         
         return data.qr_codes[0].links[0].href;
     }
@@ -318,7 +320,7 @@ export default function ProdutoInd () {
             <Header status={status}></Header>
 
                 <div className="produto-mostrar">
-                    <img src={`http://localhost:8000${produto.imagem_path}`} alt={produto.nome} />
+                    <img src={`http://localhost:8080${produto.imagem_path}`} alt={produto.nome} />
                     <div className="produto-informacao">
                         <div className="titulo-produto">
                             <h3>{produto.nome}</h3>

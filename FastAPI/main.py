@@ -3,6 +3,15 @@ import fastapi_swagger_dark as fsd
 import fastapi
 from fastapi import Response
 from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[ "http://localhost:5173"],  # ou ["*"] para liberar geral (menos seguro)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 router = fastapi.APIRouter()
 

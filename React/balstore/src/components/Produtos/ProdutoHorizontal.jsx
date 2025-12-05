@@ -8,7 +8,7 @@ export default function ProdutoHorizontal({props, children}) {
         <>
             <div className="produto">
                 <div className="left_produto">
-                    <img src={`http://localhost:8000${props.imagem_path}`} alt={props.nome} className="img_produto"/>
+                    <img src={`http://localhost:8080${props.imagem_path}`} alt={props.nome} className="img_produto"/>
                 </div>
                 <div className="conteudo_produto">
                     <div className="texto">
