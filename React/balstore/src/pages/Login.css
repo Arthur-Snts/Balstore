@@ -86,43 +86,41 @@
 
 .input-field {
     width: 100%;
-    padding: 10px 10px 10px 10px; /* Padding interno */
-    border: 2px solid #ccc; /* Borda padrão */
-    border-radius: 8px; /* Borda mais arredondada como na imagem */
+    padding: 10px 10px 10px 10px; 
+    border: 2px solid #ccc; 
+    border-radius: 8px; 
     font-size: 16px;
     outline: none;
     transition: all 0.3s ease;
-    background-color: transparent !important;  /* Garante que o fundo não atrapalhe o label */ 
-    /* Remove o placeholder real para que o label atue como placeholder */
-    color: var(--cor-do-texto-input); /* Se tiver uma cor padrão para o texto */
+    background-color: transparent !important;  
+    color: var(--cor-do-texto-input); 
 }
 
 .input-label {
     position: absolute;
-    top: 50%; /* Posição inicial no meio do input */
-    left: 3%; /* Um pouco para dentro da borda */
+    top: 50%; 
+    left: 3%; 
     transform: translateY(-50%);
-    color: #6c757d; /* Cor do label quando está "placeholder" */
+    color: #6c757d; 
     transition: all 0.3s ease;
-    pointer-events: none; /* Não interfere com o clique no input */
-    background-color: white; /* **CRÍTICO:** Para "cortar" a borda */
-    padding: 0 5px; /* Padding horizontal para o corte visual */
-    font-size: 16px; /* Tamanho da fonte inicial */
+    pointer-events: none; 
+    background-color: white; 
+    padding: 0 5px; 
+    font-size: 16px; 
 }
 
-/* ➡️ Efeito de Rótulo Flutuante (A Magia) ⬅️ */
+
 
 .input-field:focus + .input-label,
 .input-field:not(:placeholder-shown) + .input-label {
-    top: 0; /* Move para o topo */
-    left: 3%; /* Ajusta a posição horizontal para o "corte" */
-    font-size: 12px; /* Diminui a fonte */
-    color: var(--azul-principal); /* Muda a cor para o foco */
-    transform: translateY(-50%); /* Ajusta verticalmente para ficar centralizado com o corte */
-    z-index: 1; /* Garante que o label fique sobre a borda */
+    top: 0; 
+    left: 3%; 
+    font-size: 12px; 
+    color: var(--azul-principal); 
+    transform: translateY(-50%); 
+    z-index: 1; 
 }
 
-/* Estilo do input quando focado */
 .input-field:focus {
-    border-color: var(--azul-principal); /* Sua cor principal */
+    border-color: var(--azul-principal); 
 }

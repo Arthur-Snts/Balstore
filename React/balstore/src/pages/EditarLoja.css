@@ -1,0 +1,50 @@
+.perfil-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 80%;
+  gap: 120px;
+  font-family: Arial, sans-serif;
+}
+
+.avatar img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+}
+
+.perfil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 50%;
+}
+
+.titulo-info {
+  color: var(--azul-principal);
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.perfil-form input:focus {
+  border-color: var(--azul-principal);
+}
+
+.config-button {
+  padding: 10px;
+  background-color: var(--azul-principal);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 10px;
+  width: 300px;
+  height: 40px;
+  font-size: 15px;
+}
+
+.config-button:hover {
+  background-color: var(--azul-escuro);
+}
