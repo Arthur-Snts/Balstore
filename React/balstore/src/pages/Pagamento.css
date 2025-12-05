@@ -27,7 +27,7 @@
     margin-top: 30px;
     margin-bottom: 30px;
     padding: 30px;
-    gap: 50px;
+    gap: 10px
 }
 
 .left_pagamento {
@@ -54,6 +54,7 @@
 .confirmacao {
     display: flex;
     flex-direction: column;
+    gap: 30px;
 }
 
 .confirmacao p{
@@ -67,6 +68,7 @@
 .right_pagamento {
     display: flex;
     flex-direction: column;
+    width: 40%;
 }
 
 .right_pagamento p {
@@ -84,11 +86,16 @@
     flex-direction: column;
     align-items: center;
 }
+.central_pagamento img{
+    width: 75%;
+}
 
 .central_pagamento button{
     background-color: var(--amarelo);
     border: none;
     padding: 10px;
     border-radius: 40px;
+    width: 40%;
+    font-weight: bold;
     color: var(--azul-principal);
 }
