@@ -384,8 +384,12 @@ export default function ProdutoInd () {
                                     <p>{comentario.cliente.email}</p>
                                 </div>
                             </div>
+                           
                             <EstrelasAvaliacao rating = {comentario.avaliacao} />
-                            <p>{comentario.conteudo}</p>
+                            <p>{comentario.conteudo}</p>  
+                        <div className="linha-divisoria"></div>
+                           
+                            
                         </div>
                     ))}
                 </div>
