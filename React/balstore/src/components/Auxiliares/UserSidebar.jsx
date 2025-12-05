@@ -18,18 +18,23 @@ export default function UserSidebar ({props, active}) {
     }
     const [count, setCount] = useState(0)
      useEffect(() => {
+            if (!props) return;
 
-            props?.amigos_enviados.map((amigo)=>{
-                if (amigo.solicitacao == "Aceito"){
-                    setCount(count+1)
-                }
-            })
+            let novoCount = 0;
 
-            props?.amigos_recebidos.map((amigo)=>{
-                if (amigo.solicitacao == "Aceito"){
-                    setCount(count+1)
+            props?.amigos_enviados?.forEach(amigo => {
+                if (amigo.solicitacao === "Aceito" && amigo.amigo_de === props.id) {
+                    novoCount++;
                 }
-            })
+            });
+
+            props?.amigos_recebidos?.forEach(amigo => {
+                if (amigo.solicitacao === "Aceito" && amigo.amigo === props.id) {
+                    novoCount++;
+                }
+            });
+
+            setCount(novoCount);
         }, [props]);
     
 

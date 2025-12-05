@@ -175,7 +175,7 @@ export default function Carrinho () {
             cli_cpf:cli_cpf,
             amount: valor })
         });
-        const data = await res.json();
+        const data = await res.json()
         return data.qr_codes[0].links[0].href;
     }
 
@@ -185,6 +185,7 @@ export default function Carrinho () {
             showAlert(`Coloque itens no Carrinho Primeiro`, "info");
             return;
         }
+
         if (!endereco) {
             showAlert(`Selecione um Endereço Primeiro`, "info");
             setNeedFocusSelect(true);
@@ -196,10 +197,10 @@ export default function Carrinho () {
         try {
             let list_produtos = [];
 
-            
+            // 🔥 1. Atualizar estoque e coletar IDs
             for (const carrinho of produtos_carrinho) {
 
-                
+                // valida estoque
                 if (carrinho.qnt_produto > carrinho.produto.estoque) {
                     showAlert(
                         `O produto "${carrinho.produto.nome}" não possui estoque suficiente`,
@@ -209,34 +210,43 @@ export default function Carrinho () {
                     return;
                 }
 
-                
                 const novoEstoque = carrinho.produto.estoque - carrinho.qnt_produto;
 
+                // PUT PRODUTO
                 const r1 = await putproduto(
                     carrinho.produto.id,
                     { estoque: novoEstoque },
                     null
                 );
 
-                if (!r1.success) {
+                if (!r1?.success) {
                     showAlert(`Falha ao atualizar estoque de ${carrinho.produto.nome}`, "erro");
                     setLoading(false);
                     return;
                 }
 
-               
                 list_produtos.push(carrinho.produto.id);
 
-              
+                // REMOVE DO CARRINHO
                 await deletecarrinho(carrinho.id);
 
-            
                 setProdutos_Carrinho(prev =>
                     prev.filter(item => item.id !== carrinho.id)
                 );
             }
 
-        
+            // 🔥 2. Calcular valor total corretamente
+            const totalCalculado = produtos_carrinho.reduce((acc, item) => {
+                let preco = item.produto.preco;
+                if (item.produto.promocao > 0) {
+                    preco = preco - (preco * (item.produto.promocao / 100));
+                }
+                return acc + preco * item.qnt_produto;
+            }, 0);
+
+            const valor_total = Number(totalCalculado.toFixed(2));
+
+            // 🔥 3. Gera PIX
             const qrcode = await gerarPix(
                 cliente.cpf,
                 cliente.nome,
@@ -244,34 +254,42 @@ export default function Carrinho () {
                 valor_total
             );
 
-      
+            if (!qrcode) {
+                showAlert("Erro ao gerar código PIX", "erro");
+                setLoading(false);
+                return;
+            }
+
+            // 🔥 4. POST COMPRA
             const resultado_compra = await postCompra(
                 cliente.id,
                 valor_total,
                 qrcode,
-                10,
+                10,               // frete
                 list_produtos,
                 endereco
             );
 
-            if (resultado_compra?.success) {
-                setLoading(false);
-                showAlert(`Compra Feita com Sucesso`, "success");
-
-                navigate("/Pagamento", {
-                    state: {
-                        compra: resultado_compra.compra
-                    }
-                });
-            } else {
-                setLoading(false);
+            if (!resultado_compra?.success) {
                 showAlert(`Compra não Feita, Falhou`, "erro");
+                setLoading(false);
+                return;
             }
 
-        } catch (e) {
-            console.error(e);
+            // SUCESSO
             setLoading(false);
+            showAlert(`Compra Feita com Sucesso`, "success");
+
+            navigate("/Pagamento", {
+                state: {
+                    compra: resultado_compra.compra
+                }
+            });
+
+        } catch (e) {
+            console.error("ERRO NO HANDLECOMPRAR:", e);
             showAlert(`Erro inesperado ao finalizar compra`, "erro");
+            setLoading(false);
         }
     }
 

@@ -98,6 +98,8 @@ export default function ListaAmigos () {
         const [texto, setTexto] = useState("")
         const [procurados, setProcurados] = useState([])
         const [erro, setErro] = useState("")
+        const [pendingIds, setPendingIds] = useState(new Set());
+        const [busca, setBusca] = useState("");
         
 
         useEffect(() => {
@@ -138,18 +140,33 @@ export default function ListaAmigos () {
                 lista = lista.filter(c => c.id !== cliente.id);
 
                 // Remover clientes já com solicitação pendente (recebidas/enviadas)
-                const idsPendentesOutros = [
-                    ...solicitacoesRecebidas.map(s => s.cliente_de?.id), // quem enviou para mim
-                    ...solicitacoesEnviadas.map(s => s.cliente_amigo?.id) // quem eu enviei
+                const idsPendentesOutrosFromState = [
+                    ...solicitacoesRecebidas.map(s => Number(s.amigo_de ?? s.cliente_de ?? s.cliente_de?.id ?? s.amigo_de?.id)),
+                    ...solicitacoesEnviadas.map(s => Number(s.amigo ?? s.cliente_amigo ?? s.cliente_amigo?.id ?? s.amigo))
                 ].filter(Boolean);
 
-                lista = lista.filter(c => !idsPendentesOutros.includes(c.id));
+                // unir com pendingIds (que é um Set)
+                const idsPendentesOutros = Array.from(new Set([
+                    ...idsPendentesOutrosFromState,
+                    ...Array.from(pendingIds)
+                ]));
+
+                lista = lista.filter(c => !idsPendentesOutros.includes(Number(c.id)));
 
                 // Remover clientes já aceitos
-                const idsAceitosOutros = amigosAceitos.map(s => (s.cliente_de?.id === cliente.id ? s.cliente_amigo?.id : s.cliente_de?.id)).filter(Boolean);
+                const idsAceitosOutros = amigosAceitos.map(a =>
+                    a.amigo_de === cliente.id ? a.amigo : a.amigo_de
+                ).filter(Boolean);
+
                 lista = lista.filter(c => !idsAceitosOutros.includes(c.id));
+                
 
                 setProcurados(lista);
+
+                setPendingIds(new Set([
+                    ...solicitacoesRecebidas.map(s => Number(s.amigo_de ?? s.cliente_de ?? s.cliente_de?.id ?? s.amigo_de?.id)),
+                    ...solicitacoesEnviadas.map(s => Number(s.amigo ?? s.cliente_amigo ?? s.cliente_amigo?.id ?? s.amigo))
+                ]));
 
             }, 300);
 
@@ -164,18 +181,31 @@ export default function ListaAmigos () {
             const resultado = await postamigo(id, cliente.id);
 
             if (resultado.success) {
+                const novo = resultado.amigo;
 
-                // Atualiza pendentes enviados localmente
-                const novo = resultado.amigo
+                // determinar o id do "outro" de forma robusta
+                const outroId =
+                    Number(novo.amigo ?? novo.cliente_amigo?.id ?? novo.amigo ?? id);
+
+                // atualizar solicitacoesEnviadas (mantendo o objeto retornado)
                 setSolicitacoesEnviadas(prev => [...prev, novo]);
 
-                // Remove da lista de busca
-                setProcurados(prev => prev.filter(p => p.id !== id));
+                // adicionar imediatamente ao conjunto de pendentes
+                setPendingIds(prev => {
+                    const s = new Set(prev);
+                    s.add(outroId);
+                    return s;
+                });
+
+                // Remover da lista de busca (assegurar comparação numeric)
+                setProcurados(prev => prev.filter(p => Number(p.id) !== Number(outroId)));
 
                 setTexto("");
                 setIsOpen(false);
                 showAlert("Solicitação enviada!", "success");
 
+                // opcional: sincroniza do servidor para garantir shapes corretos
+                // await carregarAmigos();
             } else {
                 showAlert("Erro ao enviar solicitação", "error");
             }
@@ -247,6 +277,14 @@ export default function ListaAmigos () {
         if (loading) {
             return <Loading />;
             }
+
+    const amigosFiltrados = amigosAceitos.filter(amigo => {
+        const outro = amigo.cliente_de?.id === cliente?.id
+            ? amigo.cliente_amigo
+            : amigo.cliente_de;
+
+        return outro?.nome?.toLowerCase().includes(busca.toLowerCase());
+    });
     
 
     return(
@@ -361,13 +399,13 @@ export default function ListaAmigos () {
                     <div className="busca">
                         <div className='search-product'>
                             <i className="fa fa-search"></i>
-                            <input type="text"  placeholder="Pesquisar Amigo em sua Lista de Amigos"/>
+                            <input type="text"  placeholder="Pesquisar Amigo em sua Lista de Amigos" value={busca} onChange={(e) => setBusca(e.target.value)}/>
                         </div>
                         <LuMailPlus onClick={()=>(setIsOpen(true))}/>
                         <IoIosNotifications  onClick={()=>setIsOpenSolitations(true)}/>
                     </div>
                     <div className="amigos-lista">
-                        {amigosAceitos.map((amigo) => {
+                        {amigosFiltrados.map((amigo) => {
                             const outro = (amigo.cliente_de?.id === cliente?.id) ? (amigo.cliente_amigo || {}) : (amigo.cliente_de || {});
                             const outroId = outro?.id;
                             return (

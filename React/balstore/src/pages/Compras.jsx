@@ -20,6 +20,7 @@ export default function Compras () {
 
     const [status, setStatus] = useState("")
     const {showAlert} = useAlert()
+    const [busca, setBusca] = useState("");
 
     useEffect(() => {
 
@@ -28,7 +29,6 @@ export default function Compras () {
             let token = localStorage.getItem("token");
             if (token){
                 const user_devolvido = await verificar_token_cliente(navigate);
-                
                 setCliente(user_devolvido);
                 setStatus("client")
             }
@@ -114,6 +114,13 @@ export default function Compras () {
         }
     }
 
+    const comprasFiltradas = compras.map((compra) => ({
+        ...compra,
+        produtos: compra.produtos.filter(produto =>
+            produto.nome.toLowerCase().includes(busca.toLowerCase())
+        )
+    })).filter(compra => compra.produtos.length > 0);
+
     return(
         <>
             {loading == true ? <Loading/> :
@@ -126,12 +133,12 @@ export default function Compras () {
                 <div className="right-compras">
                     <div className='search-product'>
                             <i className="fa fa-search"></i>
-                            <input type="text"  placeholder="Pesquisar Pedido da sua Loja"/>
+                            <input type="text"  placeholder="Pesquisar Pedido da sua Loja"value={busca} onChange={(e) => setBusca(e.target.value)}/>
                         </div>
                     <div className="compras">
                         
                         <div className="produtos_compra">
-                            {compras.map((compra)=>(
+                            {comprasFiltradas.map((compra)=>(
                                 compra.produtos.map((produto, index) => (
                                 <div key={index}>
                                     <ProdutoHorizontal props={produto}>

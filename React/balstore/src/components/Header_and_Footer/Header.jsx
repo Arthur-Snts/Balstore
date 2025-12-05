@@ -101,7 +101,7 @@ function Header_Lojist ({user_name, active, handleLogout}) {
                 <li><Link to="/Loja/Pedidos" className={active=== "Pedidos"? 'nav-link active-nav-button': 'nav-link'}>Pedidos</Link></li>
                 <li><Link to="/Loja/Editar" className={active=== "Configurações"? 'nav-link active-nav-button': 'nav-link'}>Configurações</Link></li>
                 <li><Link to="/Sobre" className={active=== "Sobre nós"? 'nav-link active-nav-button': 'nav-link'}>Sobre nós</Link></li>
-                <li><a className={active=== "Logout"? 'nav-link active-nav-button': 'nav-link'} onClick={handleLogout}>Logout</a></li>
+                <li><a className={active=== "Logout"? 'nav-link active-nav-button': 'nav-link'} style={{cursor:'pointer'}}onClick={handleLogout}>Logout</a></li>
             </ul>
         </nav>
         <div className="perfil">

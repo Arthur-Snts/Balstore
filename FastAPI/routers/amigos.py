@@ -54,11 +54,18 @@ def pega_amigos(cli_id:int, session: SessionDep):
 # ------------------------------------------------------------------------------
 # POST
 
+from sqlalchemy import or_, and_
+
 @router.post("/")
 def adiciona_amigo(amigo:Amigo, session:SessionDep):
 
     amizade_existente = session.exec(
-        select(Amigo).where(Amigo.amigo_de == amigo.amigo_de, Amigo.amigo == amigo.amigo)
+        select(Amigo).where(
+            or_(
+                and_(Amigo.amigo_de == amigo.amigo_de, Amigo.amigo == amigo.amigo),
+                and_(Amigo.amigo_de == amigo.amigo, Amigo.amigo == amigo.amigo_de)
+            )
+        )
     ).first()
 
     if amizade_existente:
@@ -78,20 +85,17 @@ def adiciona_amigo(amigo:Amigo, session:SessionDep):
 
 @router.delete("/{cli_id}")
 def desfaz_amizade(session: SessionDep, cli_id:int, amigo_exclui:int):
-    # Deletar amizade em qualquer direção envolvendo cli_id e amigo_exclui
+    
     amigo_deletado = session.exec(
         select(Amigo).where(
-            (Amigo.amigo_de == cli_id) & (Amigo.amigo == amigo_exclui)
-        )
-    ).first()
-
-    if not amigo_deletado:
-        # tentar a direção inversa
-        amigo_deletado = session.exec(
-            select(Amigo).where(
+            (
+                (Amigo.amigo_de == cli_id) & (Amigo.amigo == amigo_exclui)
+            ) |
+            (
                 (Amigo.amigo_de == amigo_exclui) & (Amigo.amigo == cli_id)
             )
-        ).first()
+        )
+    ).first()
 
     if not amigo_deletado:
         raise HTTPException(404, "Amigo não encontrado nas amizades desse Cliente")
