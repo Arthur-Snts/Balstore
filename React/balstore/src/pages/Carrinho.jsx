@@ -77,15 +77,17 @@ export default function Carrinho () {
     
 
     useEffect(() => {
-            const total = produtos_carrinho.reduce((acc, carrinho) => {
-                return acc + (carrinho.produto.preco * carrinho.qnt_produto);
-            }, 0);
-
-            setValor_Total(total.toFixed(2));
-
+        const total = produtos_carrinho.reduce((acc, carrinho) => {
             
+            const preco = carrinho.produto.promocao
+                ? Number(carrinho.produto.preco-((carrinho.produto.promocao/100)*carrinho.produto.preco))
+                : carrinho.produto.preco;
 
-        }, [produtos_carrinho]);
+            return acc + (preco * carrinho.qnt_produto);
+        }, 0);
+
+        setValor_Total(total.toFixed(2));
+    }, [produtos_carrinho]);
 
     async function alterarQuantidade(car_id, qnt_nova) {
             
@@ -164,7 +166,7 @@ export default function Carrinho () {
     
 
     async function gerarPix( cli_cpf, cli_nome, cli_email, valor) {
-        const res = await fetch("http://localhost:8000/pix/", {
+        const res = await fetch("http://localhost:8080/pix/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -179,51 +181,99 @@ export default function Carrinho () {
 
 
     async function handlecomprar() {
-        if (produtos_carrinho.length === 0){
+        if (produtos_carrinho.length === 0) {
             showAlert(`Coloque itens no Carrinho Primeiro`, "info");
             return;
         }
-        if (!endereco){
+        if (!endereco) {
             showAlert(`Selecione um Endereço Primeiro`, "info");
             setNeedFocusSelect(true);
             return;
         }
-            setLoading(true)
-            var list_produtos = []
-            produtos_carrinho.map((carrinho) => {
+
+        setLoading(true);
+
+        try {
+            let list_produtos = [];
+
+            
+            for (const carrinho of produtos_carrinho) {
+
                 
-                if (carrinho.qnt_produto > carrinho.produto.estoque){
-                    showAlert(`Um dos seus Produtos no seu Carrinho não está disponível na quantidade desejada`, "info");
+                if (carrinho.qnt_produto > carrinho.produto.estoque) {
+                    showAlert(
+                        `O produto "${carrinho.produto.nome}" não possui estoque suficiente`,
+                        "info"
+                    );
+                    setLoading(false);
+                    return;
                 }
 
-                putproduto(carrinho.produto_id, {"estoque": carrinho.produto.estoque-carrinho.qnt_produto})
-
-                list_produtos.push(carrinho.produto.id)
                 
-                deletecarrinho(carrinho.id)
+                const novoEstoque = carrinho.produto.estoque - carrinho.qnt_produto;
+
+                const r1 = await putproduto(
+                    carrinho.produto.id,
+                    { estoque: novoEstoque },
+                    null
+                );
+
+                if (!r1.success) {
+                    showAlert(`Falha ao atualizar estoque de ${carrinho.produto.nome}`, "erro");
+                    setLoading(false);
+                    return;
+                }
+
+               
+                list_produtos.push(carrinho.produto.id);
+
+              
+                await deletecarrinho(carrinho.id);
+
+            
                 setProdutos_Carrinho(prev =>
                     prev.filter(item => item.id !== carrinho.id)
                 );
-            })
+            }
 
-            const qrcode =  await gerarPix(cliente.cpf, cliente.nome, cliente.email, valor_total)
+        
+            const qrcode = await gerarPix(
+                cliente.cpf,
+                cliente.nome,
+                cliente.email,
+                valor_total
+            );
 
-            // Gerar código de pagamento(terceiro paramento) e calcular frete (quarto parametro)
-            
-            const resultado_compra = await postCompra(cliente.id, valor_total, qrcode, 10, list_produtos, endereco)
-                if (resultado_compra?.success){
-                    setLoading(false)
-                    showAlert(`Compra Feita com Sucesso`, "success");
-                    navigate("/Pagamento", {
-                        state: {
-                            compra: resultado_compra.compra
-                        }
-                    })
-                } else {
-                    setLoading(false)
-                    showAlert(`Compra não Feita, Falhou`, "erro");
-                }
+      
+            const resultado_compra = await postCompra(
+                cliente.id,
+                valor_total,
+                qrcode,
+                10,
+                list_produtos,
+                endereco
+            );
+
+            if (resultado_compra?.success) {
+                setLoading(false);
+                showAlert(`Compra Feita com Sucesso`, "success");
+
+                navigate("/Pagamento", {
+                    state: {
+                        compra: resultado_compra.compra
+                    }
+                });
+            } else {
+                setLoading(false);
+                showAlert(`Compra não Feita, Falhou`, "erro");
+            }
+
+        } catch (e) {
+            console.error(e);
+            setLoading(false);
+            showAlert(`Erro inesperado ao finalizar compra`, "erro");
         }
+    }
 
     return(
         <>

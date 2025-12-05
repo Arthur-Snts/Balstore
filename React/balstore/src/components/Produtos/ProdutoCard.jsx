@@ -30,7 +30,7 @@ export default function ProdutoCard({produto, favoritoInicial, onclickFavoritar}
     <>
       <div className='card' >
           <div className='top-card-section'onClick={()=>navigate(`/Produto/${produto.id}`)}>
-            <img src={`http://localhost:8000${produto.imagem_path}`} alt={produto.alt}  className='produto-img'/>
+            <img src={`http://localhost:8080${produto.imagem_path}`} alt={produto.alt}  className='produto-img'/>
           </div>
           <div className='mid-card-section' onClick={()=>navigate(`/Produto/${produto.id}`)}>
             <p className='nome-texto'>{produto.nome}</p>
@@ -39,7 +39,11 @@ export default function ProdutoCard({produto, favoritoInicial, onclickFavoritar}
               </div>
           </div>
           <div className='bottom-card-section'>
-            <p className='preco' onClick={()=>navigate(`/Produto/${produto.id}`)}>R${produto.preco}</p>
+            {produto.promocao > 0 
+            ? 
+            <p className="preco">R$ {(produto.preco - ((Number(produto.promocao)/100) *produto.preco)).toFixed(2)}</p> 
+            : 
+            <p className='preco' onClick={()=>navigate(`/Produto/${produto.id}`)}>R${produto.preco.toFixed(2)}</p>}
             <Favoritos favorito={favorito_interno} setFavorito={onToggleFavorito} onclick = {()=> onclickFavoritar(produto.id)}/>
           </div>
       </div>

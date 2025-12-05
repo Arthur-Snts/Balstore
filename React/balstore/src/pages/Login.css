@@ -26,13 +26,15 @@
 .formulario-login{
     display: flex;
     flex-direction: column;
-    width: 600px;
-    gap: 30px;
+    width: 400px;
+    gap: 10px;
+    justify-content: center;
 }
 .form-login h1{
     color: var(--azul-principal);
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
+    font-size: 41px;
 }
 
 
@@ -57,6 +59,7 @@
 .links-login{
     display: flex;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 .link-form{

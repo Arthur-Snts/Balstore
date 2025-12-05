@@ -14,8 +14,9 @@
     justify-content: space-between;
 }
 .user-icon-and-text img {
-    width: 60px;
-    height: 100%;
+    width: 80px;
+    height: 80px;
+    margin-right: 20px
 }
 .user-text{
     width: 80%;
@@ -52,6 +53,7 @@
     display: flex;
     align-items: center ;
     transition: 99ms;
+    cursor: pointer;
 }
 
 .active-button-side {

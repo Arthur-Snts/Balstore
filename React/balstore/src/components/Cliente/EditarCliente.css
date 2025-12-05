@@ -26,7 +26,9 @@
   border-color: var(--azul-principal);
 }
 
-.perfil-form button {
+.perfil-form .button-form-atualizar {
+  font-size: 21px;
+  border-radius: 10px;
   padding: 10px;
   background-color: var(--azul-principal);
   color: white;

@@ -76,15 +76,17 @@ export default function MinhaLoja() {
         if (!loja) return;
 
         var avaliacoes = 0
+        var count = 0
 
         loja.produtos.map((produto) => (
-            produto.comentarios.map((comentario)=> (
+            produto.comentarios.map((comentario)=> {
                 avaliacoes = avaliacoes + Number(comentario.avaliacao)
-            ))
+                count = count +1
+        })
             
         ))
 
-        setAvaliacao_media(avaliacoes/loja.produtos.length)
+        setAvaliacao_media(avaliacoes/count)
 
         var compras = 0
 
@@ -114,8 +116,8 @@ export default function MinhaLoja() {
                     </div>
                     <div className="informacoes">
                         <p>{loja.produtos.length} Produtos Diferentes</p>
-                        <p><EstrelasAvaliacao rating={avaliacao_media}></EstrelasAvaliacao> </p>
-                        <p>{compras_totais} Produtos Vendidos: </p>
+                        <EstrelasAvaliacao rating={avaliacao_media}></EstrelasAvaliacao>
+                        <p>{compras_totais} Produtos Vendidos </p>
                     </div>
                 </div>
                 <div className="produtos_loja">

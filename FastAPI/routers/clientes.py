@@ -236,15 +236,19 @@ def busca_cliente(session: SessionDep, cli_email: str = None, cli_nome:str=None,
 
 # ------------------------------------------------------------------------------
 # CADASTRO
+
+def limpar_cpf(cpf: str) -> str:
+    return ''.join(filter(str.isdigit, cpf))
+
 @router.post("/")
 def cadastra_cliente(cliente_cadastra: Cliente, session: SessionDep):
 
 
+    cliente_cadastra.cpf = limpar_cpf(cliente_cadastra.cpf)
+
     cliente_existente = session.exec(
         select(Cliente).where(Cliente.email == cliente_cadastra.email)
     ).first()
-   
-
 
     if cliente_existente:
         raise HTTPException(400, "Email já cadastrado")

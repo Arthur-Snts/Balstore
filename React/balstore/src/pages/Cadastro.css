@@ -27,13 +27,14 @@
     display: flex;
     flex-direction: column;
     width: 400px;
-    gap: 40px;
+    gap: 10px;
     justify-content: center;
 }
 .form-cadastro h1{
     color: var(--azul-principal);
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
+    font-size: 41px;
 }
 
 .formulario-cadastro input {
@@ -41,8 +42,8 @@
   border-bottom: 2px solid var(--azul-principal) !important;
   outline: none;
   transition: border-color 0.3s;
-  font-size: 21px;
-  width: 100%;
+  font-size: 15px;
+  border-radius: 0px;
 }
 
 .formulario-cadastro input:focus {
@@ -68,7 +69,8 @@
 
 .links-cadastro{
     display: flex;
-    gap: 10px;
+    gap: 15px;
+    margin-bottom: 10px;
 }
 
 .link-form{
