@@ -62,7 +62,7 @@ export default function Cadastro (){
 
         setLoading(true)
         
-        const res = await fetch(`http://localhost:8000/clientes/login`, {
+        const res = await fetch(`http://localhost:8080/clientes/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify( {cli_email: cli_email, 
@@ -87,7 +87,7 @@ export default function Cadastro (){
     async function handleLoginloja(loj_email, loj_senha) {
             setLoading(true)
             
-            const res = await fetch(`http://localhost:8000/lojas/login`, {
+            const res = await fetch(`http://localhost:8080/lojas/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify( {loj_email: loj_email, 
@@ -176,7 +176,7 @@ export default function Cadastro (){
     };
 
     async function validateCPF(cpf) {
-        const res = await fetch(`http://localhost:8000/document/?cpf=${cpf}`);
+        const res = await fetch(`http://localhost:8080/document/?cpf=${cpf}`);
         const data = await res.json();
 
         // Se o backend retornar erro de resposta
@@ -186,7 +186,7 @@ export default function Cadastro (){
     }
 
     async function validateCNPJ(cnpj) {
-        const res = await fetch(`http://localhost:8000/document/?cnpj=${cnpj}`);
+        const res = await fetch(`http://localhost:8080/document/?cnpj=${cnpj}`);
         const data = await res.json();
 
         // Se o backend retornar erro de resposta

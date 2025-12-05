@@ -26,13 +26,15 @@
 .formulario-login{
     display: flex;
     flex-direction: column;
-    width: 600px;
-    gap: 30px;
+    width: 400px;
+    gap: 10px;
+    justify-content: center;
 }
 .form-login h1{
     color: var(--azul-principal);
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
+    font-size: 41px;
 }
 
 
@@ -57,6 +59,7 @@
 .links-login{
     display: flex;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 .link-form{
@@ -76,7 +79,7 @@
     display: flex;
     justify-content: center;
     position: relative;
-    margin-bottom: 25px; 
+    margin-bottom: 20px; 
 }
 
 
@@ -112,7 +115,7 @@
 .input-field:focus + .input-label,
 .input-field:not(:placeholder-shown) + .input-label {
     top: 0; /* Move para o topo */
-    left: %; /* Ajusta a posição horizontal para o "corte" */
+    left: 3%; /* Ajusta a posição horizontal para o "corte" */
     font-size: 12px; /* Diminui a fonte */
     color: var(--azul-principal); /* Muda a cor para o foco */
     transform: translateY(-50%); /* Ajusta verticalmente para ficar centralizado com o corte */

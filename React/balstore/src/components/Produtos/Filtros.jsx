@@ -79,6 +79,7 @@ function FiltrosDeProduto({ onChangeFiltros, filtrosAtuais }) {
               className="input-preco"
               value={precoMin}
               onChange={(e) => setPrecoMin(e.target.value)}
+              min={0}
             />
             <span className="separador-preco"></span>
             <input
@@ -87,6 +88,7 @@ function FiltrosDeProduto({ onChangeFiltros, filtrosAtuais }) {
               className="input-preco"
               value={precoMax}
               onChange={(e) => setPrecoMax(e.target.value)}
+              min={0}
             />
           </div>
 
