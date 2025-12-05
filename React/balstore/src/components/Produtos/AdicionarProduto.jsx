@@ -87,6 +87,19 @@ export default function AdicionarProduto({ categorias, loja_id }) {
                         </option>
                     ))}
                 </select>
+                
+                <div className="input-container">
+                    <input 
+                        id="precos"
+                        type="text"
+                        name="preco"
+                        placeholder=""
+                        className="input-field"
+                        value={preco}
+                        onChange={(e) => setPreco(e.target.value)}
+                    />
+                    <label for="precos" className="input-label">Preço</label>
+                </div>
 
                 <input 
                     type="text"
