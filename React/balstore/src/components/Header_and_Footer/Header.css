@@ -50,6 +50,7 @@ nav{
     align-items: center;
     gap: 10%;
     margin-top: 15px;
+    padding: 0 !important;
 }
 
 .nav-link {

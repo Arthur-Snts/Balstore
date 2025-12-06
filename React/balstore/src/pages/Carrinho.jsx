@@ -349,7 +349,7 @@ export default function Carrinho () {
                         <h4>Você pode gostar: </h4>
                         {ProdutosRecomendados.map((produto, index)=>(
                             <ProdutoHorizontal props={produto} key={index}>
-                                <button className='adicionar' onClick={() => handlecarrinho(produto.id)}>
+                                <button className='adicionar-carrinho' onClick={() => handlecarrinho(produto.id)}>
                                     Adicionar ao Carrinho
                                 </button>
                             </ProdutoHorizontal>

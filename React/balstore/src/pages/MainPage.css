@@ -48,7 +48,7 @@
 }
 
 .carrossel-produtos .slick-slide{
-    display: flex;
+    display: flex !important;
     justify-content: center;
     align-items: center;
     height: 380px;

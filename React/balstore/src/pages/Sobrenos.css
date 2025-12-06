@@ -34,6 +34,10 @@
     width: 100%;
 }
 
+.sobrenos h1 {
+    color: var(--azul-principal);
+}
+
 .foto_sobre {
   width: 200px;
   height: 200px;
