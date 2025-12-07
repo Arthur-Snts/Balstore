@@ -307,23 +307,25 @@ export default function Carrinho () {
                     <div className="produtos-carrinho">
                         {produtos_carrinho.map((carrinho, index)=>(
                             <ProdutoHorizontal props={carrinho.produto} key={index}>
-                                <div className="contador">
+                                <div className="contagem-carrinho">
+                                    <div className="contador">
 
-                                    <button onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto +1)}>+</button>
+                                        <button onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto +1)}>+</button>
 
-                                    <p>{carrinho.qnt_produto}</p>
+                                        <p>{carrinho.qnt_produto}</p>
 
-                                    <button 
-                                        onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto -1)}
-                                        disabled={(carrinho.qnt_produto) === 1}
-                                    >
-                                        -
-                                    </button>
+                                        <button 
+                                            onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto -1)}
+                                            disabled={(carrinho.qnt_produto) === 1}
+                                        >
+                                            -
+                                        </button>
+                                    </div>
+                                    <MdDelete  onClick={()=>(handleExcluir(carrinho.id))} className="delete-carrinho"/>
                                 </div>
-                                <MdDelete  onClick={()=>(handleExcluir(carrinho.id))}/>
                                 {(carrinho.presente_para) && 
                                 <div className="presenteado">
-                                    <img src={Presente} alt="Presente Icon" />
+                                    <img src={Presente} alt="Presente Icon" className="presente"/>
                                     <p>Presente para: {carrinho.cliente_presenteado.nome}</p>
                                 </div> }
                             </ProdutoHorizontal>
@@ -331,8 +333,8 @@ export default function Carrinho () {
                     </div>
                     <div className="endereco">
                         <p>Enviando para: </p>
-                        <select name="endereco" onChange={(e)=>setEndereco(e.target.value)} ref={selectRef}>
-                            <option value="">Selecionar Endereço</option>
+                        <select name="endereco" onChange={(e)=>setEndereco(e.target.value)} ref={selectRef} className="endereco-carrinho">
+                            <option value="" >Selecionar Endereço</option>
                             {cliente?.enderecos.map((endereco)=>(
                                 <option value={endereco.id}>{endereco.rua}, {endereco.numero} - {endereco.cidade} / {endereco.estado}</option>
                             ))}

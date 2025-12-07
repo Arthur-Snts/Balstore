@@ -116,7 +116,7 @@ export default function FavoritosAmigo(){
                 </aside>
 
                 <main className="user-profile-content">
-                    <div className="favoritos-amigo-header" style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'18px'}}>
+                    <div className="favoritos-amigo-header" style={{display:'flex',alignItems:'center',gap:'12px',marginBottom:'18px', marginTop: "40px"}}>
                         <img src={user_icon} alt="Ícone" style={{width:72,height:72,borderRadius:8,objectFit:'cover'}}/>
                         <div>
                             <h2 style={{margin:0}}>Favoritos de {amigo?.nome || 'Usuário'}</h2>
@@ -128,17 +128,16 @@ export default function FavoritosAmigo(){
                             <div className="contagem">
                                 <p>Quantidade:</p>
                                 <div className="contador">
-
-                                    <button onClick={() => alterarQuantidade(produto.id, +1)}>+</button>
-
-                                    <p>{quantidades[produto.id] || 1}</p>
-
                                     <button 
                                         onClick={() => alterarQuantidade(produto.id, -1)}
                                         disabled={(quantidades[produto.id] || 1) === 1}
                                     >
                                         -
                                     </button>
+
+                                    <p>{quantidades[produto.id] || 1}</p>
+
+                                    <button onClick={() => alterarQuantidade(produto.id, +1)}>+</button>
                                 </div>
 
                                 <Favoritos 

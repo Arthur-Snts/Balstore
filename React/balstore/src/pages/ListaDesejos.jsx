@@ -162,17 +162,16 @@ export default function ListaDesejos() {
                             <div className="contagem">
                                 <p>Quantidade:</p>
                                 <div className="contador">
-
-                                    <button onClick={() => alterarQuantidade(produto.id, +1)}>+</button>
-
-                                    <p>{quantidades[produto.id] || 1}</p>
-
                                     <button 
                                         onClick={() => alterarQuantidade(produto.id, -1)}
                                         disabled={(quantidades[produto.id] || 1) === 1}
                                     >
                                         -
                                     </button>
+
+                                    <p>{quantidades[produto.id] || 1}</p>
+
+                                    <button onClick={() => alterarQuantidade(produto.id, +1)}>+</button>
                                 </div>
 
                                 <Favoritos 

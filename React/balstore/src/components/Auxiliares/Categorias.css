@@ -24,7 +24,8 @@
 }
 
 .categoria:hover{
-    transition: 1000ms;
+    transform: scale(1.1);
+    transition: 100ms;
 }
 
 .categorias .categoria .titulo-categoria{
