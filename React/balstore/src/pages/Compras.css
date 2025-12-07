@@ -29,6 +29,17 @@
     gap: 50px;
 }
 
+.buttons-children {
+    display: flex;
+    align-items: center;
+}
+
+.buttons-children p {
+    color: var(--azul-principal);
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .buttons-children button {
     color: var(--azul-principal);
     background-color: var(--amarelo);
@@ -55,3 +66,7 @@
     color: var(--preto);
 }
 
+.buttons-children .data_hora {
+    text-align: center;
+    font-weight: normal;
+}

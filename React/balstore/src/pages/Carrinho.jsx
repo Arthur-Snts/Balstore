@@ -181,61 +181,87 @@ export default function Carrinho () {
 
 
     async function handlecomprar() {
-        if (produtos_carrinho.length === 0) {
-            showAlert(`Coloque itens no Carrinho Primeiro`, "info");
-            return;
-        }
+    if (produtos_carrinho.length === 0) {
+        showAlert(`Coloque itens no Carrinho Primeiro`, "info");
+        return;
+    }
 
-        if (!endereco) {
-            showAlert(`Selecione um Endereço Primeiro`, "info");
-            setNeedFocusSelect(true);
-            return;
-        }
+    if (!endereco) {
+        showAlert(`Selecione um Endereço Primeiro`, "info");
+        setNeedFocusSelect(true);
+        return;
+    }
 
-        setLoading(true);
+    setLoading(true);
 
-        try {
-            let list_produtos = [];
+    try {
+        // ======================================================
+        // 1) AGRUPAR PRODUTOS DO CARRINHO POR PRODUTO_ID
+        // ======================================================
+        const mapaProdutos = {};  
+            produtos_carrinho.forEach((c) => {
+                if (!mapaProdutos[c.produto.id]) {
+                    mapaProdutos[c.produto.id] = {
+                        produto: c.produto,
+                        total: 0
+                    };
+                }
+                mapaProdutos[c.produto.id].total += c.qnt_produto;
+            });
 
-            // 🔥 1. Atualizar estoque e coletar IDs
-            for (const carrinho of produtos_carrinho) {
+            // ======================================================
+            // 2) VALIDAR ESTOQUE DE FORMA CORRETA
+            // ======================================================
+            for (const id in mapaProdutos) {
+                const { produto, total } = mapaProdutos[id];
 
-                // valida estoque
-                if (carrinho.qnt_produto > carrinho.produto.estoque) {
+                if (total > produto.estoque) {
                     showAlert(
-                        `O produto "${carrinho.produto.nome}" não possui estoque suficiente`,
+                        `O produto "${produto.nome}" não possui estoque suficiente`,
                         "info"
                     );
                     setLoading(false);
                     return;
                 }
+            }
 
-                const novoEstoque = carrinho.produto.estoque - carrinho.qnt_produto;
+            // ======================================================
+            // 3) ATUALIZAR ESTOQUE DOS PRODUTOS (UMA VEZ POR PRODUTO)
+            // ======================================================
+            const list_produtos = [];
 
-                // PUT PRODUTO
+            for (const id in mapaProdutos) {
+                const { produto, total } = mapaProdutos[id];
+
+                const novoEstoque = produto.estoque - total;
+
                 const r1 = await putproduto(
-                    carrinho.produto.id,
+                    produto.id,
                     { estoque: novoEstoque },
                     null
                 );
 
                 if (!r1?.success) {
-                    showAlert(`Falha ao atualizar estoque de ${carrinho.produto.nome}`, "erro");
+                    showAlert(`Falha ao atualizar estoque de: ${produto.nome}`, "erro");
                     setLoading(false);
                     return;
                 }
 
-                list_produtos.push(carrinho.produto.id);
-
-                // REMOVE DO CARRINHO
-                await deletecarrinho(carrinho.id);
-
-                setProdutos_Carrinho(prev =>
-                    prev.filter(item => item.id !== carrinho.id)
-                );
+                list_produtos.push(produto.id);
             }
 
-            // 🔥 2. Calcular valor total corretamente
+            // ======================================================
+            // 4) LIMPAR O CARRINHO (DEPOIS DE ATUALIZAR O ESTOQUE)
+            // ======================================================
+            for (const carrinho of produtos_carrinho) {
+                await deletecarrinho(carrinho.id);
+            }
+
+            setProdutos_Carrinho([]);
+
+            // ======================================================
+            // 5) CALCULAR VALOR TOTAL
+            // ======================================================
             const totalCalculado = produtos_carrinho.reduce((acc, item) => {
                 let preco = item.produto.preco;
                 if (item.produto.promocao > 0) {
@@ -246,7 +272,9 @@ export default function Carrinho () {
 
             const valor_total = Number(totalCalculado.toFixed(2));
 
-            // 🔥 3. Gera PIX
+            // ======================================================
+            // 6) GERAR PIX
+            // ======================================================
             const qrcode = await gerarPix(
                 cliente.cpf,
                 cliente.nome,
@@ -260,13 +288,15 @@ export default function Carrinho () {
                 return;
             }
 
-            // 🔥 4. POST COMPRA
+            // ======================================================
+            // 7) CRIAR COMPRA
+            // ======================================================
             const resultado_compra = await postCompra(
                 cliente.id,
                 valor_total,
                 qrcode,
-                10,               // frete
-                list_produtos,
+                10,                 // frete
+                list_produtos,      // IDs únicos dos produtos
                 endereco
             );
 
@@ -276,14 +306,11 @@ export default function Carrinho () {
                 return;
             }
 
-            // SUCESSO
             setLoading(false);
             showAlert(`Compra Feita com Sucesso`, "success");
 
             navigate("/Pagamento", {
-                state: {
-                    compra: resultado_compra.compra
-                }
+                state: { compra: resultado_compra.compra }
             });
 
         } catch (e) {

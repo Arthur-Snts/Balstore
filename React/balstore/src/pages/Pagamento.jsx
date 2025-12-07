@@ -82,7 +82,7 @@ export default function Pagamento () {
                     <div className="content_pagamento">
                         <div className="left_pagamento">
                             <div className="valores">
-                                <p className="produtos_pagamento">Produtos: <i>R${compra.valor}</i></p>
+                                <p className="produtos_pagamento">Produtos: <i>R${(compra.valor).toFixed(2)}</i></p>
                                 <p>Frete: <i>R${compra.frete}</i></p>
                                 <p>Total: <i>R${(compra.valor + compra.frete).toFixed(2)}</i></p>
                             </div>

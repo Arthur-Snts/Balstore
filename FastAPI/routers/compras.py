@@ -1,4 +1,4 @@
-from models import Compra, Compra_Produto, Produto
+from models import Compra, Comentario, Produto, Compra_Produto
 from config import engine
 from sqlmodel import Session, select
 from fastapi import HTTPException, Depends, APIRouter
@@ -26,7 +26,11 @@ router = APIRouter(prefix="/compras", tags=["compras"])
 def pega_compra(session: SessionDep, cli_id:int=None, data_pos:datetime= None, data_antes:datetime = None, com_id:int = None):
 
     query = select(Compra).options(selectinload(Compra.cliente),
-                                    selectinload(Compra.produtos))
+                                    selectinload(Compra.produtos),
+                                    selectinload(Compra.produtos).options(
+            selectinload(Produto.comentarios).options(
+                selectinload(Comentario.cliente)
+            )))
 
     if cli_id:
         query = query.where(Compra.cliente_id == cli_id)
@@ -43,15 +47,27 @@ def pega_compra(session: SessionDep, cli_id:int=None, data_pos:datetime= None, d
     if com_id:
         query = query.where(Compra.id == com_id)
 
-    compra = session.exec(query).all()
+    compras = session.exec(query).all()
 
     resultado=[]
-    for c in compra:
+    for compra in compras:
         resultado.append({
-            **c.model_dump(),
-            "cliente": c.cliente.model_dump() if c.cliente else None,
-            "endereco": c.endereco.model_dump() if c.endereco else None,
-            "produtos": [cp.model_dump() for cp in c.produtos] if c.produtos else []
+            **compra.model_dump(),
+            "cliente": compra.cliente.model_dump() if compra.cliente else None,
+            "endereco": compra.endereco.model_dump() if compra.endereco else None,
+            "produtos": [
+                {
+                    **produto.model_dump(),
+                    "comentarios": [
+                        {
+                            **coment.model_dump(),
+                            "cliente": coment.cliente.model_dump()
+                        }
+                        for coment in (produto.comentarios or [])
+                    ]
+                }
+                for produto in compra.produtos
+            ]
         })
 
     return resultado

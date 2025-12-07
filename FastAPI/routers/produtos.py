@@ -218,22 +218,22 @@ async def atualiza_produto(session: SessionDep,pro_id:int,pro_preco:float=Form(N
    
 
 
-    if pro_nome:
+    if pro_nome is not None:
         produto.nome = pro_nome
-    if pro_categoria:
+    if pro_categoria is not None:
         categoria = session.exec(
                 select(Categoria).where(Categoria.id == pro_categoria)
             ).first()
         produto.categoria_id = categoria.id
-    if pro_estoque:
+    if pro_estoque is not None:
         produto.estoque = pro_estoque
-    if pro_preco:
+    if pro_preco is not None:
         produto.preco = pro_preco
-    if pro_promocao:
+    if pro_promocao is not None:
         produto.promocao = pro_promocao
-    if pro_compra:
+    if pro_compra is not None:
         produto.com_id = pro_compra
-    if pro_imagem:
+    if pro_imagem is not None:
         # Diretório de uploads
         UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "uploads")
         os.makedirs(UPLOAD_DIR, exist_ok=True)

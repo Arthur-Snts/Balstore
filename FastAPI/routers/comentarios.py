@@ -96,9 +96,9 @@ def atualiza_comentario(session: SessionDep,com_id:int, conteudo: str =None, ava
     if not comentario_atualizar:
         raise HTTPException(404, "Comentario não encontrado")
     
-    if conteudo:
+    if conteudo is not None:
         comentario_atualizar.conteudo = conteudo
-    if avaliacao:
+    if avaliacao is not None:
         comentario_atualizar.avaliacao = avaliacao 
 
     session.add(comentario_atualizar)

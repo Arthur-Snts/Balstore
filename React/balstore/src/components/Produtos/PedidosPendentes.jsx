@@ -166,11 +166,11 @@ export default function PedidosPendentes({compras}){
                 <div className="hr"></div>
 
                 <div className="buttons-modal">
-                    <button onClick={() => setIsDeleteOpen(false)} className="cancel-button">
+                    <button onClick={() => setIsDeleteOpen(false)} className="confirm-button">
                         Cancelar
                     </button>
 
-                    <button onClick={negarProduto} className="confirm-button">
+                    <button onClick={negarProduto} className="cancel-button">
                         Negar Pedido
                     </button>
                 </div>

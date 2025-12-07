@@ -909,3 +909,21 @@ export async function deleteCompra(com_id) {
         return null;
     }
 }
+
+// ======================================================================================
+// PUT COMENTARIO
+// ======================================================================================
+
+
+export async function putComentario(comId, conteudo, avaliacao) {
+    const response = await fetch(`http://localhost:8080/comentarios/${comId}/?conteudo=${conteudo}&avaliacao=${avaliacao}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+        throw new Error("Erro ao atualizar comentário");
+    }
+
+    return response.json();
+}

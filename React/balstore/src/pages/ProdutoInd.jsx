@@ -238,6 +238,8 @@ export default function ProdutoInd () {
                     
                 if (count > produto.estoque){
                     showAlert(`O Produto não está disponível na quantidade desejada`, "info");
+                    setLoading(false)
+                    return;
                 }
 
                 list_produtos.push(produto.id)
