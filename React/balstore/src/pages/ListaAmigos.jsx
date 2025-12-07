@@ -257,14 +257,17 @@ export default function ListaAmigos () {
                     <h3 className="modal-title">Adicionar Amigo</h3>
 
                     <label className="modal-label">Buscar por nome</label>
-                    <input 
-                        type="text" 
-                        placeholder="Nome do Amigo" 
-                        className="modal-input" 
-                        value={texto} 
-                        onChange={(e) => setTexto(e.target.value)} 
-                    />
-
+                    <div className="input-conteiner">
+                        <input 
+                            id="nome"
+                            type="text" 
+                            placeholder="" 
+                            className="input-field" 
+                            value={texto} 
+                            onChange={(e) => setTexto(e.target.value)} 
+                        />
+                        <label for="nome" className="input-label-amigo">Nome do Amigo</label>
+                    </div>
                     {erro && <span className="modal-error">Nenhum Perfil com esse nome</span>}
 
                     <div className="amigos-container">
