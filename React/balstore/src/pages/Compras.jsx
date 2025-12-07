@@ -127,7 +127,7 @@ export default function Compras () {
                     <div className='search-product'>
                             <i className="fa fa-search"></i>
                             <input type="text"  placeholder="Pesquisar seu Pedido"/>
-                        </div>
+                    </div>
                     <div className="compras">
                         
                         <div className="produtos_compra">

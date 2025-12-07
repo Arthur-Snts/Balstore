@@ -4,70 +4,91 @@
     justify-content: space-evenly;
     margin-top: -30px;
     margin-bottom: -30px;
-    padding: 100px;
+    padding: 50px;
 }
 
 .center-carrinho{
     display: flex;
     flex-direction: column;
     background-color: white;
-    gap: 50px;
+    gap: 40px;
     padding: 50px;
     max-height: fit-content;
     border-radius: 30px;
-    width: 60%;
+    width: 65%;
+}
+
+.produtos-carrinho{
+    display: flex;
+}
+.produtos-carrinho .produto{
+    width: 98%;
+    margin-top: -10px;
+}
+.produtos-carrinho .produto .left_produto{
+    width: 25%
+}
+.produtos-carrinho .produto .conteudo_produto{
+    width: 70%;
+    gap: 10%;
+    height: auto;
+}
+.produtos-carrinho .children {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.produtos-carrinho .children .excluir-produto{
+    width: 30px;
+    height: 20px;
+    color: var(--vermelho);
 }
 
 .titulo-carrinho {
     border-bottom: 1px solid black;
+    display: flex;
+    justify-content: space-between;
 }
 
 .titulo-carrinho h1 {
-    font-family: 'Times New Roman', Times, serif;
+    font-size: 25px;
     font-weight: bold;
-
-}
-.titulo-carrinho p {
-    color: var(--azul-principal);
-    text-align: end;
 }
 
 .produtos-carrinho {
     width: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 50px;
-}
-
-.produtos-carrinho .produto {
-    justify-content: flex-start;
-    
-}
-
-.produtos-carrinho .produto .conteudo_produto {
-    width: 100%;
 }
 
 .endereco {
     border-top: 1px solid black;
     padding-top: 10px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 10px;
+    align-items: center;
+    padding-left: 10px;
 }
-
-
-.endereco select{
-    border: none;
-
+.endereco p{
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .endereco select {
-    text-align: center;
+    width: 84%;
+    margin-bottom: 5px;
     border: none;
     appearance: unset;
     -webkit-appearance: none;
     outline: none;
     cursor: pointer;
+    color: var(--azul-principal);
+    font-size: 16px;
+    font-weight: 400;
 }
 
 .right-carrinho {
@@ -90,6 +111,7 @@
 
 .total-carrinho p{
     font-weight: bold;
+    font-size: 25px;
 }
 
 .total-carrinho button {
@@ -97,9 +119,11 @@
     background-color: var(--azul-principal);
     color: white;
     padding: 10px;
-    border-radius: 10px;
-    width: 150px;
+    border-radius: 30px;
+    width: 200px;
+    height: 50px;
     font-weight: bold;
+    font-size: 18px;
 }
 
 .produtos-recomendados{

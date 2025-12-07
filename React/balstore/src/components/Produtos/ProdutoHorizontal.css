@@ -22,9 +22,9 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width: 75%;
     height: 250px;
-    gap:50px
+    width: 75%;
+    gap:50px;
 }
 
 .produto .conteudo_produto .texto {

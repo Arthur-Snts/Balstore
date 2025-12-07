@@ -381,10 +381,10 @@ export default function ListaAmigos () {
 
                                     <div className="amigo-info2">
                                         <p className="amigo-nome2">{outro.nome}</p>
-                                        <p className="ver-desejos">Ver a Lista de Desejos</p>
+                                        <p className="ver-desejos">Clique para ver a Lista de Desejos</p>
                                     </div>
 
-                                    <FaUserXmark onClick={(e)=>{ e.stopPropagation(); setIsOpenExcluir(true); setAmizadeSelecionada(amigo)}}/>
+                                    <FaUserXmark className="excluir-amigo" onClick={(e)=>{ e.stopPropagation(); setIsOpenExcluir(true); setAmizadeSelecionada(amigo)}}/>
                                 </div>
                             )
                         })}

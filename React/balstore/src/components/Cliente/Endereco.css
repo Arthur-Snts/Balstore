@@ -19,10 +19,11 @@
   margin-bottom: 20px;
 }
 
-.modal_content{
+.modal_backdrop .modal_content{
     display: flex;
     flex-direction: column;
-    height: 430px;
+    height: 55%;
+    width: 35%;
     justify-content: space-around;
 }
 .modal_content .linha{
@@ -66,6 +67,23 @@
 }
 
 .buttons-modal .confirm-button{
+    background-color: var(--branco);
+    color: var(--azul-principal);
+    border: 2px solid var(--amarelo);
+    padding: 10px;
+    border-radius: 30px;
+    width: 150px;
+}
+
+.buttons-modal .confirm-excluir-button{
+    background-color: var(--amarelo);
+    color: var(--azul-principal);
+    border: none;
+    padding: 10px;
+    border-radius: 30px;
+    width: 150px;
+}
+.buttons-modal .cancel-excluir-button{
     background-color: var(--branco);
     color: var(--azul-principal);
     border: 2px solid var(--amarelo);
