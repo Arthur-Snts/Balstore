@@ -156,3 +156,14 @@
     display: flex;
     justify-self: left;
 }
+
+.confirm-buttom{
+    background-color: var(--amarelo);
+    color: var(--azul-principal);
+    border: 2px solid var(--amarelo);
+    padding: 10px;
+    border-radius: 30px;
+    width: 150px;
+    height: 100%;
+    font-size: 11px;
+}

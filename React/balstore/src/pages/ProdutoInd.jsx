@@ -328,7 +328,7 @@ export default function ProdutoInd () {
                             <h3>{produto.nome}</h3>
                             <EstrelasAvaliacao rating = {avaliacao_total} />
                             <p>{produto.estoque} Em Estoque</p>
-                            <p style= {{cursor:"pointer"}}onClick={handleLoja}>{produto.loja.nome}</p>
+                            <p className="nome-loja" style= {{cursor:"pointer"}}onClick={handleLoja}>Loja: {produto.loja.nome}</p>
                         </div>
                         <div className="frete">
                             <p>Endereço: {produto.frete}</p>

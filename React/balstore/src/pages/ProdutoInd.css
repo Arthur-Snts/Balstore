@@ -27,6 +27,18 @@
     flex-direction: column;
 }
 
+.produto-informacao p {
+    font-size: 17px;
+    
+}
+
+.titulo-produto h3 {
+    font-size: 50px;
+    color: var(--azul-principal);
+}
+
+
+
 .frete select {
     text-align: center;
     border: none;
@@ -251,4 +263,9 @@
     line-height: 1.5; 
     margin: 0; 
    
+}
+
+.nome-loja{
+    color: var(--azul-principal);
+    text-decoration: underline;
 }
