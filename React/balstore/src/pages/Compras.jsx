@@ -145,7 +145,7 @@ export default function Compras () {
                                     <Modal isOpen={modais[produto.id]} onClose={() => fecharModal(produto.id)}>
                                         <div className="modal-container">
                                             <h3 className="modal-title">Avaliar e Comentar</h3>
-
+                                            
                                             <p className="modal-subtitle">
                                                 {produto.nome}
                                             </p>
@@ -154,8 +154,18 @@ export default function Compras () {
                                                 <input
                                                     type="number"
                                                     className="modal-input"
-                                                    value={avaliacoes[produto.id] || 0}
-                                                    onChange={(e) => alterarAvaliacao(produto.id, e.target.value)}
+                                                    value={avaliacoes[produto.id] || ""}
+                                                    onChange={(e) => {
+                                                        let valor = Number(e.target.value);
+
+                                                        // Impede valor menor que 0
+                                                        if (valor < 0) valor = 0;
+
+                                                        // Impede valor maior que 5
+                                                        if (valor > 5) valor = 5;
+
+                                                        alterarAvaliacao(produto.id, valor);
+                                                    }}
                                                     max="5"
                                                     min="0"
                                                 />
@@ -187,7 +197,7 @@ export default function Compras () {
                                                         )
                                                     }
                                                 >
-                                                    Confirmar
+                                                    Avaliar
                                                 </button>
                                             </div>
                                         </div>
