@@ -230,6 +230,7 @@ export default function Compras () {
                                                     onChange={(e) => alterarAvaliacao(produto.id, e.target.value)}
                                                     max="5"
                                                     min="0"
+                                                    
                                                 />
                                                 <EstrelasAvaliacao rating={avaliacoes[produto.id] || 0} />
                                             </div>
