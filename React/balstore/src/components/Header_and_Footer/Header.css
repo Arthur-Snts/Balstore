@@ -53,18 +53,17 @@ nav{
     padding: 0 !important;
 }
 
-.nav-link {
+.nav-list li .nav-link {
     text-decoration: none;
     color: var(--branco) !important;
-    font-size: 40px;
+    font-size: 17px;
     font-weight: normal;
-    border: black 1px solid;
 }
-.nav-link:hover{
+.nav-list li .nav-link:hover{
     color: var(--amarelo) !important;
     transition: 0.3s;
 }
-.active-nav-button {
+.nav-list li .active-nav-button {
     color: var(--amarelo) !important;
 }
 

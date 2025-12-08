@@ -12,6 +12,18 @@
     padding-left: 30px;
     width: 70%;
 }
+.right-compras .search-product{
+    background-color: var(--cinza-input);
+    border: none;
+    padding: 10px;
+    width: 60%;
+    border-radius: 25px;
+    text-align: center;
+}
+.right-compras .search-product i{
+    color: var(--preto);
+    margin-left: 10px;
+}
 
 .compras {
     display: flex;
@@ -27,6 +39,10 @@
     display: flex;
     flex-direction: column;
     gap: 50px;
+}
+.produtos_compra .modal_backdrop .modal_content{
+    height: 70%;
+    width: 45%;
 }
 
 .buttons-children {
@@ -66,6 +82,91 @@
     color: var(--preto);
 }
 
+.produtos_compra .modal_backdrop .modal_content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.produtos_compra .modal_backdrop .modal_content .modal-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+}
+
+.produtos_compra .modal-container .modal-subtitle{
+    font-size: 18px;
+    width: 75%;
+    height: 20%;
+    color: var(--azul-principal);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.produtos_compra .modal-container .avaliacao{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.produtos_compra .modal-container .avaliacao .modal-input{
+    width: 60px;
+    border: 1px solid var(--azul-principal);
+    background-color: transparent;
+    text-align: right;
+}
+.produtos_compra .modal-container .avaliacao .avaliacao-estrelas-barra-wrapper .nota-numerica{
+    display: none;
+}
+.produtos_compra .modal-container .avaliacao .avaliacao-estrelas-barra-wrapper .estrelas-container-base{
+    font-size: 2.0rem;
+}
+
+.produtos_compra .modal-container textarea{
+    width: 75%;
+    height: 50%;
+    outline: none;
+    border: 1px solid var(--azul-principal);
+    border-radius: 10px;
+    color: var(--azul-escuro);
+    resize: none;
+    padding: 15px;
+}
+
+.produtos_compra .modal-container textarea::placeholder{
+    font-style: italic;
+    color: var(--azul-escuro);
+}
+
+.produtos_compra .modal-container .buttons-confirmacao{
+    display: flex;
+    width: 75%;
+    justify-content: space-between;
+}
+
+.produtos_compra .modal-container .buttons-confirmacao .btn-cancelar{
+    background-color: var(--branco);
+    color: var(--azul-principal);
+    border: 2px solid var(--amarelo);
+    padding: 10px;
+    border-radius: 30px;
+    width: 150px;
+}
+.produtos_compra .modal-container .buttons-confirmacao .btn-confirmar{
+    background-color: var(--amarelo);
+    color: var(--azul-principal);
+    border: none;
+    padding: 10px;
+    border-radius: 30px;
+    width: 150px;
+}
 .buttons-children .data_hora {
     text-align: center;
     font-weight: normal;

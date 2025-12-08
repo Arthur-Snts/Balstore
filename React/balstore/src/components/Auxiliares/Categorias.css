@@ -6,6 +6,7 @@
     margin-bottom: 30px;
 }
 
+
 .categoria svg{
     font-size: 60px;
     text-align: center;
@@ -23,10 +24,6 @@
     text-decoration: none;
 }
 
-.categoria:hover{
-    transform: scale(1.1);
-    transition: 100ms;
-}
 
 .categorias .categoria .titulo-categoria{
     margin-bottom: 0;

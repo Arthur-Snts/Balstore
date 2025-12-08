@@ -53,6 +53,10 @@ footer {
     color: var(--branco);
     text-decoration: none;
 }
+.footer-list .footer-link:hover{
+    color: var(--amarelo);
+    transition: 0.3s;
+}
 
 .githubs .footer-list {
     align-items: center;

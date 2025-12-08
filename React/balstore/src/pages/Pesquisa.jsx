@@ -186,7 +186,7 @@ export default function Pesquisa() {
                 <section className="section-produtos-buscados">
                     <div className="result-pesquisa-line">
                         <div><LightBulb /></div>
-                        <p>Resultado para a pesquisa "{busca_produto}"</p>
+                        <p>Resultado para a pesquisa: {busca_produto}</p>
                     </div>
 
                     <div className="classificar-por">

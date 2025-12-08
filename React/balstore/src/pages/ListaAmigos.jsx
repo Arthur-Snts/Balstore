@@ -295,14 +295,17 @@ export default function ListaAmigos () {
                     <h3 className="modal-title">Adicionar Amigo</h3>
 
                     <label className="modal-label">Buscar por nome</label>
-                    <input 
-                        type="text" 
-                        placeholder="Nome do Amigo" 
-                        className="modal-input" 
-                        value={texto} 
-                        onChange={(e) => setTexto(e.target.value)} 
-                    />
-
+                    <div className="input-conteiner">
+                        <input 
+                            id="nome"
+                            type="text" 
+                            placeholder="" 
+                            className="input-field" 
+                            value={texto} 
+                            onChange={(e) => setTexto(e.target.value)} 
+                        />
+                        <label for="nome" className="input-label-amigo">Nome do Amigo</label>
+                    </div>
                     {erro && <span className="modal-error">Nenhum Perfil com esse nome</span>}
 
                     <div className="amigos-container">
@@ -419,10 +422,10 @@ export default function ListaAmigos () {
 
                                     <div className="amigo-info2">
                                         <p className="amigo-nome2">{outro.nome}</p>
-                                        <p className="ver-desejos">Ver a Lista de Desejos</p>
+                                        <p className="ver-desejos">Clique para ver a Lista de Desejos</p>
                                     </div>
 
-                                    <FaUserXmark onClick={(e)=>{ e.stopPropagation(); setIsOpenExcluir(true); setAmizadeSelecionada(amigo)}}/>
+                                    <FaUserXmark className="excluir-amigo" onClick={(e)=>{ e.stopPropagation(); setIsOpenExcluir(true); setAmizadeSelecionada(amigo)}}/>
                                 </div>
                             )
                         })}

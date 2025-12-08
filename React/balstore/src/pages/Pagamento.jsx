@@ -82,13 +82,12 @@ export default function Pagamento () {
                     <div className="content_pagamento">
                         <div className="left_pagamento">
                             <div className="valores">
-                                <p className="produtos_pagamento">Produtos: <i>R${(compra.valor).toFixed(2)}</i></p>
+                                <p className="produtos_pagamento">Produtos: <i>R${compra.valor.toFixed(2)}</i></p>
                                 <p>Frete: <i>R${compra.frete}</i></p>
                                 <p>Total: <i>R${(compra.valor + compra.frete).toFixed(2)}</i></p>
                             </div>
                             <div className="confirmacao">
                                 <p>Confirmação do pedido após o pagamento</p>
-                                <h4>Código expira em:</h4>
                                 <TimeBar duration={360}></TimeBar>
                             </div>
                         </div>
@@ -100,8 +99,9 @@ export default function Pagamento () {
                         <div className="right_pagamento">
                             <p style={{fontSize:"20px", color:"green", fontWeight:"bold"}}>Compra Feita</p>
                             <p className="data">{data_formatada}</p>
-                            <p>Enviado para: {cliente?.nome}</p>
-                            <p>Endereço:</p>
+                            <p style={{fontWeight:700}}>Enviado para:</p>
+                            <p> {cliente?.nome}</p>
+                            <p style={{fontWeight:700}}>Endereço:</p>
                             <p>{compra?.endereco?.rua}, Nº {compra?.endereco?.numero}, {compra?.endereco?.cidade} - {compra?.endereco?.estado} </p>
 
                         </div>

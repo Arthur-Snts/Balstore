@@ -16,7 +16,7 @@ export default function AdicionarProduto({ categorias, loja_id }) {
     const [categoria, setCategoria] = useState("");
     const [preco, setPreco] = useState("");
     const [estoque, setEstoque] = useState("");
-    const [desconto, setDesconto] = useState("");
+    const [desconto, setDesconto] = useState(0);
 
     const handleFileChange = (e) => {
         if (e.target.files.length > 0) {
@@ -65,14 +65,18 @@ export default function AdicionarProduto({ categorias, loja_id }) {
             </div>
 
             <div className="form">
-                <input 
-                    type="text"
-                    name="name"
-                    placeholder="Nome do Produto"
-                    className="nome-prod"
-                    value={nome}
-                    onChange={(e) => setNome(e.target.value)}
-                />
+                <div className="input-container">
+                    <input 
+                        id="name"
+                        type="text"
+                        name="name"
+                        placeholder=""
+                        className="input-field"
+                        value={nome}
+                        onChange={(e) => setNome(e.target.value)}
+                    />
+                    <label for="name" className="input-label">Nome</label>
+                </div>
 
                 <select 
                     name="categoria" 
@@ -87,33 +91,46 @@ export default function AdicionarProduto({ categorias, loja_id }) {
                         </option>
                     ))}
                 </select>
+                
+                <div className="input-container">
+                    <input 
+                        id="precos"
+                        type="text"
+                        name="preco"
+                        placeholder=""
+                        className="input-field"
+                        value={preco}
+                        onChange={(e) => setPreco(e.target.value)}
+                    />
+                    <label for="precos" className="input-label">Preço</label>
+                </div>
 
-                <input 
-                    type="text"
-                    name="preco"
-                    placeholder="Preço"
-                    className="preco-prod"
-                    value={preco}
-                    onChange={(e) => setPreco(e.target.value)}
-                />
+                <div className="input-container">
+                    <input
+                        id="estoque"
+                        type="text"
+                        name="estoque"
+                        placeholder=""
+                        className="input-field"
+                        value={estoque}
+                        onChange={(e) => setEstoque(e.target.value)}
+                    />
+                    <label for="estoque" className="input-label">Estoque</label>
+                </div>
 
-                <input 
-                    type="text"
-                    name="estoque"
-                    placeholder="Estoque"
-                    className="estoque-prod"
-                    value={estoque}
-                    onChange={(e) => setEstoque(e.target.value)}
-                />
-
-                <input 
-                    type="text"
-                    name="desconto"
-                    placeholder="Desconto"
-                    className="desconto-prod"
-                    value={desconto}
-                    onChange={(e) => setDesconto(e.target.value)}
-                />
+                
+                <div className="input-container">
+                    <input 
+                        id="desconto"
+                        type="text"
+                        name="desconto"
+                        placeholder=""
+                        className="input-field"
+                        value={desconto}
+                        onChange={(e) => setDesconto(e.target.value)}
+                    />
+                    <label for="desconto" className="input-label">Desconto</label>
+                </div>
 
                 <button 
                     className="cadastro-button"

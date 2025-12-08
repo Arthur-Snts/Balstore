@@ -21,16 +21,16 @@
 }
 
 .search-product input {
-    background-color: var(--cinza-texto);
+    background-color: var(--cinza-input);
     border: none;
     width: 90%;
     margin-left: 30px;
-    color: var(--branco);
+    color: var(--preto);
     outline: none;
 }
 
 .search-product input::placeholder {
-    color: var(--branco);
+    color: var(--cinza-texto);
 }
 
 /* ====== LISTA DE PRODUTOS ====== */
@@ -127,7 +127,7 @@
     gap: 100px;
 }
 
-.buttons-modal .cancel-button {
+.modal_content .buttons-modal .cancel-button {
     background-color: var(--amarelo);
     color: var(--azul-principal);
     border: none;
@@ -136,7 +136,7 @@
     width: 150px;
 }
 
-.buttons-modal .confirm-button {
+.modal_content .buttons-modal .confirm-button {
     background-color: var(--branco);
     color: var(--azul-principal);
     border: 2px solid var(--amarelo);
