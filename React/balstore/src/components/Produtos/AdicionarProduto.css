@@ -43,47 +43,103 @@
     gap: 20px;
 }
 
-.form input{
-    border: none;
-    border-bottom: 3px solid black;
-    background-color: gainsboro;
-    color: black;
-    padding-left: 10px;
-    outline: none;
+.input-container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 0px; 
 }
 
-.form input::placeholder{
-    color: black;
-    font-style: italic;
+
+
+.input-field {
+  width: 100%;
+  padding: 10px 10px 10px 10px; 
+  border: 2px solid #ccc; 
+  border-radius: 8px; 
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: transparent !important;   
+  color: var(--cor-do-texto-input); 
 }
 
-.form select {
-    border: none;
-    border-bottom: 3px solid black;
-    background-color: gainsboro;
-    color: black;
-    padding-left: 10px;
-    outline: none;
+.input-label {
+  position: absolute;
+  top: 50%; 
+  left: 3%; 
+  transform: translateY(-50%);
+  color: #6c757d; 
+  transition: all 0.3s ease;
+  pointer-events: none; 
+  background-color: white; 
+  padding: 0 5px; 
+  font-size: 16px; 
 }
 
-.form textarea {
-    border: none;
-    border-bottom: 3px solid black;
-    background-color: gainsboro;
-    color: black;
-    padding-left: 10px;
-    outline: none;
+
+.input-field:focus + .input-label,
+.input-field:not(:placeholder-shown) + .input-label {
+  top: 0; 
+  left: 3%; 
+  font-size: 12px; 
+  color: var(--azul-principal); 
+  transform: translateY(-50%); 
+  z-index: 1; 
 }
 
-.form textarea::placeholder{
-    color: black;
-    font-style: italic;
+.input-field:focus {
+  border-color: var(--azul-principal); 
 }
 
-.form .cadastro-button{
-    background-color: var(--azul-principal);
-    color: var(--branco);
-    padding: 20px;
-    border-radius: 20px;
-    border: none;
+.categoria-prod {
+    width: 100%; 
+    
+    padding: 10px 10px 10px 10px; 
+    font-size: 16px; 
+    
+    border: 2px solid #ccc; 
+    border-radius: 8px; 
+    
+    background-color: transparent; 
+    
+    outline: none; 
+    
+    transition: all 0.3s ease; 
+    
+    color: #6c757d; 
+    
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+}
+
+.categoria-prod:focus {
+    border-color: var(--azul-principal); 
+}
+
+.categoria-prod:valid {
+    color: var(--cor-do-texto-input, #6c757d); 
+}
+
+.categoria-prod option[value=""] {
+    color: #6c757d; 
+}
+
+.cadastro-button {
+  padding: 10px;
+  background-color: var(--azul-principal);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 10px;
+  width: 250px;
+  height: 40px;
+  font-size: 15px;
+}
+
+.cadastro-button:hover {
+  background-color: var(--azul-escuro);
 }
