@@ -889,3 +889,41 @@ export async function putCompra(com_id, dados) {
         return null;
     }
 }
+
+// ======================================================================================
+// DELETE COMPRA
+// ======================================================================================
+
+
+export async function deleteCompra(com_id) {
+    try {
+        const response = await fetch(`http://localhost:8080/compras/${com_id}`, {
+            method: "DELETE"
+        });
+
+        const result = await response.json();
+        return result;
+
+    } catch (error) {
+        console.error("Erro ao atualizar compra:", error);
+        return null;
+    }
+}
+
+// ======================================================================================
+// PUT COMENTARIO
+// ======================================================================================
+
+
+export async function putComentario(comId, conteudo, avaliacao) {
+    const response = await fetch(`http://localhost:8080/comentarios/${comId}/?conteudo=${conteudo}&avaliacao=${avaliacao}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+        throw new Error("Erro ao atualizar comentário");
+    }
+
+    return response.json();
+}

@@ -60,7 +60,7 @@ export default function Pedidos () {
             var lista = []
             ;(loja.produtos || []).forEach((produto) => {
                 (produto.compras || []).forEach((compra) => {
-                    if (compra.situacao == "Aguardando Pagamento") {
+                    if (compra.situacao == "Pagamento Aprovado") {
                         lista.push(compra)
                     }
                 })

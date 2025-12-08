@@ -12,6 +12,7 @@ export default function PedidosEnviados({compras}){
     const {showAlert} = useAlert()
     const [produtoSelecionado, setProdutoSelecionado] = useState(null);
     const [cod_rastreio, setCod_Rastreio] = useState("")
+    const [busca, setBusca] = useState("");
 
 
      useEffect(() => {
@@ -57,18 +58,26 @@ export default function PedidosEnviados({compras}){
     
             carregarprodutos();
         }, [compras]);
+
+    const produtosFiltrados = listaProdutos.filter(produto => {
+        const texto = busca.toLowerCase();
+
+        return (
+            produto.nome?.toLowerCase().includes(texto)
+        );
+    });
     
 
     return(
         <div className="produtos">
             <div className='search-product'>
                 <i className="fa fa-search"></i>
-                <input type="text"  placeholder="Pesquisar Pedido da sua Loja"/>
+                <input type="text"  placeholder="Pesquisar Pedido da sua Loja" value={busca} onChange={(e) => setBusca(e.target.value)}/>
             </div>
 
            
             <div className="produtos-div">
-                {listaProdutos.map((produto, index) => (
+                {produtosFiltrados.map((produto, index) => (
                     <ProdutoHorizontal props={produto} key={index}>
                     </ProdutoHorizontal>
                 ))}

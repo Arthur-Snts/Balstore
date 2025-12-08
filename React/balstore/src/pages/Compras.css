@@ -20,6 +20,7 @@
     width: 90%;
     height: 800px;
     overflow-y: scroll;
+    padding-right: 10px;
 }
 
 .produtos_compra{
@@ -28,13 +29,24 @@
     gap: 50px;
 }
 
+.buttons-children {
+    display: flex;
+    align-items: center;
+}
+
+.buttons-children p {
+    color: var(--azul-principal);
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .buttons-children button {
     color: var(--azul-principal);
     background-color: var(--amarelo);
     border: none;
     padding: 10px;
     border-radius: 10px;
-    font-size: 21px;
+    font-size: 18px;
     font-weight: bold;
 }
 
@@ -54,3 +66,7 @@
     color: var(--preto);
 }
 
+.buttons-children .data_hora {
+    text-align: center;
+    font-weight: normal;
+}

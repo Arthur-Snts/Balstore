@@ -8,6 +8,7 @@ const categorias = [
 ];
 
 function FiltrosDeProduto({ onChangeFiltros, filtrosAtuais }) {
+  const [open, setOpen] = useState(false);
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState(filtrosAtuais?.categorias || []);
   const [precoMin, setPrecoMin] = useState(filtrosAtuais?.precoMin || "");
   const [precoMax, setPrecoMax] = useState(filtrosAtuais?.precoMax || "");
@@ -43,9 +44,17 @@ function FiltrosDeProduto({ onChangeFiltros, filtrosAtuais }) {
   };
 
   return (
-    <div className="filtros-container">
+    
+    <>
+      <button 
+          className="menu-btn"
+          onClick={() => setOpen(prev => !prev)}
+      >
+          ☰
+      </button>
+    <div className={`filtros-container ${open ? 'open' : ''}`}>
       <div className="filtros-cabecalho">
-        <span className="icone-filtro">☰</span>
+        
         <h2 className="titulo-filtros">FILTROS</h2>
       </div>
 
@@ -101,7 +110,7 @@ function FiltrosDeProduto({ onChangeFiltros, filtrosAtuais }) {
           </button>
         </div>
       </form>
-    </div>
+    </div></>
   );
 }
 

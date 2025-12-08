@@ -78,15 +78,20 @@ export default function MinhaLoja() {
         var avaliacoes = 0
         var count = 0
 
-        loja.produtos.map((produto) => (
-            produto.comentarios.map((comentario)=> {
-                avaliacoes = avaliacoes + Number(comentario.avaliacao)
-                count = count +1
-        })
+        loja.produtos.map((produto) => {
+            if (!produto.comentarios){
+                produto.comentarios.map((comentario)=> {
+                    avaliacoes = avaliacoes + Number(comentario.avaliacao)
+                    count = count +1
+            })}
             
-        ))
-
-        setAvaliacao_media(avaliacoes/count)
+        })
+        if (avaliacoes == 0){
+            setAvaliacao_media(0)
+        }else {
+            setAvaliacao_media(avaliacoes/count)
+        }
+        
 
         var compras = 0
 
