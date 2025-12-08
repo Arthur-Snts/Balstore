@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { verificar_token_loja, putLoja } from "../statements";
 import { useAlert } from "../components/Auxiliares/AlertContext";
+import "./EditarLoja.css";
 
 export default function EditarLoja() {
     const navigate = useNavigate();
@@ -84,54 +85,73 @@ export default function EditarLoja() {
                         </div>
 
                         <div className="form">
-                            <h1>Editar Informações</h1>
+                            <h1 className="titulo-info">Editar Informações</h1>
 
-                            <div className="formulario">
-                                <input
-                                    type="text"
-                                    placeholder="Nome..."
-                                    className="input-name"
-                                    value={nome}
-                                    onChange={(e) => setNome(e.target.value)}
-                                />
-
-                                <input
-                                    type="email"
-                                    placeholder="Email..."
-                                    className="input-email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-
-                                {/* SENHA ATUAL */}
-                                <input
-                                    type="password"
-                                    placeholder="Senha Atual..."
-                                    className="input-senha"
-                                    value={senhaAtual}
-                                    onChange={(e) => setSenhaAtual(e.target.value)}
-                                />
-
-                                {/* NOVA SENHA */}
-                                <input
-                                    type="password"
-                                    placeholder="Nova Senha..."
-                                    className="input-senha"
-                                    value={novaSenha}
-                                    onChange={(e) => setNovaSenha(e.target.value)}
-                                />
-
-                                {/* CONFIRMAÇÃO */}
-                                <input
-                                    type="password"
-                                    placeholder="Confirmar Nova Senha..."
-                                    className="input-senha"
-                                    value={confirmarNovaSenha}
-                                    onChange={(e) => setConfirmarNovaSenha(e.target.value)}
-                                />
+                            <div className="form">
+                                <div className="input-container">
+                                    <input 
+                                        type="text" 
+                                        id="nome" 
+                                        name="nome" 
+                                        placeholder="" 
+                                        className="input-field" 
+                                        value={nome} 
+                                        onChange={(e) => setNome(e.target.value)}
+                                    />
+                                    <label for="nome" className="input-label">Nome</label>
+                                </div>
+                                <div className="input-container">
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        name="email" 
+                                        placeholder="" 
+                                        className="input-field" 
+                                        value={email} 
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                    <label for="email" className="input-label">Email</label>
+                                </div>
+                                <div className="input-container">
+                                    <input 
+                                        type="password" 
+                                        id="passwordOld" 
+                                        name="passwordOld" 
+                                        placeholder="" 
+                                        className="input-field" 
+                                        value={senhaAtual} 
+                                        onChange={(e) => setSenhaAtual(e.target.value)}
+                                    />
+                                    <label for="passwordOld" className="input-label">Senha Atual</label>
+                                </div>
+                                <div className="input-container">
+                                    <input 
+                                        type="password" 
+                                        id="passwordNew" 
+                                        name="passwordNew" 
+                                        placeholder="" 
+                                        className="input-field" 
+                                        value={novaSenha} 
+                                        onChange={(e) => setNovaSenha(e.target.value)}
+                                    />
+                                    <label for="passwordNew" className="input-label">Nova Senha</label>
+                                </div>
+                                <div className="input-container">
+                                    <input 
+                                        type="password" 
+                                        id="passwordConfirm" 
+                                        name="passwordConfirm" 
+                                        placeholder="" 
+                                        className="input-field" 
+                                        value={confirmarNovaSenha} 
+                                        onChange={(e) => setConfirmarNovaSenha(e.target.value)}
+                                    />
+                                    <label for="passwordNew" className="input-label">Nova Senha</label>
+                                </div>
+                                
                             </div>
 
-                            <button className="button-entrar" onClick={editarLoja}>
+                            <button className="config-button" onClick={editarLoja}>
                                 Editar
                             </button>
                         </div>

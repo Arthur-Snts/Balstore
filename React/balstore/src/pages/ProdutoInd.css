@@ -51,6 +51,7 @@
     display: flex;
     width: 500px;
     gap: 30px;
+    align-items: center;
 }
 
 .contador {
@@ -121,4 +122,125 @@
 .carrossel_categoria .carrossel-produtos {
     border-top: 2px solid var(--azul-principal);
     padding-top: 30px;
+}
+
+
+.comentario-conteudo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;  
+}
+.comentario .avaliacao-estrelas-barra-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}  
+
+.comentario .avaliacao-estrelas-barra-wrapper .nota-numerica {
+    font-size: 20px;
+} 
+
+.comentario .avaliacao-estrelas-barra-wrapper .estrelas-container-base {
+    font-size: 30px;
+} 
+
+.header-comentarios {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 100px;
+    padding-right: 101px;
+}
+
+
+.header-comentarios .avaliacao-estrelas-barra-wrapper{
+    display: flex;
+    align-items: center;
+    padding-right: 100px;
+    justify-content: flex-end;
+}
+
+.header-comentarios .avaliacao-estrelas-barra-wrapper .nota-numerica {
+     font-size: 20px;
+}  
+
+.header-comentarios .avaliacao-estrelas-barra-wrapper .estrelas-container-base {
+     font-size: 30px;
+} 
+
+.header-comentarios p {
+    text-align: center;
+    margin-bottom: 0;
+    padding-left: 100px;
+    font-size: 20px;
+    color: var(--azul-principal);
+}
+.comentario {
+    
+    display: flex;
+    flex-direction: column;
+    padding: 25px; 
+    padding-left: 200px;
+    padding-right: 200px;
+}
+.linha-divisoria {
+    margin-top: 20px;
+    height: 2px; 
+    background-color: #ddd; 
+
+}
+
+.comentario:last-child {
+    border-bottom: none;
+}
+
+.usuario-comentario {
+   
+    display: flex;
+    align-items: center; 
+    margin-bottom: 10px; 
+}
+
+.usuario-comentario img {
+    
+    width: 40px; 
+    height: 40px;
+    border-radius: 50%; 
+    margin-right: 10px; 
+    
+   
+    padding: 5px; 
+    box-sizing: content-box; 
+}
+
+.nome-comentario {
+  
+    display: flex;
+    flex-direction: column;
+}
+
+.nome-comentario p:first-child {
+   
+    font-weight: bold; 
+    font-size: 16px;
+    margin: 0; 
+    color: #333; 
+}
+
+.nome-comentario p:last-child {
+    
+    font-size: 14px;
+    color: #888; 
+    margin: 0; 
+}
+
+
+
+
+.comentario > p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5; 
+    margin: 0; 
+   
 }

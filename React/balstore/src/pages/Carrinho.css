@@ -139,3 +139,39 @@
 .produtos-recomendados .produto .preco {
     font-size: 18px;
 }
+
+.content-carrinho .children svg {
+    font-size: 20px;
+}
+
+.delete-carrinho {
+    color: var(--vermelho);
+    cursor: pointer;
+}
+
+
+.presente {
+    width: 60px;
+}
+
+.presenteado p {
+    font-size: 12px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.presenteado {
+    width: 180px;
+    display: flex;
+
+}
+
+.endereco-carrinho {
+    width: 200px !important;
+}
+
+.contagem-carrinho {
+    display: flex;
+    justify-self: left;
+}

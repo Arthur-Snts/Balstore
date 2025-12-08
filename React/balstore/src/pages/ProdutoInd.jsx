@@ -238,6 +238,8 @@ export default function ProdutoInd () {
                     
                 if (count > produto.estoque){
                     showAlert(`O Produto não está disponível na quantidade desejada`, "info");
+                    setLoading(false)
+                    return;
                 }
 
                 list_produtos.push(produto.id)
@@ -384,8 +386,14 @@ export default function ProdutoInd () {
                                     <p>{comentario.cliente.email}</p>
                                 </div>
                             </div>
-                            <EstrelasAvaliacao rating = {comentario.avaliacao} />
-                            <p>{comentario.conteudo}</p>
+                           <div className="comentario-conteudo">
+                                <p>{comentario.conteudo}</p>
+                                 <EstrelasAvaliacao rating = {comentario.avaliacao} />
+                                
+                            </div>  
+                        <div className="linha-divisoria"></div>
+                           
+                            
                         </div>
                     ))}
                 </div>

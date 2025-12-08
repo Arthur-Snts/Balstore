@@ -2,8 +2,9 @@ import "./PedidosPendentes.css"
 import ProdutoHorizontal from "./ProdutoHorizontal"
 import { useState, useEffect } from "react"
 import Modal from "../Auxiliares/Modal"
+import { useNavigate } from "react-router-dom"
 import { useAlert } from "../Auxiliares/AlertContext"
-import { getcliente, getCompra, getendereco_id, putCompra } from "../../statements";
+import { getcliente, getCompra, getendereco_id, putCompra, deleteCompra} from "../../statements";
 
 export default function PedidosPendentes({compras}){
 
@@ -12,9 +13,18 @@ export default function PedidosPendentes({compras}){
     const {showAlert} = useAlert()
     const [produtoSelecionado, setProdutoSelecionado] = useState(null);
     const [cod_rastreio, setCod_Rastreio] = useState("")
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [produtoNegado, setProdutoNegado] = useState(null);
+    const navigate = useNavigate()
+
+    const abrirModalNegar = (produto) => {
+        setProdutoNegado(produto);
+        setIsDeleteOpen(true);
+    };
 
     useEffect(() => {
         if (!compras) return;
+
         async function carregarprodutos() {
             const list_produtos_comprados = [];
 
@@ -26,8 +36,12 @@ export default function PedidosPendentes({compras}){
             );
 
             for (const { compra, resultado_compra } of resultados) {
-                if (resultado_compra.success) {
 
+                // ⭐️ FILTRA APENAS COMPRAS APROVADAS
+                
+
+                if (resultado_compra.success) {
+                    
                     for (const compraItem of (resultado_compra.p || [])) {
 
                         for (const produto of (compraItem.produtos || [])) {
@@ -42,17 +56,15 @@ export default function PedidosPendentes({compras}){
                                 ...produto,
                                 cliente: cliente,
                                 endereco: endereco,
-                                com_id: compra.id 
+                                com_id: compra.id
                             });
                         }
                     }
                 }
             }
-            
 
             setListaProdutos(list_produtos_comprados);
-            
-            }
+        }
 
         carregarprodutos();
     }, [compras]);
@@ -84,14 +96,43 @@ export default function PedidosPendentes({compras}){
         setCod_Rastreio("");
         setProdutoSelecionado(null);
         setIsOpen(false);
+        navigate("/Loja/Pedidos")
     };
+
+    async function negarProduto() {
+
+        if (!produtoNegado) {
+            showAlert("Nenhum produto selecionado", "info");
+            return;
+        }
+
+        await deleteCompra(produtoNegado.com_id);
+
+        showAlert("Pedido negado com sucesso!", "success");
+
+        setListaProdutos(prev =>
+            prev.filter(p => p.com_id !== produtoNegado.com_id)
+        );
+
+        setProdutoNegado(null);
+        setIsDeleteOpen(false);
+    }
+
+    const [busca, setBusca] = useState("");
+    const pedidosFiltrados = listaProdutos.filter(produto => {
+        const texto = busca.toLowerCase();
+
+        return (
+            produto.nome?.toLowerCase().includes(texto)
+        );
+    });
     
 
     return(
         <div className="produtos">
             <div className='search-product'>
                 <i className="fa fa-search"></i>
-                <input type="text"  placeholder="Pesquisar Pedido da sua Loja"/>
+                <input type="text"  placeholder="Pesquisar Pedido da sua Loja" value={busca} onChange={(e) => setBusca(e.target.value)}/>
             </div>
 
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} >
@@ -115,12 +156,31 @@ export default function PedidosPendentes({compras}){
                     <button onClick={AprovarProduto} className="confirm-button">Confirmar</button>     
                 </div>  
             </Modal>
+            <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
+                <h3>Negar Pedido</h3>
+                <p className="subtitulo">
+                    Tem certeza que deseja negar o pedido do produto 
+                    <strong> {produtoNegado?.nome}</strong>?
+                </p>
+
+                <div className="hr"></div>
+
+                <div className="buttons-modal">
+                    <button onClick={() => setIsDeleteOpen(false)} className="confirm-button">
+                        Cancelar
+                    </button>
+
+                    <button onClick={negarProduto} className="cancel-button">
+                        Negar Pedido
+                    </button>
+                </div>
+            </Modal>
             <div className="produtos-div">
-                {listaProdutos.map((produto, index) => (
+                {pedidosFiltrados.map((produto, index) => (
                     <ProdutoHorizontal props={produto} key={index}>
                         <div className="buttons-children">
                             <a onClick={() => abrirModalAprovar(produto)} className="edit-button">Enviar Pacote <i className="fa fa-check"></i></a>
-                            <a className="delete-button">Negar <i className="fa fa-trash"></i></a>
+                            <a className="delete-button" onClick={() => abrirModalNegar(produto)}>Negar <i className="fa fa-trash"></i></a>
                         </div>
                     </ProdutoHorizontal>
                 ))}

@@ -175,68 +175,106 @@ export default function Carrinho () {
             cli_cpf:cli_cpf,
             amount: valor })
         });
-        const data = await res.json();
+        const data = await res.json()
         return data.qr_codes[0].links[0].href;
     }
 
 
     async function handlecomprar() {
-        if (produtos_carrinho.length === 0) {
-            showAlert(`Coloque itens no Carrinho Primeiro`, "info");
-            return;
-        }
-        if (!endereco) {
-            showAlert(`Selecione um Endereço Primeiro`, "info");
-            setNeedFocusSelect(true);
-            return;
-        }
+    if (produtos_carrinho.length === 0) {
+        showAlert(`Coloque itens no Carrinho Primeiro`, "info");
+        return;
+    }
 
-        setLoading(true);
+    if (!endereco) {
+        showAlert(`Selecione um Endereço Primeiro`, "info");
+        setNeedFocusSelect(true);
+        return;
+    }
 
-        try {
-            let list_produtos = [];
+    setLoading(true);
 
-            
-            for (const carrinho of produtos_carrinho) {
+    try {
+        // ======================================================
+        // 1) AGRUPAR PRODUTOS DO CARRINHO POR PRODUTO_ID
+        // ======================================================
+        const mapaProdutos = {};  
+            produtos_carrinho.forEach((c) => {
+                if (!mapaProdutos[c.produto.id]) {
+                    mapaProdutos[c.produto.id] = {
+                        produto: c.produto,
+                        total: 0
+                    };
+                }
+                mapaProdutos[c.produto.id].total += c.qnt_produto;
+            });
 
-                
-                if (carrinho.qnt_produto > carrinho.produto.estoque) {
+            // ======================================================
+            // 2) VALIDAR ESTOQUE DE FORMA CORRETA
+            // ======================================================
+            for (const id in mapaProdutos) {
+                const { produto, total } = mapaProdutos[id];
+
+                if (total > produto.estoque) {
                     showAlert(
-                        `O produto "${carrinho.produto.nome}" não possui estoque suficiente`,
+                        `O produto "${produto.nome}" não possui estoque suficiente`,
                         "info"
                     );
                     setLoading(false);
                     return;
                 }
+            }
 
-                
-                const novoEstoque = carrinho.produto.estoque - carrinho.qnt_produto;
+            // ======================================================
+            // 3) ATUALIZAR ESTOQUE DOS PRODUTOS (UMA VEZ POR PRODUTO)
+            // ======================================================
+            const list_produtos = [];
+
+            for (const id in mapaProdutos) {
+                const { produto, total } = mapaProdutos[id];
+
+                const novoEstoque = produto.estoque - total;
 
                 const r1 = await putproduto(
-                    carrinho.produto.id,
+                    produto.id,
                     { estoque: novoEstoque },
                     null
                 );
 
-                if (!r1.success) {
-                    showAlert(`Falha ao atualizar estoque de ${carrinho.produto.nome}`, "erro");
+                if (!r1?.success) {
+                    showAlert(`Falha ao atualizar estoque de: ${produto.nome}`, "erro");
                     setLoading(false);
                     return;
                 }
 
-               
-                list_produtos.push(carrinho.produto.id);
-
-              
-                await deletecarrinho(carrinho.id);
-
-            
-                setProdutos_Carrinho(prev =>
-                    prev.filter(item => item.id !== carrinho.id)
-                );
+                list_produtos.push(produto.id);
             }
 
-        
+            // ======================================================
+            // 4) LIMPAR O CARRINHO (DEPOIS DE ATUALIZAR O ESTOQUE)
+            // ======================================================
+            for (const carrinho of produtos_carrinho) {
+                await deletecarrinho(carrinho.id);
+            }
+
+            setProdutos_Carrinho([]);
+
+            // ======================================================
+            // 5) CALCULAR VALOR TOTAL
+            // ======================================================
+            const totalCalculado = produtos_carrinho.reduce((acc, item) => {
+                let preco = item.produto.preco;
+                if (item.produto.promocao > 0) {
+                    preco = preco - (preco * (item.produto.promocao / 100));
+                }
+                return acc + preco * item.qnt_produto;
+            }, 0);
+
+            const valor_total = Number(totalCalculado.toFixed(2));
+
+            // ======================================================
+            // 6) GERAR PIX
+            // ======================================================
             const qrcode = await gerarPix(
                 cliente.cpf,
                 cliente.nome,
@@ -244,34 +282,41 @@ export default function Carrinho () {
                 valor_total
             );
 
-      
+            if (!qrcode) {
+                showAlert("Erro ao gerar código PIX", "erro");
+                setLoading(false);
+                return;
+            }
+
+            // ======================================================
+            // 7) CRIAR COMPRA
+            // ======================================================
             const resultado_compra = await postCompra(
                 cliente.id,
                 valor_total,
                 qrcode,
-                10,
-                list_produtos,
+                10,                 // frete
+                list_produtos,      // IDs únicos dos produtos
                 endereco
             );
 
-            if (resultado_compra?.success) {
-                setLoading(false);
-                showAlert(`Compra Feita com Sucesso`, "success");
-
-                navigate("/Pagamento", {
-                    state: {
-                        compra: resultado_compra.compra
-                    }
-                });
-            } else {
-                setLoading(false);
+            if (!resultado_compra?.success) {
                 showAlert(`Compra não Feita, Falhou`, "erro");
+                setLoading(false);
+                return;
             }
 
-        } catch (e) {
-            console.error(e);
             setLoading(false);
+            showAlert(`Compra Feita com Sucesso`, "success");
+
+            navigate("/Pagamento", {
+                state: { compra: resultado_compra.compra }
+            });
+
+        } catch (e) {
+            console.error("ERRO NO HANDLECOMPRAR:", e);
             showAlert(`Erro inesperado ao finalizar compra`, "erro");
+            setLoading(false);
         }
     }
 
@@ -288,13 +333,14 @@ export default function Carrinho () {
                     <div className="produtos-carrinho">
                         {produtos_carrinho.map((carrinho, index)=>(
                             <ProdutoHorizontal props={carrinho.produto} key={index}>
-                                <div className="contador">
+                                <div className="contagem-carrinho">
+                                    <div className="contador">
 
                                     <button 
                                         onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto -1)}
                                         disabled={(carrinho.qnt_produto) === 1}>-</button>
 
-                                    <p>{carrinho.qnt_produto}</p>
+                                        <p>{carrinho.qnt_produto}</p>
 
                                     <button onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto +1)}
                                         
@@ -305,7 +351,7 @@ export default function Carrinho () {
                                 <MdDelete  onClick={()=>(handleExcluir(carrinho.id))} className="excluir-produto"/>
                                 {(carrinho.presente_para) && 
                                 <div className="presenteado">
-                                    <img src={Presente} alt="Presente Icon" />
+                                    <img src={Presente} alt="Presente Icon" className="presente"/>
                                     <p>Presente para: {carrinho.cliente_presenteado.nome}</p>
                                 </div> }
                             </ProdutoHorizontal>
@@ -313,8 +359,8 @@ export default function Carrinho () {
                     </div>
                     <div className="endereco">
                         <p>Enviando para: </p>
-                        <select name="endereco" onChange={(e)=>setEndereco(e.target.value)} ref={selectRef}>
-                            <option value="">Selecionar Endereço</option>
+                        <select name="endereco" onChange={(e)=>setEndereco(e.target.value)} ref={selectRef} className="endereco-carrinho">
+                            <option value="" >Selecionar Endereço</option>
                             {cliente?.enderecos.map((endereco)=>(
                                 <option value={endereco.id}>{endereco.rua}, {endereco.numero} - {endereco.cidade} / {endereco.estado}</option>
                             ))}
@@ -331,7 +377,7 @@ export default function Carrinho () {
                         <h4>Você pode gostar: </h4>
                         {ProdutosRecomendados.map((produto, index)=>(
                             <ProdutoHorizontal props={produto} key={index}>
-                                <button className='adicionar' onClick={() => handlecarrinho(produto.id)}>
+                                <button className='adicionar-carrinho' onClick={() => handlecarrinho(produto.id)}>
                                     Adicionar ao Carrinho
                                 </button>
                             </ProdutoHorizontal>

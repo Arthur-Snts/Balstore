@@ -13,6 +13,7 @@ export default function ProdutosLojista({ loja_id }) {
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
   const {showAlert} = useAlert()
   const [categorias, setCategorias] = useState([])
+  const [busca, setBusca] = useState("");
 
 
   async function carregarProdutos() {
@@ -21,7 +22,7 @@ export default function ProdutosLojista({ loja_id }) {
         if (resultado_produtos.success){
             setListaProdutos(resultado_produtos.produtos);
         } else {
-          showAlert(`Erro ao Carregar lista de Produtos:${resultado_produtos.status} `, "erro")
+          showAlert(`${resultado_produtos.status} `, "info")
         }
 
         const resultado_categorias = await getcategorias()
@@ -74,6 +75,9 @@ export default function ProdutosLojista({ loja_id }) {
         setModo("lista")
       }
   };
+  const produtosFiltrados = listaProdutos.filter(produto =>
+    produto.nome.toLowerCase().includes(busca.toLowerCase())
+  );
 
   return (
     <div className="produtos">
@@ -82,12 +86,12 @@ export default function ProdutosLojista({ loja_id }) {
           {/* Campo de busca */}
           <div className="search-product">
             <i className="fa fa-search"></i>
-            <input type="text" placeholder="Pesquisar Produtos da sua Loja" />
+            <input type="text" placeholder="Pesquisar Produtos da sua Loja"  value={busca} onChange={(e) => setBusca(e.target.value)}/>
           </div>
 
           {/* Lista de produtos */}
           <div className="produtos-div">
-            {listaProdutos.map((produto, index) => (
+            {produtosFiltrados.map((produto, index) => (
               <ProdutoHorizontal props={produto} key={index}>
                 <div className="buttons-children">
                   <a

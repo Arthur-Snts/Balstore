@@ -17,7 +17,7 @@
     margin-bottom: 0;
     font-size: 30px;
     font-weight: bold;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Literata', serif;
 }
 
 .recomendados{
@@ -48,7 +48,7 @@
 }
 
 .carrossel-produtos .slick-slide{
-    display: flex;
+    display: flex !important;
     justify-content: center;
     align-items: center;
     height: 380px;

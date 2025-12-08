@@ -29,14 +29,9 @@
 .modal_content .linha{
     height: 45px;
     width:95%;
-    margin-left: 10px;
     display: flex;
 }
-.modal_content .rua{
-    height: 45px;
-    width:95%;
-    margin-left: 10px;
-}
+
 .linha input{
     width: 100%;
 }
@@ -57,17 +52,18 @@
     justify-content: space-evenly;
 }
 
-.buttons-modal .cancel-button{
-    background-color: var(--amarelo);
+.buttons-modal .confirm-endereco{
+    background-color: var(--branco);
     color: var(--azul-principal);
-    border: none;
+    border: 2px solid var(--azul-principal);
+    
     padding: 10px;
     border-radius: 30px;
     width: 150px;
 }
 
-.buttons-modal .confirm-button{
-    background-color: var(--branco);
+.buttons-modal .cancel-endereco{
+    background-color: var(--amarelo);
     color: var(--azul-principal);
     border: 2px solid var(--amarelo);
     padding: 10px;
@@ -102,9 +98,8 @@
     margin-right: 3px;
 }
 
-.modal_content input::placeholder{
-    color: black;
-    font-style: italic;
+.input-container{
+    width: 100%;
 }
 
 
