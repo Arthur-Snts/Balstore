@@ -328,8 +328,7 @@ export default function Carrinho () {
             <div className="content-carrinho">
                 <div className="center-carrinho">
                     <div className="titulo-carrinho">
-                        <h1>Seu Carrinho de Compras</h1>
-                        <p>Preço</p>
+                        <h1>Carrinho de compras</h1>
                     </div>
                     <div className="produtos-carrinho">
                         {produtos_carrinho.map((carrinho, index)=>(
@@ -337,19 +336,19 @@ export default function Carrinho () {
                                 <div className="contagem-carrinho">
                                     <div className="contador">
 
-                                        <button onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto +1)}>+</button>
+                                    <button 
+                                        onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto -1)}
+                                        disabled={(carrinho.qnt_produto) === 1}>-</button>
 
                                         <p>{carrinho.qnt_produto}</p>
 
-                                        <button 
-                                            onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto -1)}
-                                            disabled={(carrinho.qnt_produto) === 1}
-                                        >
-                                            -
-                                        </button>
-                                    </div>
-                                    <MdDelete  onClick={()=>(handleExcluir(carrinho.id))} className="delete-carrinho"/>
+                                    <button onClick={() => alterarQuantidade(carrinho.id, carrinho.qnt_produto +1)}
+                                        
+                                    >
+                                        +
+                                    </button>
                                 </div>
+                                <MdDelete  onClick={()=>(handleExcluir(carrinho.id))} className="excluir-produto"/>
                                 {(carrinho.presente_para) && 
                                 <div className="presenteado">
                                     <img src={Presente} alt="Presente Icon" className="presente"/>
@@ -370,8 +369,8 @@ export default function Carrinho () {
                 </div>
                 <div className="right-carrinho">
                     <div className="total-carrinho">
-                        <h4>Subtotal(Quantidade de Produtos):</h4>
-                        <p>{valor_total}</p>
+                        <h4>Subtotal: {produtos_carrinho.length} produto(s)</h4>
+                        <p>R${valor_total}</p>
                         <button onClick={handlecomprar}>Comprar</button>
                     </div>
                     <div className="produtos-recomendados">

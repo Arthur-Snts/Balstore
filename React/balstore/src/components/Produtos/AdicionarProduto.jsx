@@ -16,7 +16,7 @@ export default function AdicionarProduto({ categorias, loja_id }) {
     const [categoria, setCategoria] = useState("");
     const [preco, setPreco] = useState("");
     const [estoque, setEstoque] = useState("");
-    const [desconto, setDesconto] = useState("");
+    const [desconto, setDesconto] = useState(0);
 
     const handleFileChange = (e) => {
         if (e.target.files.length > 0) {

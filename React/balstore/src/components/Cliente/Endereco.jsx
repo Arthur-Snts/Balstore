@@ -288,13 +288,13 @@ export default function Endereco(){
                 {enderecoSelecionado && (
                     <p>
                         <strong>{enderecoSelecionado.rua}, {enderecoSelecionado.numero}</strong><br/>
-                        {enderecoSelecionado.bairro} – {enderecoSelecionado.cidade}/{enderecoSelecionado.estado} - {enderecoSelecionado.CEP}
+                        <strong>{enderecoSelecionado.bairro} – {enderecoSelecionado.cidade}/{enderecoSelecionado.estado} - {enderecoSelecionado.CEP}</strong>
                     </p>
                 )}
                 </p>
                 <div className="buttons-modal">
-                    <button className="confirm-button" onClick={() => setIsOpenExcluir(false)}>Cancelar</button>
-                    <button className="cancel-button" onClick={handleDelete}>Confirmar</button>
+                    <button className="confirm-excluir-button" onClick={() => setIsOpenExcluir(false)}>Cancelar</button>
+                    <button className="cancel-excluir-button" onClick={handleDelete}>Confirmar</button>
                 </div>
             </Modal>
 

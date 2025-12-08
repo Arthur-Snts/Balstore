@@ -42,6 +42,7 @@
     align-items: center;
     gap: 30px;
     width: 80%;
+    margin-top: -30px;
 }
 
 .buttons-children{
