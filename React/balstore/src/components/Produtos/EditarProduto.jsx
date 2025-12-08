@@ -74,14 +74,18 @@ export default function EditarProduto({ categorias, produto, onSave }) {
             </div>
 
             <div className="form">
-                <input 
+                <div className="input-container">
+                    <input 
+                    id="Nome"
                     type="text" 
                     name="nome" 
-                    placeholder="Nome do Produto"
-                    className="nome-prod"
+                    placeholder="" 
+                    className="input-field"
                     value={produtoEditado.nome}
                     onChange={handleChange}
-                />
+                    />
+                    <label for="Nome" className="input-label">Nome do Produto</label>
+                </div>
 
                 <select
                     name="categoria"
@@ -96,32 +100,43 @@ export default function EditarProduto({ categorias, produto, onSave }) {
                     ))}
                 </select>
 
-                <input 
-                    type="text"
-                    name="preco"
-                    placeholder="Preço"
-                    className="preco-prod"
+                <div className="input-container">
+                    <input 
+                    id="Preco"
+                    type="text" 
+                    name="Preco" 
+                    placeholder="" 
+                    className="input-field"
                     value={produtoEditado.preco}
                     onChange={handleChange}
-                />
+                    />
+                    <label for="Preco" className="input-label">Preço do Produto</label>
+                </div>
 
-                <input 
-                    type="text"
-                    name="estoque"
-                    placeholder="Estoque"
-                    className="estoque-prod"
+                <div className="input-container">
+                    <input 
+                    id="Estoque"
+                    type="text" 
+                    name="Estoque" 
+                    placeholder="" 
+                    className="input-field"
                     value={produtoEditado.estoque}
                     onChange={handleChange}
-                />
-
-                <input 
-                    type="text"
-                    name="promocao"
-                    placeholder="Desconto"
-                    className="desconto-prod"
+                    />
+                    <label for="Estoque" className="input-label">Estoque</label>
+                </div>
+                <div className="input-container">
+                    <input 
+                    id="Promocao"
+                    type="text" 
+                    name="promocao" 
+                    placeholder="" 
+                    className="input-field"
                     value={produtoEditado.promocao}
                     onChange={handleChange}
-                />
+                    />
+                    <label for="Promocao" className="input-label">Desconto (Colocar número inteiro)</label>
+                </div>
 
                 <button 
                     className="cadastro-button"

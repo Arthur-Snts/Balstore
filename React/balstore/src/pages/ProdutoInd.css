@@ -125,10 +125,18 @@
 }
 
 
+.comentarios-map {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
 .comentario-conteudo {
     display: flex;
     align-items: center;
     justify-content: space-between;  
+    
 }
 .comentario .avaliacao-estrelas-barra-wrapper {
     display: flex;
@@ -176,12 +184,12 @@
     color: var(--azul-principal);
 }
 .comentario {
-    
+    width: 80%;
     display: flex;
+    padding: 15px;
+    border-radius: 10px;
     flex-direction: column;
-    padding: 25px; 
-    padding-left: 200px;
-    padding-right: 200px;
+    box-shadow: 2px 2px 2px 2px rgba(12, 94, 148, 0.3);;
 }
 .linha-divisoria {
     margin-top: 20px;

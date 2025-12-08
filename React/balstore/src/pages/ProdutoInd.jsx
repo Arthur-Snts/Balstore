@@ -374,10 +374,11 @@ export default function ProdutoInd () {
                 
                 <div className="comentarios">
                     <div className="header-comentarios">
-                        <p>Avaliações do Produto</p>
+                        <p>Avaliações do Produto ({produto.comentarios.length} {produto.comentarios.length >1 ? "Avaliações" : "Avaliação"})</p>
                         <EstrelasAvaliacao rating = {avaliacao_total} />
                     </div>
-                    {produto.comentarios.map((comentario)=> (
+                    <div className="comentarios-map">
+                        {produto.comentarios.map((comentario)=> (
                         <div className="comentario">
                             <div className="usuario-comentario">
                                 <img src={user_icon} alt="User icon" />
@@ -391,11 +392,12 @@ export default function ProdutoInd () {
                                  <EstrelasAvaliacao rating = {comentario.avaliacao} />
                                 
                             </div>  
-                        <div className="linha-divisoria"></div>
                            
                             
                         </div>
                     ))}
+                    </div>
+                    
                 </div>
             <Footer></Footer>
         </>

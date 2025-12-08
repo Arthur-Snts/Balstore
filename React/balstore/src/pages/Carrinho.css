@@ -21,27 +21,12 @@
 .produtos-carrinho{
     display: flex;
 }
-.produtos-carrinho .produto{
-    width: 98%;
-    margin-top: -10px;
-}
-.produtos-carrinho .produto .left_produto{
-    width: 25%
-}
-.produtos-carrinho .produto .conteudo_produto{
-    width: 70%;
-    gap: 10%;
-    height: auto;
-}
-.produtos-carrinho .children {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-}
+
 .produtos-carrinho .children .excluir-produto{
     width: 30px;
     height: 20px;
     color: var(--vermelho);
+    cursor: pointer;
 }
 
 .titulo-carrinho {
@@ -79,7 +64,6 @@
 }
 
 .endereco select {
-    width: 84%;
     margin-bottom: 5px;
     border: none;
     appearance: unset;
@@ -167,9 +151,6 @@
 
 }
 
-.endereco-carrinho {
-    width: 200px !important;
-}
 
 .contagem-carrinho {
     display: flex;

@@ -295,7 +295,7 @@ export default function ListaAmigos () {
                     <h3 className="modal-title">Adicionar Amigo</h3>
 
                     <label className="modal-label">Buscar por nome</label>
-                    <div className="input-conteiner">
+                    <div className="input-container">
                         <input 
                             id="nome"
                             type="text" 
@@ -304,7 +304,7 @@ export default function ListaAmigos () {
                             value={texto} 
                             onChange={(e) => setTexto(e.target.value)} 
                         />
-                        <label for="nome" className="input-label-amigo">Nome do Amigo</label>
+                        <label for="nome" className="input-label">Nome do Amigo</label>
                     </div>
                     {erro && <span className="modal-error">Nenhum Perfil com esse nome</span>}
 

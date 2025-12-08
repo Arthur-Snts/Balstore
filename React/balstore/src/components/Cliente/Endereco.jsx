@@ -215,64 +215,91 @@ export default function Endereco(){
                     </div>
                 </div>
                 <div className="buttons-modal">
-                    <button className="cancel-endereco" onClick={() => setIsOpen(false)}>Cancelar</button>
-                    <button className="confirm-endereco" onClick={handleAdicionar}>Confirmar</button>
+                    <button className="confirm-endereco" onClick={() => setIsOpen(false)}>Cancelar</button>
+                    <button className="cancel-endereco" onClick={handleAdicionar}>Confirmar</button>
                 </div> 
             </Modal>
 
             {/* Modal Editar */}
             <Modal isOpen={isOpenEdit} onClose={() => setIsOpenEdit(false)}>
                 <h3>Editar Endereço</h3>
-
-                <input
-                    type="text"
-                    name="rua"
-                    placeholder="Rua"
-                    className="rua"
-                    defaultValue={enderecoSelecionado?.rua}
-                    onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, rua: e.target.value}))}
-                />
-
                 <div className="linha">
-                    <input
-                        type="text"
-                        name="bairro"
-                        placeholder="Bairro"
-                        defaultValue={enderecoSelecionado?.bairro}
-                        onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, bairro: e.target.value}))}
-                    />
-                    <input
-                        type="text"
-                        name="numero"
-                        placeholder="Nº"
+                    <div className="input-container">
+                        <input 
+                            id="rua"
+                            type="text" 
+                            name="rua" 
+                            placeholder="" 
+                            className="input-field" 
+                            defaultValue={enderecoSelecionado?.rua}
+                            onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, rua: e.target.value}))}
+                        />
+                        <label for="rua" className="input-label">Rua</label>
+                    </div>
+                </div>
+                <div className="linha">
+                    <div className="input-container">
+                        <input 
+                            id="bairro"
+                            type="text" 
+                            name="bairro" 
+                            placeholder=""
+                            className="input-field"
+                             defaultValue={enderecoSelecionado?.bairro}
+                            onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, bairro: e.target.value}))}
+                        />
+                        <label for="bairro" className="input-label">Bairro</label>
+                    </div>
+                    <div className="input-container">
+                        <input 
+                        id="numero" 
+                        type="text" 
+                        name="numero" 
+                        placeholder="" 
+                        className="input-field"
                         defaultValue={enderecoSelecionado?.numero}
                         onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, numero: e.target.value}))}
-                    />
+                        />
+                        <label for="numero" className="input-label">Nº</label>
+                    </div>
                 </div>
-
                 <div className="linha">
-                    <input
-                        type="text"
-                        name="estado"
-                        placeholder="UF"
-                        style={{width:"60px"}}
+                    <div className="input-container">
+                        <input 
+                        id="UF"
+                        type="text" 
+                        name="estado" 
+                        placeholder=""
+                        className="input-field" 
                         defaultValue={enderecoSelecionado?.estado}
                         onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, estado: e.target.value}))}
-                    />
-                    <input
-                        type="text"
-                        name="cidade"
-                        placeholder="Cidade"
+                        />
+                        <label for="UF" className="input-label">UF</label>
+                    </div>
+                    <div className="input-container">
+                        <input 
+                        id="cidade"
+                        type="text" 
+                        name="cidade" 
+                        placeholder="" 
+                        className="input-field"
                         defaultValue={enderecoSelecionado?.cidade}
                         onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, estado: e.target.value}))}
-                    />
-                    <input
-                        type="text"
-                        name="CEP"
-                        placeholder="CEP"
+                        />
+                        <label for="cidade" className="input-label">Cidade</label>
+                    </div>
+                    <div className="input-container">
+                        <input 
+                        id="CEP"
+                        type="text" 
+                        name="CEP" 
+                        placeholder="" 
+                        className="input-field"
                         defaultValue={enderecoSelecionado?.CEP}
                         onChange={(e) =>setEnderecoSelecionado(prev=>({...prev, CEP: e.target.value}))}
-                    />
+                        />
+                        <label for="CEP" className="input-label">CEP</label>
+                    </div>
                 </div>
 
                 <div className="buttons-modal">

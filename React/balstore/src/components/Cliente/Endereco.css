@@ -88,15 +88,6 @@
     width: 150px;
 }
 
-.modal_content input{
-    border: none;
-    border-bottom: 3px solid black;
-    background-color: gainsboro;
-    color: black;
-    padding-left: 10px;
-    outline: none;
-    margin-right: 3px;
-}
 
 .input-container{
     width: 100%;

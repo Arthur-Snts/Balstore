@@ -333,7 +333,7 @@ export default function Carrinho () {
                     <div className="produtos-carrinho">
                         {produtos_carrinho.map((carrinho, index)=>(
                             <ProdutoHorizontal props={carrinho.produto} key={index}>
-                                <div className="contagem-carrinho">
+                                <div className="contagem">
                                     <div className="contador">
 
                                     <button 
@@ -354,6 +354,7 @@ export default function Carrinho () {
                                     <img src={Presente} alt="Presente Icon" className="presente"/>
                                     <p>Presente para: {carrinho.cliente_presenteado.nome}</p>
                                 </div> }
+                                </div>
                             </ProdutoHorizontal>
                         ))}
                     </div>
