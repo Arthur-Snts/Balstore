@@ -4,16 +4,21 @@
     justify-content: center;
     gap: 150px;
     margin-bottom: 50px;
+    
 }
 
 .produto-mostrar img {
-    width: 600px;
+    max-width: 600px;
+    min-width: 400px;
+    max-height: 600px;
 }
 
 .produto-mostrar .produto-informacao {
     display: flex;
     flex-direction: column;
     gap: 30px;
+    width: 40%;
+    
 }
 
 .produto-informacao .titulo-produto {
@@ -33,7 +38,9 @@
 }
 
 .titulo-produto h3 {
-    font-size: 50px;
+    font-size: 30px;
+    width: 80%;
+    text-align: center;
     color: var(--azul-principal);
 }
 
@@ -61,7 +68,6 @@
 
 .contagem {
     display: flex;
-    width: 500px;
     gap: 30px;
     align-items: center;
 }
@@ -84,8 +90,9 @@
 
 .produto-buttons {
     display: flex;
-    gap: 50px;
+    justify-content: space-around;
     margin-top: 100px;
+
 }
 
 .produto-buttons button {

@@ -145,6 +145,7 @@ export default function ListaDesejos() {
             showAlert(`${resultado?.status}`, "info");
         }
     }
+    if (loading) {return <Loading/>}
 
     return (   
         <div className="lista-desejos-page">  

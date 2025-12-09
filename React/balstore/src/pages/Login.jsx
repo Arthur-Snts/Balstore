@@ -100,7 +100,7 @@ export default function Login (){
                 <div className="foto">
                     {login === "cliente" ? <img src={login_cliente}/> : <img src={login_lojista}/>}
                 </div>
-                <div className="form-login">
+                <form className="form-login">
                     <h1>Login</h1>
                     <div className="formulario-login">
                         <div className="links-login">
@@ -131,7 +131,7 @@ export default function Login (){
                         </>}
                     </div>
                     <button className="button-entrar" onClick={login == "cliente"? handleLogincliente : handleLoginloja}>Entrar</button>
-                </div>
+                </form>
             </div>
             <Footer></Footer>
         </>}</>
