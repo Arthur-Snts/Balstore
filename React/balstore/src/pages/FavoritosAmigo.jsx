@@ -139,11 +139,6 @@ export default function FavoritosAmigo(){
 
                                     <button onClick={() => alterarQuantidade(produto.id, +1)}>+</button>
                                 </div>
-
-                                <Favoritos 
-                                    favorito={false}
-                                    onclick={() => {}}
-                                />
                             </div>
 
                             <button className='adicionar' onClick={() => handlecarrinho(produto.id)}>

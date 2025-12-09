@@ -93,30 +93,30 @@
 }
 
 .button_amarelo {
-    color: var(--azul-principal);
+    color: var(--azul-escuro);
     background-color: var(--amarelo);
     border: none;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 30px;
     font-size: 21px;
     font-weight: bold;
 }
 
 .button_azul {
-    color: var(--amarelo);
+    color: var(--branco);
     background-color: var(--azul-principal);
     border: none;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 30px;
     font-size: 21px;
     font-weight: bold;
 }
 
-.produto-preco {
+.produto-informacao .produto-preco {
     margin: 5px;
     font-size: 30px;
     font-weight: bold;
-    color: var(--amarelo);
+    color: var(--azul-principal);
 }
 
 .carrossel_categoria {
@@ -267,5 +267,5 @@
 
 .nome-loja{
     color: var(--azul-principal);
-    text-decoration: underline;
+    
 }

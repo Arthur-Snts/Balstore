@@ -14,6 +14,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import user_icon from "../assets/user-icon-default.png"
+import { IoCart } from "react-icons/io5";
 
 
 import "./ProdutoInd.css"
@@ -359,7 +360,7 @@ export default function ProdutoInd () {
                         </div>
 
                         <div className="produto-buttons">
-                            <button className="button_amarelo" onClick={()=>(handlecarrinho(produto.id))}>Adicionar ao Carrinho</button>
+                            <button className="button_amarelo" onClick={()=>(handlecarrinho(produto.id))}>Carrinho <IoCart /></button>
                             <button className="button_azul" onClick={handlecomprar}>Comprar</button>
                         </div>
                     </div>

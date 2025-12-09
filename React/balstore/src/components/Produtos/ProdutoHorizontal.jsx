@@ -38,7 +38,7 @@ export default function ProdutoHorizontal({props, children}) {
                             )}
                             {(props.promocao || props.promocao === 0) && (
                                 <p className="desconto_aplicado">
-                                Desconto Aplicado: {props.promocao} %
+                                Desconto Aplicado: {props.promocao}%
                                 </p>
                             )}
                         </div>

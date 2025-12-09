@@ -157,13 +157,18 @@
     justify-self: left;
 }
 
-.confirm-buttom{
+.confirm-buttom-carrinho{
     background-color: var(--amarelo);
     color: var(--azul-principal);
     border: 2px solid var(--amarelo);
     padding: 10px;
     border-radius: 30px;
     width: 150px;
-    height: 100%;
     font-size: 11px;
+    text-align: center;
+
+}
+.produtos-recomendados .produto {
+    zoom: 0.8;
+    width: 100%;
 }
