@@ -16,7 +16,7 @@
 
 .produto .left_produto{
     height: 100%;
-    
+    max-width: 30%;
     flex-shrink: 0;
 }
 
@@ -43,7 +43,6 @@
     justify-content: space-between;
     align-items: flex-start;
     width: 100%;
-    gap: 10px;
 }
 
 .produto .conteudo_produto .texto .center_produto{
@@ -64,6 +63,10 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     padding-top: 10px;
+}
+
+.produto .right_produto {
+    min-width: 30%;
 }
 
 

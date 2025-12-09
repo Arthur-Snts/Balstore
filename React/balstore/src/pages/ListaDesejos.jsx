@@ -72,6 +72,7 @@ export default function ListaDesejos() {
 
     useEffect(() => {
         async function syncFavoritos() {
+            setLoading(true)
             if (!cliente?.favoritos) return;
 
             const listaNova = [];
@@ -82,6 +83,7 @@ export default function ListaDesejos() {
                     listaNova.push(res.produto);
                 }
             }
+            setLoading(false)
 
             setProdutos_favoritos(listaNova);
         }
